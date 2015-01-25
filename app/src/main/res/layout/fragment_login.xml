@@ -3,16 +3,42 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
+              android:paddingLeft="48dp"
+              android:paddingRight="48dp"
               tools:context="com.iyuelbs.ui.login.LoginFragment">
 
     <EditText
-        android:layout_marginLeft="48dp"
-        android:layout_marginRight="48dp"
+        android:id="@+id/username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="@string/title_username"/>
 
     <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="@string/title_password"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/comfirm_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title_confirm_pwd"
+        android:inputType="textPassword"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/title_email"
+        android:inputType="textEmailAddress"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_login"/>
 
 </LinearLayout>

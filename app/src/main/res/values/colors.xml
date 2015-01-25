@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_background">#ffeeeeee</color>
+    <color name="teal">#009688</color>
+    <color name="teal_dark">#00796B</color>
+    <color name="orange">#FF5722</color>
+</resources>
