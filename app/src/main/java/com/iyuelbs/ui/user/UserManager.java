@@ -16,12 +16,10 @@ import com.iyuelbs.entity.User;
 import com.iyuelbs.entity.UserInfo;
 import com.iyuelbs.utils.ViewUtils;
 
-import java.util.List;
-
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.GetListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -67,23 +65,21 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
 
     private void loadUserInfo() {
         BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.addWhereRelatedTo(User.USERINFO_TABLE_NAME, new BmobPointer(mUser));
-        query.findObjects(mContext, new FindListener<UserInfo>() {
+        query.getObject(mContext, mUser.getUserInfo().getObjectId(), new GetListener<UserInfo>() {
 
             @Override
-            public void onSuccess(List<UserInfo> userInfos) {
-                if (userInfos == null || userInfos.size() == 0)
+            public void onSuccess(UserInfo userInfo) {
+                if (userInfo == null)
                     return;
-
-                mUserInfo = userInfos.get(0);
-                mNickName.setText(mUserInfo.getNickName());
-                mAvatar.setText(mUserInfo.getAvatar());
-                mSex.setChecked(mUserInfo.isMale());
+                mUserInfo = userInfo;
+                mNickName.setText(userInfo.getNickName());
+                mAvatar.setText(userInfo.getAvatar());
+                mSex.setChecked(userInfo.isMale());
             }
 
             @Override
-            public void onError(int i, String s) {
-                ViewUtils.showToast(mContext, s);
+            public void onFailure(int i, String s) {
+                ViewUtils.showToast(mContext, "error:" + i + " " + s);
             }
         });
     }
