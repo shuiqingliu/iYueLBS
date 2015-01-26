@@ -23,7 +23,7 @@ public class CommonActivity extends BaseActivity {
 
             String type = bundle.getString(Keys.OPEN_TYPE);
             if (type.equals(Keys.OPEN_LOGIN)) {
-                transaction.replace(R.id.common_container, new LoginFragment());
+                transaction.replace(R.id.common_container, LoginFragment.getInstance(bundle));
             } else if (type.equals(Keys.OPEN_REGISTER)) {
                 transaction.replace(R.id.common_container, LoginFragment.getInstance(bundle));
             }

@@ -5,6 +5,7 @@
               android:orientation="vertical"
               android:paddingLeft="48dp"
               android:paddingRight="48dp"
+              android:paddingTop="24dp"
               tools:context="com.iyuelbs.ui.login.LoginFragment">
 
     <EditText
@@ -21,7 +22,7 @@
         android:inputType="textPassword"/>
 
     <EditText
-        android:id="@+id/comfirm_pwd"
+        android:id="@+id/confirm_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title_confirm_pwd"
@@ -37,6 +38,7 @@
         android:visibility="gone"/>
 
     <Button
+        android:id="@+id/confirm_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_login"/>

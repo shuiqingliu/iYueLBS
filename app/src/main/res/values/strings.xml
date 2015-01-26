@@ -12,5 +12,9 @@
     <string name="title_password">密码</string>
     <string name="title_confirm_pwd">确认密码</string>
     <string name="title_email">电子邮箱</string>
+    <string name="title_fill_user_info">填写用户信息</string>
+    <string name="title_add_friend">添加好友</string>
+    <string name="title_view_friends">查看好友</string>
+    <string name="title_new_tag">新增标签</string>
 
 </resources>

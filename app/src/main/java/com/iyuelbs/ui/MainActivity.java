@@ -31,14 +31,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.login:
-                Intent intent = new Intent(mContext,CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE,Keys.OPEN_LOGIN);
-                startActivity(intent);
+                Intent intent = new Intent(mContext, CommonActivity.class);
+                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_LOGIN);
+                startActivityForResult(intent, Keys.FOR_LOGIN_RESULT);
                 break;
             case R.id.register:
-                intent = new Intent(mContext,CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE,Keys.OPEN_REGISTER);
-                startActivity(intent);
+                intent = new Intent(mContext, CommonActivity.class);
+                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_REGISTER);
+                startActivityForResult(intent, Keys.FOR_LOGIN_RESULT);
+                break;
+            case R.id.add_friend:
+                break;
+            case R.id.view_friend:
+                break;
+            case R.id.fill_info:
+                break;
+            case R.id.new_tag:
                 break;
         }
     }
