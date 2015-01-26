@@ -16,5 +16,8 @@
     <string name="title_add_friend">添加好友</string>
     <string name="title_view_friends">查看好友</string>
     <string name="title_new_tag">新增标签</string>
+    <string name="title_phone_number">手机号</string>
+    <string name="title_nickname">昵称</string>
+    <string name="btn_save">保存</string>
 
 </resources>

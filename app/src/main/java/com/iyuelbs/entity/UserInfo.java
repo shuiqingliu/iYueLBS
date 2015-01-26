@@ -9,6 +9,7 @@ import cn.bmob.v3.datatype.BmobRelation;
  */
 public class UserInfo extends BmobObject {
     private User user;
+    private String nickName;
     private String avatar;
     private boolean male;
     private String locStatus;
@@ -71,5 +72,22 @@ public class UserInfo extends BmobObject {
 
     public void setFriends(BmobRelation friends) {
         this.friends = friends;
+    }
+
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public BmobRelation getMessages() {
+        return messages;
+    }
+
+    public void setMessages(BmobRelation messages) {
+        this.messages = messages;
     }
 }

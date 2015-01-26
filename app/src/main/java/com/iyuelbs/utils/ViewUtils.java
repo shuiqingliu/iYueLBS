@@ -1,7 +1,9 @@
 package com.iyuelbs.utils;
 
+import android.content.Context;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Toast;
 
 import com.iyuelbs.app.AppHelper;
 
@@ -33,5 +35,13 @@ public class ViewUtils {
             mDensity = AppHelper.getAppContext().getResources().getDisplayMetrics().density;
 
         return (int) (unit * mDensity + 0.5f);
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showToast(Context context, int stringId) {
+        showToast(context, context.getString(stringId));
     }
 }
