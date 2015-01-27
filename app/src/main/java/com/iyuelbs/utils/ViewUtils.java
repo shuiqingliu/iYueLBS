@@ -13,6 +13,7 @@ import com.iyuelbs.app.AppHelper;
 public class ViewUtils {
 
     private static float mDensity = 0f;
+    private static int mScreenWidth = 0;
 
     @SuppressWarnings("unchecked")
     public static View get(View rootView, int resId) {
@@ -35,6 +36,12 @@ public class ViewUtils {
             mDensity = AppHelper.getAppContext().getResources().getDisplayMetrics().density;
 
         return (int) (unit * mDensity + 0.5f);
+    }
+
+    public static int getScreenWidth() {
+        if (mScreenWidth == 0)
+            mScreenWidth = AppHelper.getAppContext().getResources().getDisplayMetrics().widthPixels;
+        return mScreenWidth;
     }
 
     public static void showToast(Context context, String message) {

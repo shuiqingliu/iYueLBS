@@ -14,5 +14,6 @@ public class BaseFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mContext = activity;
+        setHasOptionsMenu(true);
     }
 }
