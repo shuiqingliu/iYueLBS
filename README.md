@@ -19,3 +19,13 @@
 ###爱约餐厅(Optional)
 
 >     约人可以去的用餐地点推荐
+
+##依赖开源项目
+>support-v7
+>SystemBarTintManager (https://github.com/jgilfelt/SystemBarTint)
+>RoundedImageView (https://github.com/vinc3m1/RoundedImageView)
+
+##其他依赖支持
+>BmobSDK (http://www.bmob.cn/)
+>高德地图SDK (http://lbs.amap.com/)
+>七牛云存储 (https://portal.qiniu.com/)
