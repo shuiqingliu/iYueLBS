@@ -1,11 +1,14 @@
 package com.iyuelbs.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Toast;
 
+import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.app.Keys;
 
 /**
  * Created by Bob Peng on 2015/1/25.
@@ -14,6 +17,7 @@ public class ViewUtils {
 
     private static float mDensity = 0f;
     private static int mScreenWidth = 0;
+    private static int mScreenHeight = 0;
 
     @SuppressWarnings("unchecked")
     public static View get(View rootView, int resId) {
@@ -42,6 +46,28 @@ public class ViewUtils {
         if (mScreenWidth == 0)
             mScreenWidth = AppHelper.getAppContext().getResources().getDisplayMetrics().widthPixels;
         return mScreenWidth;
+    }
+
+    public static int getScreenHeight() {
+        if (mScreenHeight == 0)
+            mScreenHeight = AppHelper.getAppContext().getResources().getDisplayMetrics().heightPixels;
+        return mScreenHeight;
+    }
+
+    /**
+     * @return color
+     */
+    public static int getThemeColor(Resources res, int style) {
+        switch (style) {
+            case Keys.STYLE_COLOR_PRIMARY:
+                return res.getColor(R.color.teal);
+            case Keys.STYLE_COLOR_PRIMARY_DARK:
+                return res.getColor(R.color.teal_dark);
+            case Keys.STYLE_COLOR_ACCENT:
+                return res.getColor(R.color.orange);
+            default:
+                return 0;
+        }
     }
 
     public static void showToast(Context context, String message) {

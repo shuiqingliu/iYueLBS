@@ -13,11 +13,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppConfig;
+import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.app.Keys;
 import com.iyuelbs.utils.ViewUtils;
+import com.iyuelbs.utils.external.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,7 @@ import java.util.List;
  * Created by Bob Peng on 2015/1/27.
  */
 public class DrawerFragment extends ListFragment implements DrawerController {
+
     private Context mContext;
 
     private List<MenuItem> mDrawerList;
@@ -37,15 +43,20 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity();
         setHasOptionsMenu(true);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mContext = getActivity();
 
         initDrawerItem();
+        setupListView();
+        attachListHeader();
+    }
+
+    private void setupListView() {
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(new ColorDrawable(getResources().getColor(R.color.transparent)));
@@ -54,6 +65,21 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         listView.setCacheColorHint(Color.TRANSPARENT);
 
         setListAdapter(mAdapter = new DrawerAdapter());
+    }
+
+    private void attachListHeader() {
+        View view = View.inflate(mContext, R.layout.view_drawer_header, null);
+
+        RoundedImageView userAvatar = (RoundedImageView) view.findViewById(R.id.drawer_user_avatar);
+        if (AppConfig.TRANSLUCENT_BAR_ENABLED) {
+            ((LinearLayout.LayoutParams) userAvatar.getLayoutParams()).topMargin += ViewUtils.getPixels
+                    (24);
+        }
+
+        TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
+        userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
+
+        getListView().addHeaderView(view, null, false);
     }
 
     @Override
@@ -181,10 +207,13 @@ public class DrawerFragment extends ListFragment implements DrawerController {
 
                 if (getListView().getCheckedItemPosition() == position) {
                     view.setBackgroundResource(R.color.divider_gray);
-                    titleText.setTextColor(mRes.getColor(R.color.teal));
+                    int color = ViewUtils.getThemeColor(mRes, Keys.STYLE_COLOR_PRIMARY);
+                    titleText.setTextColor(color);
+                    iconView.setColorFilter(color);
                 } else {
                     view.setBackgroundResource(0);
                     titleText.setTextColor(mRes.getColor(R.color.black));
+                    iconView.clearColorFilter();
                 }
             }
 

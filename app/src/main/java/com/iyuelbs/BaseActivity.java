@@ -8,7 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
-import com.iyuelbs.utils.SystemBarTintManager;
+import com.iyuelbs.app.AppConfig;
+import com.iyuelbs.utils.external.SystemBarTintManager;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class BaseActivity extends ActionBarActivity {
     protected Context mContext;
+//    protected int mColorPrimary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class BaseActivity extends ActionBarActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
         tintManager.setTintColor(getResources().getColor(R.color.teal));
     }
 

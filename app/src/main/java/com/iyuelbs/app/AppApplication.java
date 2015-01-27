@@ -2,6 +2,8 @@ package com.iyuelbs.app;
 
 import android.app.Application;
 
+import com.iyuelbs.entity.User;
+
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
@@ -14,7 +16,7 @@ public class AppApplication extends Application {
 
     private static AppApplication mAppApplication;
 
-    private BmobUser mUser;
+    private User mUser;
 
     @Override
     public void onCreate() {
@@ -22,7 +24,6 @@ public class AppApplication extends Application {
         mAppApplication = this;
         // 初始化BmobSDK
         initBmobSdk();
-
     }
 
     private void initBmobSdk() {
@@ -31,14 +32,14 @@ public class AppApplication extends Application {
         BmobPush.startWork(this, AppConfig.BMOB_AK); // 监听推送消息
 
         // 初始化用户信息
-        mUser = BmobUser.getCurrentUser(this);
+        mUser = BmobUser.getCurrentUser(this, User.class);
     }
 
     public static AppApplication getApplication() {
         return mAppApplication;
     }
 
-    public BmobUser getUser() {
+    public User getCurrentUser() {
         return mUser;
     }
 

@@ -14,4 +14,8 @@ public class Keys {
     public static final String OPEN_REGISTER = "register";
     public static final String OPEN_FILL_INFO = "fillInfo";
 
+    public static final int STYLE_COLOR_PRIMARY = 1;
+    public static final int STYLE_COLOR_PRIMARY_DARK = 2;
+    public static final int STYLE_COLOR_ACCENT = 3;
+
 }

@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="8dp">
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/drawer_user_cover"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/bg_cover"/>
+
+    <LinearLayout
+        android:id="@+id/drawer_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/hint_gray"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
+
+        <com.iyuelbs.utils.external.RoundedImageView
+            android:id="@+id/drawer_user_avatar"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitCenter"
+            app:riv_border_width="0dip"
+            app:riv_corner_radius="30dip"
+            app:riv_oval="true"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/drawer_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/drawer_user_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/drawer_user_name"
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:id="@+id/drawer_user_status_change_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignBottom="@id/drawer_user_status"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

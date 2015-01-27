@@ -10,6 +10,7 @@
 
     <color name="divider_gray">#1E000000</color>
     <color name="hint_gray">#42000000</color>
+    <color name="medium_gray">#89000000</color>
     <color name="text_gray">#DE000000</color>
 
     <color name="black">#ff000000</color>

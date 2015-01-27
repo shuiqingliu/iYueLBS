@@ -8,6 +8,10 @@ import android.content.Context;
 public class AppHelper {
 
     public static Context getAppContext() {
+        return getApplication();
+    }
+
+    public static AppApplication getApplication() {
         return AppApplication.getApplication();
     }
 }
