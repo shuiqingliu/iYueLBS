@@ -77,7 +77,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         }
 
         TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
-        userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
+        userNameText.setText(AppHelper.getApplication().getCurUserName());
 
         getListView().addHeaderView(view, null, false);
     }

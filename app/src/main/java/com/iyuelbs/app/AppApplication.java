@@ -1,13 +1,11 @@
 package com.iyuelbs.app;
 
 import android.app.Application;
-
-import com.iyuelbs.entity.User;
-
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobInstallation;
 import cn.bmob.v3.BmobUser;
+import com.iyuelbs.entity.User;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -17,6 +15,10 @@ public class AppApplication extends Application {
     private static AppApplication mAppApplication;
 
     private User mUser;
+
+    public static AppApplication getApplication() {
+        return mAppApplication;
+    }
 
     @Override
     public void onCreate() {
@@ -35,12 +37,12 @@ public class AppApplication extends Application {
         mUser = BmobUser.getCurrentUser(this, User.class);
     }
 
-    public static AppApplication getApplication() {
-        return mAppApplication;
-    }
-
     public User getCurrentUser() {
         return mUser;
+    }
+
+    public String getCurUserName() {
+        return isLogin() ? mUser.getUsername() : null;
     }
 
     public boolean isLogin() {
