@@ -9,7 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.iyuelbs.app.AppConfig;
-import com.iyuelbs.utils.external.SystemBarTintManager;
+import com.iyuelbs.external.SystemBarTintManager;
 
 import java.util.List;
 

@@ -13,6 +13,7 @@ public class User extends BmobUser {
     private BmobPointer userInfo;
     private BmobRelation friends;
     private String phoneNumber;
+    private String avatarUrl;
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -37,5 +38,14 @@ public class User extends BmobUser {
 
     public void setFriends(BmobRelation friends) {
         this.friends = friends;
+    }
+
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

@@ -10,7 +10,6 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class UserInfo extends BmobObject {
     private User user;
     private String nickName;
-    private String avatar;
     private boolean male;
     private String locStatus;
     private BmobGeoPoint geoLocation;
@@ -24,14 +23,6 @@ public class UserInfo extends BmobObject {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
 
     public boolean isMale() {

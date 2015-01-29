@@ -13,6 +13,10 @@ public class Keys {
     public static final String OPEN_LOGIN = "login";
     public static final String OPEN_REGISTER = "register";
     public static final String OPEN_FILL_INFO = "fillInfo";
+    /**
+     * temp
+     */
+    public static final String OPEN_AVATAR = "avatar";
 
     public static final int STYLE_COLOR_PRIMARY = 1;
     public static final int STYLE_COLOR_PRIMARY_DARK = 2;

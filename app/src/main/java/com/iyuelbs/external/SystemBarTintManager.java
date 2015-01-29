@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.iyuelbs.utils.external;
+package com.iyuelbs.external;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

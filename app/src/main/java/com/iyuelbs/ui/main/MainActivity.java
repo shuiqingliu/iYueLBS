@@ -109,6 +109,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.new_tag:
                 break;
+            case R.id.upload_avatar:
+                intent = new Intent(mContext, CommonActivity.class);
+                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_AVATAR);
+                startActivity(intent);
+                break;
         }
     }
 }

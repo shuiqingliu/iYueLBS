@@ -59,6 +59,13 @@
                 android:layout_height="wrap_content"
                 android:onClick="onClick"
                 android:text="@string/title_new_tag"/>
+
+            <Button
+                android:id="@+id/upload_avatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onClick"
+                android:text="@string/title_upload_avatar"/>
         </LinearLayout>
     </FrameLayout>
 

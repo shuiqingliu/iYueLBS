@@ -56,6 +56,7 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
             mUsername.setText(mUser.getUsername());
             mEmail.setText(mUser.getEmail());
             mPhone.setText(mUser.getPhoneNumber());
+            mAvatar.setText(mUser.getAvatarUrl());
             loadUserInfo();
         } else {
             Toast.makeText(mContext, "用户未登录！", Toast.LENGTH_SHORT).show();
@@ -73,7 +74,6 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
                     return;
                 mUserInfo = userInfo;
                 mNickName.setText(userInfo.getNickName());
-                mAvatar.setText(userInfo.getAvatar());
                 mSex.setChecked(userInfo.isMale());
             }
 
@@ -89,7 +89,6 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v == mSaveBtn) {
             final UserInfo userInfo = new UserInfo();
-            userInfo.setAvatar(mAvatar.getText().toString());
             userInfo.setNickName(mNickName.getText().toString());
             userInfo.setMale(mSex.isChecked());
             userInfo.setUser(mUser);
@@ -98,6 +97,8 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
                 public void onSuccess() {
                     BmobPointer userInfoPointer = new BmobPointer(userInfo);
                     mUser.setUserInfo(userInfoPointer);
+                    mUser.setPhoneNumber(mPhone.getText().toString());
+                    mUser.setAvatarUrl(mAvatar.getText().toString());
                     mUser.update(mContext, new UpdateListener() {
                         @Override
                         public void onSuccess() {

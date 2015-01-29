@@ -16,6 +16,7 @@
     <string name="title_new_tag">新增标签</string>
     <string name="title_phone_number">手机号</string>
     <string name="title_nickname">昵称</string>
+    <string name="title_upload_avatar">上传头像</string>
 
     <string name="title_drawer_index">首页</string>
     <string name="title_drawer_places">附近</string>

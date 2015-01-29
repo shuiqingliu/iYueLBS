@@ -22,7 +22,7 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp">
 
-        <com.iyuelbs.utils.external.RoundedImageView
+        <com.iyuelbs.external.RoundedImageView
             android:id="@+id/drawer_user_avatar"
             android:layout_width="64dp"
             android:layout_height="64dp"
