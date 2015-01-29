@@ -4,8 +4,8 @@
     <style name="Default" parent="AppTheme">
         <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">@color/teal_dark</item>
-        <item name="colorAccent">@color/orange</item>
-
+        <item name="colorAccent">@color/pink</item>
+        <item name="android:textColorPrimary">@color/text_gray</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

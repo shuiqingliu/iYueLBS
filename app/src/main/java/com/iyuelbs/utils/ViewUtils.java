@@ -64,7 +64,7 @@ public class ViewUtils {
             case Keys.STYLE_COLOR_PRIMARY_DARK:
                 return res.getColor(R.color.teal_dark);
             case Keys.STYLE_COLOR_ACCENT:
-                return res.getColor(R.color.orange);
+                return res.getColor(R.color.pink);
             default:
                 return 0;
         }

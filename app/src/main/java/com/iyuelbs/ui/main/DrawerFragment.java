@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,11 +91,15 @@ public class DrawerFragment extends ListFragment implements DrawerController {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        if (getListView().getHeaderViewsCount() > 0)
+            position--; // fix wrong pos.
+
         super.onListItemClick(l, v, position, id);
 
         if (position < mDrawerList.size() - 1) { // don't toggle settings
             l.setItemChecked(position, true);
             mCurrentIndex = position;
+            Log.e("xifan", "click " + position);
 
             switch (position) {
                 case 0: // index
@@ -206,6 +211,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 }
 
                 if (getListView().getCheckedItemPosition() == position) {
+                    Log.e("xifan", "update " + position);
                     view.setBackgroundResource(R.color.divider_gray);
                     int color = ViewUtils.getThemeColor(mRes, Keys.STYLE_COLOR_PRIMARY);
                     titleText.setTextColor(color);
