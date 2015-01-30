@@ -17,7 +17,7 @@ import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.utils.HttpUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -36,6 +36,11 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
 
         mUploadBtn.setOnClickListener(this);
         mPreviewImage.setOnClickListener(this);
+
+        if (AppHelper.getCurrentUser().getAvatarUrl() != null) {
+            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getSignedAvatar(mContext),
+                    mPreviewImage, DisplayImageOptions.createSimple());
+        }
         return view;
     }
 
@@ -67,8 +72,7 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
                     if (user == null) {
                         // TODO login
                     } else {
-                        String signedUrl = HttpUtils.getSignedImageUrl(mContext, filename, url);
-
+                        String signedUrl = AppHelper.signAvatar(mContext,filename,url);
                         Log.e("xifan", signedUrl);
                         user.setAvatarUrl(url);
                         user.update(mContext);

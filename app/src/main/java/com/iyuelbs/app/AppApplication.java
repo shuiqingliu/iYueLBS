@@ -3,6 +3,9 @@ package com.iyuelbs.app;
 import android.app.Application;
 
 import com.iyuelbs.entity.User;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import cn.bmob.push.BmobPush;
 import cn.bmob.v3.Bmob;
@@ -18,12 +21,27 @@ public class AppApplication extends Application {
 
     private User mUser;
 
+    public static AppApplication getApplication() {
+        return mAppApplication;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mAppApplication = this;
         // 初始化BmobSDK
         initBmobSdk();
+        initImageLoader();
+    }
+
+    private void initImageLoader() {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .denyCacheImageMultipleSizesInMemory()
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .defaultDisplayImageOptions(AppHelper.getDefaultOpts())
+                .build();
+
+        ImageLoader.getInstance().init(config);
     }
 
     private void initBmobSdk() {
@@ -33,10 +51,6 @@ public class AppApplication extends Application {
 
         // 初始化用户信息
         mUser = BmobUser.getCurrentUser(this, User.class);
-    }
-
-    public static AppApplication getApplication() {
-        return mAppApplication;
     }
 
     public User getCurrentUser() {

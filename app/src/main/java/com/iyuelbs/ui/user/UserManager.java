@@ -13,14 +13,9 @@ import android.widget.Toast;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.entity.UserInfo;
 import com.iyuelbs.utils.ViewUtils;
 
-import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.listener.GetListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -37,7 +32,6 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
     private Button mSaveBtn;
 
     private User mUser;
-    private UserInfo mUserInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,66 +51,34 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
             mEmail.setText(mUser.getEmail());
             mPhone.setText(mUser.getPhoneNumber());
             mAvatar.setText(mUser.getAvatarUrl());
-            loadUserInfo();
+            mNickName.setText(mUser.getNickName());
+            mSex.setChecked(mUser.isMale());
         } else {
             Toast.makeText(mContext, "用户未登录！", Toast.LENGTH_SHORT).show();
         }
         return view;
     }
 
-    private void loadUserInfo() {
-        BmobQuery<UserInfo> query = new BmobQuery<>();
-        query.getObject(mContext, mUser.getUserInfo().getObjectId(), new GetListener<UserInfo>() {
-
-            @Override
-            public void onSuccess(UserInfo userInfo) {
-                if (userInfo == null)
-                    return;
-                mUserInfo = userInfo;
-                mNickName.setText(userInfo.getNickName());
-                mSex.setChecked(userInfo.isMale());
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                ViewUtils.showToast(mContext, "error:" + i + " " + s);
-            }
-        });
-    }
-
 
     @Override
     public void onClick(View v) {
         if (v == mSaveBtn) {
-            final UserInfo userInfo = new UserInfo();
-            userInfo.setNickName(mNickName.getText().toString());
-            userInfo.setMale(mSex.isChecked());
-            userInfo.setUser(mUser);
-            userInfo.save(mContext, new SaveListener() {
+            mUser.setEmail(mEmail.getText().toString());
+            mUser.setNickName(mNickName.getText().toString());
+            mUser.setIsMale(mSex.isChecked());
+            mUser.setPhoneNumber(mPhone.getText().toString());
+            mUser.setAvatarUrl(mAvatar.getText().toString());
+            mUser.update(mContext, new UpdateListener() {
                 @Override
                 public void onSuccess() {
-                    BmobPointer userInfoPointer = new BmobPointer(userInfo);
-                    mUser.setUserInfo(userInfoPointer);
-                    mUser.setPhoneNumber(mPhone.getText().toString());
-                    mUser.setAvatarUrl(mAvatar.getText().toString());
-                    mUser.update(mContext, new UpdateListener() {
-                        @Override
-                        public void onSuccess() {
-                            ViewUtils.showToast(mContext, "已保存UserInfo！");
-                        }
-
-                        @Override
-                        public void onFailure(int i, String s) {
-                        }
-                    });
-                    ViewUtils.showToast(mContext, "保存成功！");
+                    ViewUtils.showToast(mContext, "已保存UserInfo！");
                 }
 
                 @Override
                 public void onFailure(int i, String s) {
-                    ViewUtils.showToast(mContext, s);
                 }
             });
+            ViewUtils.showToast(mContext, "保存成功！");
         }
     }
 }

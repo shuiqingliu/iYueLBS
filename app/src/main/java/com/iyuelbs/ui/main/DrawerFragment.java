@@ -23,6 +23,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.external.RoundedImageView;
 import com.iyuelbs.utils.ViewUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.List;
 public class DrawerFragment extends ListFragment implements DrawerController {
 
     private Context mContext;
+    private ImageLoader mImageLoader;
 
     private List<MenuItem> mDrawerList;
     private MenuItem mDividerItem;
@@ -44,6 +46,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
+        mImageLoader = AppHelper.getImageLoader();
         setHasOptionsMenu(true);
     }
 
@@ -76,8 +79,11 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                     (24);
         }
 
-        TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
-        userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
+        if (AppHelper.checkLogin()) {
+            mImageLoader.displayImage(AppHelper.getCurrentUser().getSignedAvatar(mContext), userAvatar);
+            TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
+            userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
+        }
 
         getListView().addHeaderView(view, null, false);
     }

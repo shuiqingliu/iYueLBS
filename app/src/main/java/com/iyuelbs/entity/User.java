@@ -1,8 +1,12 @@
 package com.iyuelbs.entity;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.iyuelbs.app.AppHelper;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
-import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.datatype.BmobRelation;
 
 /**
@@ -12,15 +16,14 @@ public class User extends BmobUser {
 
     public static final String USER_TABLE = "user";
 
-    private BmobPointer userInfo;
     private BmobRelation friends;
     private String phoneNumber;
     private String avatarUrl;
     private String nickName;
+    private boolean male;
     private String locStatus;
     private BmobGeoPoint geoLocation;
     private BmobRelation tags;
-
 
     public String getPhoneNumber() {
         return phoneNumber;
@@ -30,15 +33,6 @@ public class User extends BmobUser {
         this.phoneNumber = phoneNumber;
     }
 
-    public BmobPointer getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(BmobPointer userInfo) {
-        this.userInfo = userInfo;
-    }
-
-
     public BmobRelation getFriends() {
         return friends;
     }
@@ -46,7 +40,6 @@ public class User extends BmobUser {
     public void setFriends(BmobRelation friends) {
         this.friends = friends;
     }
-
 
     public String getAvatarUrl() {
         return avatarUrl;
@@ -56,6 +49,13 @@ public class User extends BmobUser {
         this.avatarUrl = avatarUrl;
     }
 
+    public String getSignedAvatar(Context context) {
+        String avatar = getAvatarUrl();
+        String filename = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
+        String result = AppHelper.signAvatar(context, filename, getAvatarUrl());
+        Log.e("xifan", "sign " + filename + " " + result);
+        return result;
+    }
 
     public String getNickName() {
         return nickName;
@@ -87,5 +87,13 @@ public class User extends BmobUser {
 
     public void setTags(BmobRelation tags) {
         this.tags = tags;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setIsMale(boolean male) {
+        this.male = male;
     }
 }

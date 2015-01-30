@@ -13,7 +13,6 @@ public class UserMessage extends BmobObject {
     private boolean isMsg;
     private boolean read;
 
-
     public User getSender() {
         return sender;
     }
