@@ -8,6 +8,7 @@ public class Keys {
      * keys for requestCode that don't care who's return.
      */
     public static final int FOR_COMMON_RESULT = 100;
+    public static final int FOR_IMAGE_PICK_RESULT = 101;
 
     public static final String OPEN_TYPE = "openType";
     public static final String OPEN_LOGIN = "login";

@@ -64,6 +64,9 @@
             android:name=".ui.CommonActivity"
             android:label="@string/title_activity_common">
         </activity>
+
+        <!-- Image Crop -->
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
     </application>
 
 </manifest>

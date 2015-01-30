@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="transparent_white">#00ffffff</color>
+    <color name="transparent_white">#00FFFFFF</color>
     <color name="transparent">#00000000</color>
-    <color name="white">#ffffffff</color>
-    <color name="app_background">#ffeeeeee</color>
+    <color name="white">#FFF</color>
+    <color name="app_background">#EEE</color>
     <color name="teal">#009688</color>
     <color name="teal_dark">#00796B</color>
     <color name="pink">#FF5177</color>
