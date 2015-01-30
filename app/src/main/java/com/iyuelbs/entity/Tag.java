@@ -7,12 +7,15 @@ import cn.bmob.v3.datatype.BmobDate;
  * Created by Bob Peng on 2015/1/24.
  */
 public class Tag extends BmobObject {
+
+    public static final String PLACE_TABLE = "place";
+
     private String title;
     private String message;
     private int tagType;
     private BmobDate appointTime;
     private Places place;
-    private UserInfo userInfo;
+    private User user;
 
     public String getTitle() {
         return title;
@@ -54,11 +57,11 @@ public class Tag extends BmobObject {
         this.tagType = tagType;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public User getUserInfo() {
+        return user;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUserInfo(User user) {
+        this.user = user;
     }
 }

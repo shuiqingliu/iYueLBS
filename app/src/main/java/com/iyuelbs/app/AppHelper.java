@@ -2,6 +2,8 @@ package com.iyuelbs.app;
 
 import android.content.Context;
 
+import com.iyuelbs.entity.User;
+
 import java.io.File;
 
 /**
@@ -15,6 +17,10 @@ public class AppHelper {
 
     public static AppApplication getApplication() {
         return AppApplication.getApplication();
+    }
+
+    public static User getCurrentUser() {
+        return getApplication().getCurrentUser();
     }
 
     public static String getCacheDirPath() {

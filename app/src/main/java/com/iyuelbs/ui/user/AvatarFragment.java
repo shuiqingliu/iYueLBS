@@ -16,6 +16,8 @@ import com.bmob.btp.callback.UploadListener;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.entity.User;
+import com.iyuelbs.utils.HttpUtils;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -61,7 +63,16 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
             BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
                 @Override
                 public void onSuccess(String filename, String url) {
-                    Log.e("xifan", "onSuccess, " + filename + " , " + url);
+                    User user = AppHelper.getCurrentUser();
+                    if (user == null) {
+                        // TODO login
+                    } else {
+                        String signedUrl = HttpUtils.getSignedImageUrl(mContext, filename, url);
+
+                        Log.e("xifan", signedUrl);
+                        user.setAvatarUrl(url);
+                        user.update(mContext);
+                    }
                 }
 
                 @Override

@@ -6,26 +6,28 @@ import cn.bmob.v3.BmobObject;
  * Created by Bob Peng on 2015/1/24.
  */
 public class UserMessage extends BmobObject {
-    private UserInfo userInfo;
-    private UserInfo receiverInfo;
-    private boolean isMsg;
+    private User sender;
+    private User receiver;
     private Tag relatedTag;
     private String message;
+    private boolean isMsg;
+    private boolean read;
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+
+    public User getSender() {
+        return sender;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 
-    public UserInfo getReceiverInfo() {
-        return receiverInfo;
+    public User getReceiver() {
+        return receiver;
     }
 
-    public void setReceiverInfo(UserInfo receiverInfo) {
-        this.receiverInfo = receiverInfo;
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 
     public Tag getRelatedTag() {
@@ -36,19 +38,27 @@ public class UserMessage extends BmobObject {
         this.relatedTag = relatedTag;
     }
 
-    public boolean isMsg() {
-        return isMsg;
-    }
-
-    public void setMsg(boolean isMsg) {
-        this.isMsg = isMsg;
-    }
-
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean getIsMsg() {
+        return isMsg;
+    }
+
+    public void setIsMsg(boolean isMsg) {
+        this.isMsg = isMsg;
+    }
+
+    public boolean getRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }
