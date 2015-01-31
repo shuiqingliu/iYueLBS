@@ -43,4 +43,21 @@
         android:layout_height="wrap_content"
         android:text="@string/btn_login"/>
 
+    <Button
+        android:id="@+id/login_weibo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="微博登陆"/>
+
+    <Button
+        android:id="@+id/login_qq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QQ登陆"/>
+    <Button
+        android:id="@+id/login_logoff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注销"/>
+
 </LinearLayout>

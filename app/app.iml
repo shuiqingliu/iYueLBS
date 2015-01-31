@@ -86,13 +86,13 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="BmobPush" level="project" />
+    <orderEntry type="library" exported="" name="com.android.volley-2015.01.27" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="android-crop-unspecified" level="project" />
     <orderEntry type="library" exported="" name="BmobSDK" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
-    <orderEntry type="library" exported="" name="com.android.volley-2015.01.06" level="project" />
   </component>
 </module>
 

@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.login;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,7 +15,9 @@ import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.ui.CommonActivity;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
@@ -36,15 +39,21 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         mUsername = (EditText) view.findViewById(R.id.username);
         mPassword = (EditText) view.findViewById(R.id.password);
         mConfirmBtn = (Button) view.findViewById(R.id.confirm_btn);
-        mIsLogin = getArguments().getString(Keys.OPEN_TYPE, Keys.OPEN_LOGIN).equals(Keys.OPEN_LOGIN);
+        Button weiboLogin = (Button) view.findViewById(R.id.login_weibo);
+        Button qqLogin = (Button) view.findViewById(R.id.login_qq);
+        Button logoff = (Button) view.findViewById(R.id.login_logoff);
+
+        mIsLogin = getArguments().getInt(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_LOGIN) == Keys.OPEN_LOGIN;
         if (!mIsLogin) {
             mPasswordConfirm = (EditText) view.findViewById(R.id.confirm_pwd);
             mEmail = (EditText) view.findViewById(R.id.email);
-
             mPasswordConfirm.setVisibility(View.VISIBLE);
             mEmail.setVisibility(View.VISIBLE);
         }
 
+        logoff.setOnClickListener(this);
+        weiboLogin.setOnClickListener(this);
+        qqLogin.setOnClickListener(this);
         mConfirmBtn.setOnClickListener(this);
         mConfirmBtn.setText(getString(mIsLogin ? R.string.btn_login : R.string.btn_register));
         return view;
@@ -59,6 +68,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             } else {
                 onRegisterRequest();
             }
+        } else if (v.getId() == R.id.login_weibo) {
+            Intent intent = new Intent(mContext, CommonActivity.class);
+            intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_WEIBO_AUTH);
+            startActivityForResult(intent, 1);
+        } else if (v.getId() == R.id.login_qq) {
+
+        } else if (v.getId() == R.id.login_logoff) {
+            BmobUser.logOut(mContext);
         }
     }
 

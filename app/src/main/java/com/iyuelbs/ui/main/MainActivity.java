@@ -88,12 +88,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (id) {
             case R.id.login:
                 Intent intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_LOGIN);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_LOGIN);
                 startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
                 break;
             case R.id.register:
                 intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_REGISTER);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_REGISTER);
                 startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
                 break;
             case R.id.add_friend:
@@ -104,14 +104,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.fill_info:
                 intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_FILL_INFO);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_FILL_INFO);
                 startActivity(intent);
                 break;
             case R.id.new_tag:
                 break;
             case R.id.upload_avatar:
                 intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.OPEN_TYPE, Keys.OPEN_AVATAR);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_AVATAR);
                 startActivity(intent);
                 break;
         }

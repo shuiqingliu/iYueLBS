@@ -105,7 +105,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
             mUserNameText.setText(user.getNickName());
             mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());
         } else {
-            mAvatarImage.setVisibility(View.GONE);
+            mAvatarImage.setVisibility(View.INVISIBLE);
             mUserNameText.setText(R.string.title_not_login);
             mStatusText.setText(R.string.title_no_loc_status);
         }

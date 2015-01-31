@@ -58,7 +58,7 @@ public class AppHelper {
     }
 
     public static File getCacheDir() {
-        return getAppContext().getExternalCacheDir();
+        return getAppContext().getCacheDir();
     }
 
     public static String getCacheDirPath(String filename) {
