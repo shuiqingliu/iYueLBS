@@ -17,6 +17,7 @@ public class Keys {
      * temp
      */
     public static final String OPEN_AVATAR = "avatar";
+    public static final String OPEN_DEFAULT = "defaultLogin";
 
     public static final int STYLE_COLOR_PRIMARY = 1;
     public static final int STYLE_COLOR_PRIMARY_DARK = 2;
