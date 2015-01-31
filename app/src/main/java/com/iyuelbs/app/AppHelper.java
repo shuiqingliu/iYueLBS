@@ -50,7 +50,7 @@ public class AppHelper {
                 .cacheOnDisk(true)
                 .displayer(new FadeInBitmapDisplayer(600))
                 .bitmapConfig(Bitmap.Config.RGB_565)
-                .showImageOnLoading(R.color.hint_gray);
+                .showImageOnLoading(R.color.hint_dark);
     }
 
     public static String getCacheDirPath() {
@@ -66,6 +66,7 @@ public class AppHelper {
     }
 
     public static String signAvatar(Context context, String filename, String url) {
-        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 100, MAGIC);
+//        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 100, MAGIC);
+        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 0, null);
     }
 }

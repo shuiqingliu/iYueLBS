@@ -1,10 +1,5 @@
 package com.iyuelbs.entity;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.iyuelbs.app.AppHelper;
-
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.datatype.BmobRelation;
@@ -47,14 +42,6 @@ public class User extends BmobUser {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getSignedAvatar(Context context) {
-        String avatar = getAvatarUrl();
-        String filename = avatar.substring(avatar.lastIndexOf("/") + 1, avatar.length());
-        String result = AppHelper.signAvatar(context, filename, getAvatarUrl());
-        Log.e("xifan", "sign " + filename + " " + result);
-        return result;
     }
 
     public String getNickName() {

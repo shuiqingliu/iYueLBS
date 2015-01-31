@@ -16,8 +16,10 @@
         android:id="@+id/drawer_user_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/hint_gray"
+        android:layout_alignBottom="@id/drawer_user_cover"
+        android:background="@color/hint_dark"
         android:orientation="vertical"
+        android:paddingBottom="4dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp">
@@ -33,7 +35,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="48dp"
             android:layout_marginTop="16dp">
 
             <TextView
@@ -41,14 +43,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="15sp"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/drawer_user_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/drawer_user_name"
-                android:textColor="@color/white"/>
+                android:textColor="@color/medium_light"
+                android:textSize="13sp"/>
 
             <ImageView
                 android:id="@+id/drawer_user_status_change_btn"

@@ -17,15 +17,20 @@ import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
+import java.util.Random;
+
+import cn.bmob.v3.listener.UpdateListener;
 
 public class AvatarFragment extends BaseFragment implements View.OnClickListener {
 
     private ImageView mPreviewImage;
     private Button mUploadBtn;
+    private File mTmpFile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,7 +43,7 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
         mPreviewImage.setOnClickListener(this);
 
         if (AppHelper.getCurrentUser().getAvatarUrl() != null) {
-            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getSignedAvatar(mContext),
+            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatarUrl(),
                     mPreviewImage, DisplayImageOptions.createSimple());
         }
         return view;
@@ -72,10 +77,21 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
                     if (user == null) {
                         // TODO login
                     } else {
-                        String signedUrl = AppHelper.signAvatar(mContext,filename,url);
-                        Log.e("xifan", signedUrl);
-                        user.setAvatarUrl(url);
-                        user.update(mContext);
+                        String signedUrl = AppHelper.signAvatar(mContext, filename, url);
+                        Log.e("xifan", "signed Url " + signedUrl);
+                        user.setAvatarUrl(signedUrl);
+                        user.update(mContext, new UpdateListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.e("xifan", "onSuccess");
+                            }
+
+                            @Override
+                            public void onFailure(int i, String s) {
+                                Log.e("xifan", s);
+                            }
+                        });
+                        getTmpAvatarFile().delete();
                     }
                 }
 
@@ -93,6 +109,17 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
     }
 
     private File getTmpAvatarFile() {
-        return new File(AppHelper.getCacheDirPath(), "tmp_avatar.jpg");
+        if (mTmpFile == null) {
+            mTmpFile = new File(AppHelper.getCacheDirPath(), generateTmpFile());
+            if (mTmpFile.exists()) {
+                mTmpFile.delete();
+                mTmpFile = new File(AppHelper.getCacheDirPath(), generateTmpFile());
+            }
+        }
+        return mTmpFile;
+    }
+
+    private String generateTmpFile() {
+        return "tmp_avatar" + new Random(Utils.getTimestamp()).nextInt(1000) + ".jpg";
     }
 }

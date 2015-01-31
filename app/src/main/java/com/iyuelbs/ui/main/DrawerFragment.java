@@ -21,6 +21,7 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.entity.User;
 import com.iyuelbs.external.RoundedImageView;
 import com.iyuelbs.utils.ViewUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,6 +40,10 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     private List<MenuItem> mDrawerList;
     private MenuItem mDividerItem;
     private DrawerAdapter mAdapter;
+
+    private RoundedImageView mAvatarImage;
+    private TextView mUserNameText;
+    private TextView mStatusText;
 
     private int mCurrentIndex = 0;
 
@@ -73,25 +78,37 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     private void attachListHeader() {
         View view = View.inflate(mContext, R.layout.view_drawer_header, null);
 
-        RoundedImageView userAvatar = (RoundedImageView) view.findViewById(R.id.drawer_user_avatar);
+        mAvatarImage = (RoundedImageView) view.findViewById(R.id.drawer_user_avatar);
         if (AppConfig.TRANSLUCENT_BAR_ENABLED) {
-            ((LinearLayout.LayoutParams) userAvatar.getLayoutParams()).topMargin += ViewUtils.getPixels
-                    (24);
+            ((LinearLayout.LayoutParams) mAvatarImage.getLayoutParams()).topMargin += ViewUtils.getPixels(24);
         }
-
-        if (AppHelper.checkLogin()) {
-            mImageLoader.displayImage(AppHelper.getCurrentUser().getSignedAvatar(mContext), userAvatar);
-            TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
-            userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
-        }
-
+        mUserNameText = (TextView) view.findViewById(R.id.drawer_user_name);
+        mStatusText = (TextView) view.findViewById(R.id.drawer_user_status);
         getListView().addHeaderView(view, null, false);
+
+        initUserInfo();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        initUserInfo();
         getListView().setItemChecked(mCurrentIndex, true);
+    }
+
+    private void initUserInfo() {
+        if (AppHelper.checkLogin()) {
+            User user = AppHelper.getCurrentUser();
+            mImageLoader.displayImage(user.getAvatarUrl(), mAvatarImage);
+            mAvatarImage.setVisibility(View.VISIBLE);
+            mUserNameText.setText(user.getNickName());
+            mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());
+        } else {
+            mAvatarImage.setVisibility(View.GONE);
+            mUserNameText.setText(R.string.title_not_login);
+            mStatusText.setText(R.string.title_no_loc_status);
+        }
     }
 
     @Override
@@ -215,7 +232,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 }
 
                 if (getListView().getCheckedItemPosition() == position) {
-                    view.setBackgroundResource(R.color.divider_gray);
+                    view.setBackgroundResource(R.color.divider_dark);
                     int color = ViewUtils.getThemeColor(mRes, Keys.STYLE_COLOR_PRIMARY);
                     titleText.setTextColor(color);
                     iconView.setColorFilter(color);

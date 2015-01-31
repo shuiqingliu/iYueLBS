@@ -45,15 +45,17 @@ public class AppApplication extends Application {
     }
 
     private void initBmobSdk() {
-        Bmob.initialize(this, AppConfig.BMOB_AK);
+        Bmob.initialize(this, AppConfig.BMOB_APP_KEY);
         BmobInstallation.getCurrentInstallation(this).save();
-        BmobPush.startWork(this, AppConfig.BMOB_AK); // 监听推送消息
+        BmobPush.startWork(this, AppConfig.BMOB_APP_KEY); // 监听推送消息
 
         // 初始化用户信息
         mUser = BmobUser.getCurrentUser(this, User.class);
     }
 
     public User getCurrentUser() {
+        if (mUser == null)
+            mUser = BmobUser.getCurrentUser(this, User.class);
         return mUser;
     }
 

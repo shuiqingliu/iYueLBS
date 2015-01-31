@@ -5,7 +5,7 @@
         <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">@color/teal_dark</item>
         <item name="colorAccent">@color/pink</item>
-        <item name="android:textColorPrimary">@color/text_gray</item>
+        <item name="android:textColorPrimary">@color/text_dark</item>
         <item name="android:statusBarColor">@color/teal_dark</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
