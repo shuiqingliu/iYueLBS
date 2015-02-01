@@ -27,5 +27,8 @@
     <string name="btn_login">登录</string>
     <string name="btn_register">注册</string>
     <string name="btn_save">保存</string>
+    <string name="weibo">微博登录</string>
+    <string name="qq">QQ登录</string>
+    <string name="default_login">直接登录</string>
 
 </resources>

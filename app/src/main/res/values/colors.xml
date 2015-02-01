@@ -19,4 +19,7 @@
     <color name="text_light">#ffbdbdbd</color>
 
     <color name="black">#ff000000</color>
+    <color name="login_background">#ff323642</color>
+    <color name="user_login">#ff464854</color>
+    <color name="edit_bg">#ff767a83</color>
 </resources>

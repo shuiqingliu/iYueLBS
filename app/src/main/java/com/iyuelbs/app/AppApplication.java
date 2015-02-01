@@ -59,6 +59,10 @@ public class AppApplication extends Application {
         return mUser;
     }
 
+    public String getCurUserName() {
+        return isLogin() ? mUser.getUsername() : null;
+    }
+
     public boolean isLogin() {
         return mUser != null;
     }
