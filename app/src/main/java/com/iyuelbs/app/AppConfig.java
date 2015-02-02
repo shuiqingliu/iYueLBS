@@ -1,5 +1,8 @@
 package com.iyuelbs.app;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * Created by Bob Peng on 2015/1/20.
  */
@@ -11,4 +14,40 @@ public class AppConfig {
     public static final String WEIBO_SECRET = "79f1d519042f2b1cf609970a876add5a";
     public static final String REDIRECT_URL = "http://dating.bmob.cn/";
     public static final boolean TRANSLUCENT_BAR_ENABLED = true;
+
+    public static final String KEY_BMOB_PUSH_ENABLED = "bmob_push_enabled";
+
+    private static final String PREF_NAME = "preferences";
+
+    public static SharedPreferences getPref() {
+        return AppHelper.getAppContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static SharedPreferences.Editor getEditor() {
+        return getPref().edit();
+    }
+
+    public static void putString(String key, String value) {
+        getPref().edit().putString(key, value).apply();
+    }
+
+    public static void putInt(String key, int value) {
+        getPref().edit().putInt(key, value).apply();
+    }
+
+    public static void putBoolean(String key, boolean value) {
+        getPref().edit().putBoolean(key, value).apply();
+    }
+
+    public static String getString(String key, String defValue) {
+        return getPref().getString(key, defValue);
+    }
+
+    public static int getInt(String key, int defValue) {
+        return getPref().getInt(key, defValue);
+    }
+
+    public static boolean getBoolean(String key, boolean defValue) {
+        return getPref().getBoolean(key, defValue);
+    }
 }
