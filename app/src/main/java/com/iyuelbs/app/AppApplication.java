@@ -18,7 +18,6 @@ import cn.bmob.v3.BmobUser;
 public class AppApplication extends Application {
 
     private static AppApplication mAppApplication;
-
     private User mUser;
 
     public static AppApplication getApplication() {
@@ -29,7 +28,8 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mAppApplication = this;
-        // 初始化BmobSDK
+
+        // 初始化
         initBmobSdk();
         initImageLoader();
     }
@@ -38,7 +38,7 @@ public class AppApplication extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .denyCacheImageMultipleSizesInMemory()
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .defaultDisplayImageOptions(AppHelper.getDefaultOpts())
+                .defaultDisplayImageOptions(AppHelper.getDefaultOption())
                 .build();
 
         ImageLoader.getInstance().init(config);
@@ -47,7 +47,11 @@ public class AppApplication extends Application {
     private void initBmobSdk() {
         Bmob.initialize(this, AppConfig.BMOB_APP_KEY);
         BmobInstallation.getCurrentInstallation(this).save();
-        BmobPush.startWork(this, AppConfig.BMOB_APP_KEY); // 监听推送消息
+
+        // 开启推送消息
+        if (AppConfig.getBoolean(AppConfig.KEY_BMOB_PUSH_ENABLED, true)) {
+            BmobPush.startWork(this, AppConfig.BMOB_APP_KEY);
+        }
 
         // 初始化用户信息
         mUser = BmobUser.getCurrentUser(this, User.class);

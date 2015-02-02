@@ -2,6 +2,7 @@ package com.iyuelbs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -18,23 +19,29 @@ import java.util.List;
  */
 public class BaseActivity extends ActionBarActivity {
     protected Context mContext;
-//    protected int mColorPrimary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setupWindowStyle(getResources().getColor(R.color.teal));
         super.onCreate(savedInstanceState);
+
         mContext = this;
-        setupActionBar();
     }
 
-    protected void setupActionBar() {
+    protected void setupWindowStyle(int themeColor) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                SystemBarTintManager tintManager = new SystemBarTintManager(this);
+                tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
+                tintManager.setTintColor(themeColor);
+            }
         }
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
-        tintManager.setTintColor(getResources().getColor(R.color.teal));
+    }
+
+    protected void initFragments() {
     }
 
     @Override

@@ -30,5 +30,9 @@
     <string name="weibo">微博登录</string>
     <string name="qq">QQ登录</string>
     <string name="default_login">直接登录</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="msg_please_input_account">请输入用户名/密码</string>
 
 </resources>

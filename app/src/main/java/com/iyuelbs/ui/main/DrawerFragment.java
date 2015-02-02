@@ -60,19 +60,29 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         super.onViewCreated(view, savedInstanceState);
 
         initDrawerItem();
-        setupListView();
         attachListHeader();
+        setupListView();
     }
 
-    private void setupListView() {
-        ListView listView = getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setDivider(new ColorDrawable(getResources().getColor(R.color.transparent)));
-        listView.setDividerHeight(0);
-        listView.setBackgroundColor(getResources().getColor(R.color.white));
-        listView.setCacheColorHint(Color.TRANSPARENT);
+    @Override
+    public void onResume() {
+        super.onResume();
+        initUserInfo();
+        getListView().setItemChecked(mCurrentIndex, true);
+    }
 
-        setListAdapter(mAdapter = new DrawerAdapter());
+    private void initDrawerItem() {
+        mDrawerList = new ArrayList<>();
+        mDividerItem = new MenuItem(0, null);
+        mDrawerList.add(new MenuItem(R.drawable.ic_explore_grey600_24dp,
+                getString(R.string.title_drawer_index)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_place_grey600_24dp,
+                getString(R.string.title_drawer_places)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
+                getString(R.string.title_drawer_restaurant)));
+        mDrawerList.add(mDividerItem);
+        mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
+                getString(R.string.action_settings)));
     }
 
     private void attachListHeader() {
@@ -89,14 +99,6 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         initUserInfo();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        initUserInfo();
-        getListView().setItemChecked(mCurrentIndex, true);
-    }
-
     private void initUserInfo() {
         if (AppHelper.checkLogin()) {
             User user = AppHelper.getCurrentUser();
@@ -109,6 +111,17 @@ public class DrawerFragment extends ListFragment implements DrawerController {
             mUserNameText.setText(R.string.title_not_login);
             mStatusText.setText(R.string.title_no_loc_status);
         }
+    }
+
+    private void setupListView() {
+        ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setDivider(new ColorDrawable(getResources().getColor(R.color.transparent)));
+        listView.setDividerHeight(0);
+        listView.setBackgroundColor(getResources().getColor(R.color.white));
+        listView.setCacheColorHint(Color.TRANSPARENT);
+
+        setListAdapter(mAdapter = new DrawerAdapter());
     }
 
     @Override
@@ -133,20 +146,6 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         } else {
             // TODO: for now is settings
         }
-    }
-
-    private void initDrawerItem() {
-        mDrawerList = new ArrayList<>();
-        mDividerItem = new MenuItem(0, null);
-        mDrawerList.add(new MenuItem(R.drawable.ic_explore_grey600_24dp,
-                getString(R.string.title_drawer_index)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_place_grey600_24dp,
-                getString(R.string.title_drawer_places)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
-                getString(R.string.title_drawer_restaurant)));
-        mDrawerList.add(mDividerItem);
-        mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
-                getString(R.string.action_settings)));
     }
 
     private DrawerAdapter getAdapter() {
@@ -205,7 +204,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = mInflater.inflate(R.layout.view_drawer_item, null);
+                view = mInflater.inflate(R.layout.list_drawer_item, null);
             }
 
             if (getItemId(position) == 0) {

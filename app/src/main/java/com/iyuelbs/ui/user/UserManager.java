@@ -41,7 +41,7 @@ public class UserManager extends BaseFragment implements View.OnClickListener {
         mNickName = (EditText) view.findViewById(R.id.nickname);
         mPhone = (EditText) view.findViewById(R.id.phone);
         mEmail = (EditText) view.findViewById(R.id.email);
-        mUsername = (EditText) view.findViewById(R.id.username);
+        mUsername = (EditText) view.findViewById(R.id.login_username);
         mSaveBtn = (Button) view.findViewById(R.id.save_btn);
 
         mSaveBtn.setOnClickListener(this);
