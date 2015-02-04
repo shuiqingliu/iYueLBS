@@ -1,7 +1,8 @@
 package com.iyuelbs.ui.login;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,14 +12,18 @@ import android.widget.EditText;
 
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
-import com.iyuelbs.app.Keys;
+import com.iyuelbs.entity.User;
+import com.iyuelbs.ui.main.MainActivity;
 import com.iyuelbs.utils.ViewUtils;
+
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by qingliu on 1/31/15.
  */
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
     private EditText mUserText, mPwdText;
+    private AlertDialog mDialog;
 
     public static LoginFragment newInstance(Bundle data) {
         LoginFragment fragment = new LoginFragment();
@@ -40,24 +45,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         return view;
     }
 
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.login_confirm_btn) {
-            if (checkField()) {
-                login();
-            }
-        } else if (id == R.id.login_register_btn) {
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-            Bundle data = new Bundle();
-            data.putInt(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_REGISTER);
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.replace(R.id.common_container, LoginFragment.newInstance(data));
-            transaction.addToBackStack(null);
-            transaction.commit();
-        }
-    }
-
     private boolean checkField() {
         if (TextUtils.isEmpty(mUserText.getText())) {
             mUserText.requestFocus();
@@ -72,7 +59,48 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         return true;
     }
 
-    private void login() {
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.login_confirm_btn) {
+            if (checkField()) {
+                login();
+            }
+        } else if (id == R.id.login_register_btn) {
+            Intent intent = new Intent(mContext, RegisterActivity.class);
+            startActivity(intent);
+        }
+    }
 
+    private void login() {
+        User user = new User();
+        user.setPassword(mPwdText.getText().toString());
+        user.multiLogin(mContext, mUserText.getText().toString(), new SaveListener() {
+            @Override
+            public void onSuccess() {
+                if (mDialog != null)
+                    mDialog.dismiss();
+                Intent intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onFailure(int i, String s) {
+                if (mDialog != null)
+                    mDialog.dismiss();
+                ViewUtils.showToast(mContext, s);
+            }
+        });
+        mDialog = ViewUtils.createLoadingDialog(mContext, getString(R.string.msg_login_in));
+        mDialog.show();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
     }
 }

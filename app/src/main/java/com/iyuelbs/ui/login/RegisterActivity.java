@@ -1,52 +1,25 @@
 package com.iyuelbs.ui.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
-import com.iyuelbs.app.AppHelper;
-import com.iyuelbs.ui.main.MainActivity;
 
-public class LoginActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (AppHelper.checkLogin()) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_common);
-
-        initFragments();
     }
 
-    @Override
-    protected void setupWindowStyle() {
-        super.setupWindowStyle();
-    }
-
-    @Override
-    protected void setupActionBar(int themeColor) {
-        AppHelper.setSystemBarSolidColor(this, getResources().getColor(R.color.login_background));
-    }
-
-    @Override
-    protected void initFragments() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.common_container, new LoginFragment())
-                .commit();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_common, menu);
+        getMenuInflater().inflate(R.menu.menu_register, menu);
         return true;
     }
 

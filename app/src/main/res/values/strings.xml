@@ -34,5 +34,9 @@
     <string name="hello_world">Hello world!</string>
 
     <string name="msg_please_input_account">请输入用户名/密码</string>
+    <string name="title_activity_register">RegisterActivity</string>
+
+    <string name="msg_loading">请稍后&#8230;</string>
+    <string name="msg_login_in">正在登录&#8230;</string>
 
 </resources>

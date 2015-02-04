@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.external.SystemBarTintManager;
@@ -22,13 +23,25 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setupWindowStyle(getResources().getColor(R.color.teal));
+        setupWindowStyle();
         super.onCreate(savedInstanceState);
-
+        setupActionBar(getResources().getColor(R.color.teal));
         mContext = this;
     }
 
-    protected void setupWindowStyle(int themeColor) {
+    /**
+     * Before super.onCreate().
+     */
+    protected void setupWindowStyle() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    }
+
+
+    /**
+     * config actionBar or systemBar style.
+     */
+    protected void setupActionBar(int themeColor) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

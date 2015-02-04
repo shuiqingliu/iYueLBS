@@ -1,15 +1,28 @@
 package com.iyuelbs.entity;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.iyuelbs.utils.Utils;
+import com.iyuelbs.utils.ViewUtils;
+
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobGeoPoint;
 import cn.bmob.v3.datatype.BmobRelation;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by Bob Peng on 2015/1/24.
  */
 public class User extends BmobUser {
 
-    public static final String USER_TABLE = "user";
+    public static final String TABLE_NAME = "user";
+    public static final String EMAIL = "email";
+    public static final String PHONE = "phoneNumber";
 
     private BmobRelation friends;
     private String phoneNumber;
@@ -82,5 +95,39 @@ public class User extends BmobUser {
 
     public void setIsMale(boolean male) {
         this.male = male;
+    }
+
+    /**
+     * helper method for user login with phone or email, don't forget set password before it.
+     */
+    public void multiLogin(final Context context, String key, final SaveListener listener) {
+        boolean isEmail = Utils.isEmailString(key);
+        if (isEmail || Utils.isPhoneString(key)) {
+            BmobQuery<User> query = new BmobQuery<>();
+            query.addWhereEqualTo(isEmail ? EMAIL : PHONE, key);
+            query.findObjects(context, new FindListener<User>() {
+                @Override
+                public void onSuccess(List<User> users) {
+                    if (users.size() > 0) {
+                        setUsername(users.get(0).getUsername());
+                        login(context, listener);
+                    }
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    if (listener == null) {
+                        ViewUtils.showToast(context, s);
+                    } else {
+                        Log.e("xifan", "query failed");
+                        listener.onFailure(i, s);
+                    }
+                }
+            });
+        } else {
+            Log.e("xifan", "normal");
+            setUsername(key);
+            login(context, listener);
+        }
     }
 }

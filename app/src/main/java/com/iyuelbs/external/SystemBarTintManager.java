@@ -89,8 +89,6 @@ public class SystemBarTintManager {
         Window win = activity.getWindow();
         ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
 
-        win.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
             int[] attrs = {android.R.attr.windowTranslucentStatus,

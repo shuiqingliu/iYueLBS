@@ -14,6 +14,9 @@ import java.util.TimeZone;
  * Created by Bob Peng on 2015/1/30.
  */
 public class Utils {
+    private static final String REGEX_PHONE = "^0?(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$";
+    private static final String REGEX_EMAIL = "^[a-zA-Z0-9_\\.]+@[a-zA-Z0-9-]+[\\.a-zA-Z]+$";
+
     public static long getTimestamp() {
         return Calendar.getInstance(TimeZone.getTimeZone("GMT")).getTimeInMillis() / 1000l;
     }
@@ -33,36 +36,12 @@ public class Utils {
 
         return bundle;
     }
-//
-//    public static Bundle parseUrl(String url) {
-//        try {
-//            URL u = new URL(url);
-//            Bundle b = decodeUrl(u.getQuery());
-//            b.putAll(decodeUrl(u.getRef()));
-//            return b;
-//        } catch (MalformedURLException e) {
-//            return new Bundle();
-//        }
-//    }
-//
-//    public static Bundle decodeUrl(String s) {
-//        Bundle params = new Bundle();
-//        if (TextUtils.isEmpty(s)) {
-//            return params;
-//        }
-//
-//        String array[] = s.split("&");
-//        for (String parameter : array) {
-//            if (TextUtils.isEmpty(parameter)) {
-//                continue;
-//            }
-//            String v[] = parameter.split("=");
-//            if (v.length < 2) {
-//                continue;
-//            }
-//            params.putString(URLDecoder.decode(v[0]), URLDecoder.decode(v[1]));
-//        }
-//
-//        return params;
-//    }
+
+    public static boolean isPhoneString(String str) {
+        return str.matches(REGEX_PHONE);
+    }
+
+    public static boolean isEmailString(String str) {
+        return str.matches(REGEX_EMAIL);
+    }
 }

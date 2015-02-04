@@ -30,8 +30,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_fake);
-
-        setupDrawer();
     }
 
     @Override
@@ -42,12 +40,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void setupDrawer() {
-        // actionBar trick
+    @Override
+    protected void setupActionBar(int themeColor) {
+        super.setupActionBar(themeColor);
         hackActionBar();
+
         // set drawer width
         findViewById(R.id.left_drawer).getLayoutParams().width = ViewUtils.getScreenWidth()
                 - ViewUtils.getPixels(56);
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.app_name, R.string.app_name);
         mDrawerToggle.syncState();
@@ -57,13 +58,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private void hackActionBar() {
         ViewGroup decor = (ViewGroup) getWindow().getDecorView();
         View actionBar = decor.getChildAt(0);
-        decor.removeView(actionBar);
 
         DrawerLayout drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_main, null);
         FrameLayout container = (FrameLayout) drawerLayout.findViewById(R.id.main_fake_content);
         container.setFitsSystemWindows(true);
         ((ViewGroup.MarginLayoutParams) drawerLayout.findViewById(R.id.main_content).getLayoutParams())
                 .topMargin = ViewUtils.getPixels(56); // content missing actionbar
+        decor.removeView(actionBar);
         container.addView(actionBar);
         decor.addView(drawerLayout);
 
