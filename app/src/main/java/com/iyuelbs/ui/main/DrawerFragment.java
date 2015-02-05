@@ -24,7 +24,9 @@ import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.external.RoundedImageView;
 import com.iyuelbs.utils.ViewUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
 
     private Context mContext;
     private ImageLoader mImageLoader;
+    private DisplayImageOptions mImageOptions;
 
     private List<MenuItem> mDrawerList;
     private MenuItem mDividerItem;
@@ -51,7 +54,6 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        mImageLoader = AppHelper.getImageLoader();
         setHasOptionsMenu(true);
     }
 
@@ -60,7 +62,6 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         super.onViewCreated(view, savedInstanceState);
 
         initDrawerItem();
-        attachListHeader();
         setupListView();
     }
 
@@ -85,6 +86,18 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 getString(R.string.action_settings)));
     }
 
+    private void setupListView() {
+        ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setDivider(new ColorDrawable(getResources().getColor(R.color.transparent)));
+        listView.setDividerHeight(0);
+        listView.setBackgroundColor(getResources().getColor(R.color.white));
+        listView.setCacheColorHint(Color.TRANSPARENT);
+
+        attachListHeader();
+        setListAdapter(mAdapter = new DrawerAdapter());
+    }
+
     private void attachListHeader() {
         View view = View.inflate(mContext, R.layout.view_drawer_header, null);
 
@@ -102,7 +115,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     private void initUserInfo() {
         if (AppHelper.checkLogin()) {
             User user = AppHelper.getCurrentUser();
-            mImageLoader.displayImage(user.getAvatarUrl(), mAvatarImage);
+            getImageLoader().displayImage(user.getAvatarUrl(), mAvatarImage, mImageOptions);
             mAvatarImage.setVisibility(View.VISIBLE);
             mUserNameText.setText(user.getNickName());
             mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());
@@ -111,17 +124,6 @@ public class DrawerFragment extends ListFragment implements DrawerController {
             mUserNameText.setText(R.string.title_not_login);
             mStatusText.setText(R.string.title_no_loc_status);
         }
-    }
-
-    private void setupListView() {
-        ListView listView = getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setDivider(new ColorDrawable(getResources().getColor(R.color.transparent)));
-        listView.setDividerHeight(0);
-        listView.setBackgroundColor(getResources().getColor(R.color.white));
-        listView.setCacheColorHint(Color.TRANSPARENT);
-
-        setListAdapter(mAdapter = new DrawerAdapter());
     }
 
     @Override
@@ -152,6 +154,14 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         if (mAdapter == null)
             mAdapter = new DrawerAdapter();
         return mAdapter;
+    }
+
+    private ImageLoader getImageLoader() {
+        if (mImageLoader == null) {
+            mImageLoader = AppHelper.getImageLoader();
+            mImageOptions = AppHelper.getDefaultOptsBuilder().displayer(new SimpleBitmapDisplayer()).build();
+        }
+        return mImageLoader;
     }
 
     @Override

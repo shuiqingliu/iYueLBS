@@ -25,8 +25,8 @@ public class BaseActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setupWindowStyle();
         super.onCreate(savedInstanceState);
-        setupActionBar(getResources().getColor(R.color.teal));
         mContext = this;
+        setupActionBar(getResources().getColor(R.color.teal));
     }
 
     /**
