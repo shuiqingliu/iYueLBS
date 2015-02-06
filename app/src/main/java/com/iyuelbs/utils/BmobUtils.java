@@ -20,6 +20,9 @@ public class BmobUtils {
                 break;
             case 203:
                 msg = "该邮箱已被注册，请重新输入";
+                break;
+            case 301:
+                msg = "请输入正确的电子邮箱";
         }
         ViewUtils.showToast(context, "code " + code + ": " + msg);
     }

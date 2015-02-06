@@ -88,7 +88,7 @@ public class ViewUtils {
         }
 
         return new MaterialDialog.Builder(context)
-                .customView(view)
+                .customView(view, false)
                 .cancelable(false)
                 .show();
     }

@@ -26,6 +26,9 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by Bob Peng on 2015/2/3.
  */
 public class RegAccountFragment extends BaseFragment {
+
+    private static final int MIN_PWD_LENGTH = 8;
+
     private MaterialEditText mUserNameText, mEmailText, mPasswordText, mConfirmPwdText;
     private MaterialDialog mDialog;
 
@@ -85,9 +88,19 @@ public class RegAccountFragment extends BaseFragment {
             mConfirmPwdText.setError(getString(R.string.msg_pwd_confirm_required));
             valid = false;
         }
-        if (valid && !mPasswordText.getText().toString().equals(mConfirmPwdText.getText().toString())) {
-            mConfirmPwdText.setError(getString(R.string.msg_pwd_confirm_failed));
-            valid = false;
+        if (valid) {
+            if (!Utils.isEmailString(mEmailText.getText().toString())) {
+                mEmailText.setError(getString(R.string.msg_email_invalid));
+                valid = false;
+            }
+            if (!mPasswordText.getText().toString().equals(mConfirmPwdText.getText().toString())) {
+                mConfirmPwdText.setError(getString(R.string.msg_pwd_confirm_failed));
+                valid = false;
+            }
+            if (mPasswordText.getText().length() < MIN_PWD_LENGTH) {
+                mPasswordText.setError(getString(R.string.msg_pwd_too_short));
+                valid = false;
+            }
         }
         return valid;
     }
