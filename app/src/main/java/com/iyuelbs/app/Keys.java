@@ -20,6 +20,11 @@ public class Keys {
      */
     public static final int OPEN_AVATAR = 0;
 
+    public static final String EXTRA_REGISTER_STEP = "regStep";
+    public static final int REG_STEP_USER_INTERFACE = 1;
+    public static final int REG_STEP_USER_BRIEF = 2;
+    public static final int REG_STEP_USER_CONFIG = 3;
+
     public static final int STYLE_COLOR_PRIMARY = 1;
     public static final int STYLE_COLOR_PRIMARY_DARK = 2;
     public static final int STYLE_COLOR_ACCENT = 3;

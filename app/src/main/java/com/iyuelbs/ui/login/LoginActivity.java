@@ -21,7 +21,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
+        setContentView(R.layout.common_activity);
 
         initFragments();
     }

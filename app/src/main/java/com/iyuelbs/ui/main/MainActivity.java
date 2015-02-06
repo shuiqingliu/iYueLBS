@@ -29,7 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_fake);
+        setContentView(R.layout.fake_main_acitivity);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ViewGroup decor = (ViewGroup) getWindow().getDecorView();
         View actionBar = decor.getChildAt(0);
 
-        DrawerLayout drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.activity_main, null);
+        DrawerLayout drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.main_activity, null);
         FrameLayout container = (FrameLayout) drawerLayout.findViewById(R.id.main_fake_content);
         container.setFitsSystemWindows(true);
         ((ViewGroup.MarginLayoutParams) drawerLayout.findViewById(R.id.main_content).getLayoutParams())

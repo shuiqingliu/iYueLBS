@@ -1,11 +1,14 @@
 package com.iyuelbs.utils;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.TimeZone;
@@ -43,5 +46,26 @@ public class Utils {
 
     public static boolean isEmailString(String str) {
         return str.matches(REGEX_EMAIL);
+    }
+
+    public static String md5(String input) {
+        if (!TextUtils.isEmpty(input)) {
+            MessageDigest messageDigest;
+            try {
+                messageDigest = MessageDigest.getInstance("MD5");
+                messageDigest.update(input.getBytes());
+                byte digestResult[] = messageDigest.digest();
+
+                StringBuffer sb = new StringBuffer();
+                for (byte digit : digestResult) {
+                    sb.append(Character.forDigit((digit & 240) >> 4, 16));
+                    sb.append(Character.forDigit(digit & 15, 16));
+                }
+                return sb.toString();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

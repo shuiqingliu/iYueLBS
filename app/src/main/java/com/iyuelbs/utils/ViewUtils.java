@@ -1,6 +1,5 @@
 package com.iyuelbs.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.SparseArray;
@@ -81,12 +80,16 @@ public class ViewUtils {
         showToast(context, context.getString(stringId));
     }
 
-    public static AlertDialog createLoadingDialog(Context context, String message) {
+    public static MaterialDialog createLoadingDialog(Context context, String message) {
         View view = View.inflate(context, R.layout.dialog_loading_view, null);
-        TextView msgText = (TextView) view.findViewById(R.id.dialog_loading_msg);
-        msgText.setText(message);
+        if (message != null) {
+            TextView msgText = (TextView) view.findViewById(R.id.dialog_loading_msg);
+            msgText.setText(message);
+        }
+
         return new MaterialDialog.Builder(context)
                 .customView(view)
+                .cancelable(false)
                 .show();
     }
 }

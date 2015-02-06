@@ -14,6 +14,7 @@ import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.ui.main.MainActivity;
+import com.iyuelbs.utils.BmobUtils;
 import com.iyuelbs.utils.ViewUtils;
 
 import cn.bmob.v3.listener.SaveListener;
@@ -24,12 +25,6 @@ import cn.bmob.v3.listener.SaveListener;
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
     private EditText mUserText, mPwdText;
     private AlertDialog mDialog;
-
-    public static LoginFragment newInstance(Bundle data) {
-        LoginFragment fragment = new LoginFragment();
-        fragment.setArguments(data);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +83,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             public void onFailure(int i, String s) {
                 if (mDialog != null)
                     mDialog.dismiss();
-                ViewUtils.showToast(mContext, s);
+                BmobUtils.onFailure(mContext, i, s);
             }
         });
         mDialog = ViewUtils.createLoadingDialog(mContext, getString(R.string.msg_login_in));

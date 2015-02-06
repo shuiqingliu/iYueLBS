@@ -1,40 +1,43 @@
 package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
+import com.iyuelbs.app.Keys;
 
 public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
+        setContentView(R.layout.common_activity);
+        initFragment();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void initFragment() {
+        Fragment fragment;
+        Bundle bundle = getIntent().getExtras();
+        int step = bundle == null ? 0 : bundle.getInt(Keys.EXTRA_REGISTER_STEP);
+        switch (step) {
+            case Keys.REG_STEP_USER_INTERFACE:
+                fragment = null;
+                break;
+            case Keys.REG_STEP_USER_BRIEF:
+                fragment = null;
+                break;
+            case Keys.REG_STEP_USER_CONFIG:
+                fragment = null;
+                break;
+            default:
+                fragment = new RegAccountFragment();
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.common_container,
+                    fragment).commit();
+        }
     }
 }

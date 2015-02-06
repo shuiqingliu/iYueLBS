@@ -1,7 +1,6 @@
 package com.iyuelbs.entity;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -119,13 +118,11 @@ public class User extends BmobUser {
                     if (listener == null) {
                         ViewUtils.showToast(context, s);
                     } else {
-                        Log.e("xifan", "query failed");
                         listener.onFailure(i, s);
                     }
                 }
             });
         } else {
-            Log.e("xifan", "normal");
             setUsername(key);
             login(context, listener);
         }

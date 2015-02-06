@@ -1,7 +1,7 @@
 package com.iyuelbs.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
@@ -15,28 +15,37 @@ public class CommonActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_common);
+        setContentView(R.layout.common_activity);
         initFragment();
     }
 
     private void initFragment() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
+            final Fragment fragment;
             int type = bundle.getInt(Keys.EXTRA_OPEN_TYPE);
-            if (type == Keys.OPEN_LOGIN) {
-//                transaction.replace(R.id.common_container, LoginFragment.getInstance(bundle));
-                transaction.replace(R.id.common_container, new LoginFragment());
-            } else if (type == Keys.OPEN_REGISTER) {
-                transaction.replace(R.id.common_container, LoginChooserFragment.getInstance(bundle));
-            } else if (type == Keys.OPEN_FILL_INFO) {
-                transaction.replace(R.id.common_container, new UserManager());
-            } else if (type == Keys.OPEN_AVATAR) {
-                transaction.replace(R.id.common_container, new AvatarFragment());
+            switch (type) {
+                case Keys.OPEN_LOGIN:
+                    fragment = new LoginFragment();
+                    break;
+                case Keys.OPEN_REGISTER:
+                    fragment = LoginChooserFragment.getInstance(bundle);
+                    break;
+                case Keys.OPEN_FILL_INFO:
+                    fragment = new UserManager();
+                    break;
+                case Keys.OPEN_AVATAR:
+                    fragment = new AvatarFragment();
+                    break;
+                default:
+                    fragment = null;
+                    break;
             }
 
-            transaction.commit();
+            if (fragment != null) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.common_container,
+                        fragment).commit();
+            }
         }
     }
 

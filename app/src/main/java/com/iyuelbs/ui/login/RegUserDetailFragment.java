@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import com.iyuelbs.BaseFragment;
 
 /**
- * Created by Bob Peng on 2015/2/3.
+ * Created by Bob Peng on 2015/2/6.
  */
-public class RegisterFragment extends BaseFragment {
+public class RegUserDetailFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

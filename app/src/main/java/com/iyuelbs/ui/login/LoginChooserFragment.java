@@ -13,6 +13,7 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.ui.CommonActivity;
 
+@Deprecated
 public class LoginChooserFragment extends BaseFragment implements View.OnClickListener {
 
     private boolean mIsLogin;
@@ -27,7 +28,7 @@ public class LoginChooserFragment extends BaseFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.login_chooser_fragment, container, false);
         mWeiboBtn = (Button) view.findViewById(R.id.login_weibo_auth_btn);
         mQQBtn = (Button) view.findViewById(R.id.login_qq_auth_btn);
         mDefaultBtn = (Button) view.findViewById(R.id.login_default_auth_btn);
