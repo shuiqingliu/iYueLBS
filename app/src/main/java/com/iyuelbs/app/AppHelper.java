@@ -75,12 +75,17 @@ public class AppHelper {
         return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 0, null);
     }
 
+    /**
+     * set status bar color, better use it in setupWindowStyle() method
+     */
     public static void setSystemBarSolidColor(Activity activity, int color) {
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(color);
-        } else if (Build.VERSION.SDK_INT == 19) {
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            Window window = activity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
             tintManager.setTintColor(color);

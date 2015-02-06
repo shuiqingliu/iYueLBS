@@ -28,11 +28,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void setupWindowStyle() {
-        super.setupWindowStyle();
-    }
-
-    @Override
-    protected void setupActionBar(int themeColor) {
         AppHelper.setSystemBarSolidColor(this, getResources().getColor(R.color.login_background));
     }
 

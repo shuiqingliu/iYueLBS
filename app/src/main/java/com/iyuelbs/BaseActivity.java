@@ -40,6 +40,7 @@ public class BaseActivity extends ActionBarActivity {
 
     /**
      * config actionBar or systemBar style.
+     * only effect if actionBar exists.
      */
     protected void setupActionBar(int themeColor) {
         ActionBar actionBar = getSupportActionBar();
