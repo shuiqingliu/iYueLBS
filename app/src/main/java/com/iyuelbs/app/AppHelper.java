@@ -40,6 +40,13 @@ public class AppHelper {
         return getApplication().isLogin();
     }
 
+    /**
+     * Update cached user.
+     */
+    public static void updateUser() {
+        getApplication().updateUser();
+    }
+
     public static ImageLoader getImageLoader() {
         return ImageLoader.getInstance();
     }

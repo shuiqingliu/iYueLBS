@@ -63,6 +63,10 @@ public class AppApplication extends Application {
         return mUser;
     }
 
+    public void updateUser() {
+        mUser = BmobUser.getCurrentUser(this, User.class);
+    }
+
     public String getCurUserName() {
         return isLogin() ? mUser.getUsername() : null;
     }

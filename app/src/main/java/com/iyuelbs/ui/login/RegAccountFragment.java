@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.utils.BmobUtils;
 import com.iyuelbs.utils.Utils;
@@ -113,8 +114,12 @@ public class RegAccountFragment extends BaseFragment {
             user.login(mContext, new SaveListener() {
 
                 public void onSuccess() {
-                    if (mDialog != null)
+                    if (mDialog != null) {
                         mDialog.dismiss();
+                    }
+
+                    AppHelper.updateUser();
+
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.common_container, new RegUserDetailFragment());
                     transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -122,16 +127,20 @@ public class RegAccountFragment extends BaseFragment {
                 }
 
                 public void onFailure(int i, String s) {
-                    if (mDialog != null)
+                    if (mDialog != null) {
                         mDialog.dismiss();
+                    }
+
                     BmobUtils.onFailure(mContext, i, s);
                 }
             });
         }
 
         public void onFailure(int i, String s) {
-            if (mDialog != null)
+            if (mDialog != null) {
                 mDialog.dismiss();
+            }
+
             BmobUtils.onFailure(mContext, i, s);
         }
     }

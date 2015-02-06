@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.ui.main.MainActivity;
 import com.iyuelbs.utils.BmobUtils;
@@ -74,6 +75,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             public void onSuccess() {
                 if (mDialog != null)
                     mDialog.dismiss();
+
+                AppHelper.updateUser();
                 Intent intent = new Intent(mContext, MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();
