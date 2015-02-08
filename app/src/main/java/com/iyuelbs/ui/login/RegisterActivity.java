@@ -2,6 +2,7 @@ package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
@@ -39,5 +40,11 @@ public class RegisterActivity extends BaseActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.common_container,
                     fragment).commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_register, menu);
+        return true;
     }
 }

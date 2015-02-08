@@ -64,7 +64,7 @@ public class BaseActivity extends ActionBarActivity {
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
         if (fragmentList != null && fragmentList.size() > 0) {
             for (Fragment fragment : fragmentList) {
-                if (fragment.isVisible())
+                if (fragment != null && fragment.isVisible())
                     fragment.onActivityResult(requestCode, resultCode, data);
             }
         }

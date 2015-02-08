@@ -3,8 +3,6 @@
 
     <string name="app_name">爱约</string>
     <string name="action_settings">设置</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_common">CommonActivity</string>
 
     <string name="title_username">用户名</string>
     <string name="title_password">密码</string>
@@ -16,28 +14,35 @@
     <string name="title_new_tag">新增标签</string>
     <string name="title_phone_number">手机号</string>
     <string name="title_nickname">昵称</string>
-    <string name="title_upload_avatar">上传头像</string>
+    <string name="title_set_avatar">设置头像</string>
     <string name="title_not_login">未登录</string>
     <string name="title_no_loc_status">暂无状态</string>
+    <string name="title_nick_name">昵称</string>
+    <string name="title_introduce">个性签名</string>
+    <string name="title_sex">性别</string>
+
+    <string name="helper_username">用于登陆爱聊的账号</string>
+    <string name="helper_email">常用的电子邮箱，用于密码找回或登陆账号</string>
+    <string name="helper_password">8&#8211;16位密码</string>
 
     <string name="title_drawer_index">首页</string>
     <string name="title_drawer_places">附近</string>
     <string name="title_drawer_restaurant">餐厅</string>
 
+    <string name="title_activity_register">注册账号</string>
+    <string name="title_user_detail">详细资料</string>
+
     <string name="btn_login">登录</string>
     <string name="btn_register">注册</string>
     <string name="btn_save">保存</string>
+    <string name="btn_next">下一步</string>
     <string name="weibo">微博登录</string>
     <string name="qq">QQ登录</string>
     <string name="default_login">直接登录</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="hello_world">Hello world!</string>
-
-    <string name="msg_please_input_account">请输入用户名/密码</string>
-    <string name="title_activity_register">注册账号</string>
 
     <string name="msg_loading">请稍候&#8230;</string>
     <string name="msg_login_in">正在登录&#8230;</string>
+    <string name="msg_please_input_account">请输入用户名/密码</string>
     <string name="msg_username_required">用户名不能为空</string>
     <string name="msg_email_required">邮箱不能为空</string>
     <string name="msg_email_invalid">请输入正确的电子邮箱</string>
@@ -45,7 +50,7 @@
     <string name="msg_pwd_too_short">密码不得少于8位</string>
     <string name="msg_pwd_confirm_required">确认密码不能为空</string>
     <string name="msg_pwd_confirm_failed">两次密码输入不一致</string>
-
-    <string name="btn_next">下一步</string>
+    <string name="msg_nickname_required">昵称不能为空</string>
+    <string name="msg_sex_required">告诉小爱，你是GG还是MM呢</string>
 
 </resources>

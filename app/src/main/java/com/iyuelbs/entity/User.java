@@ -28,6 +28,7 @@ public class User extends BmobUser {
     private String avatarUrl;
     private String nickName;
     private boolean male;
+    private String introduce;
     private String locStatus;
     private BmobGeoPoint geoLocation;
     private BmobRelation tags;
@@ -94,6 +95,14 @@ public class User extends BmobUser {
 
     public void setIsMale(boolean male) {
         this.male = male;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 
     /**

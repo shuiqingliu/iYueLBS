@@ -43,10 +43,7 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity
-            android:name=".ui.CommonActivity"
-            android:label="@string/title_activity_common">
-        </activity>
+        <activity android:name=".ui.CommonActivity"/>
 
         <activity
             android:name=".ui.login.RegisterActivity"

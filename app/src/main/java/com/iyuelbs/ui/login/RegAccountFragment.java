@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,12 +46,6 @@ public class RegAccountFragment extends BaseFragment {
         mConfirmPwdText = (MaterialEditText) view.findViewById(R.id.reg_account_pwd_confirm);
 
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_register, menu);
     }
 
     @Override

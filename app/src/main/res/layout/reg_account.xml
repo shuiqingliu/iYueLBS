@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/title_username"
         android:singleLine="true"
-        app:floatingLabel="highlight"/>
+        app:floatingLabel="highlight"
+        app:helperText="@string/helper_username"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_email"
@@ -22,7 +23,8 @@
         android:hint="@string/title_email"
         android:inputType="textEmailAddress"
         android:singleLine="true"
-        app:floatingLabel="highlight"/>
+        app:floatingLabel="highlight"
+        app:helperText="@string/helper_email"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_password"
@@ -32,7 +34,8 @@
         android:hint="@string/title_password"
         android:inputType="textPassword"
         android:singleLine="true"
-        app:floatingLabel="highlight"/>
+        app:floatingLabel="highlight"
+        app:helperText="@string/helper_password"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_pwd_confirm"

@@ -4,13 +4,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.iyuelbs.app.AppHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
@@ -67,5 +71,19 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    public static File generateTempFile(String prefix, String suffix) {
+        String filename = getRandomFilename(prefix, suffix);
+        File tmpFile = new File(AppHelper.getCacheDirPath(), filename);
+        if (tmpFile.exists()) {
+            tmpFile.delete();
+            tmpFile = new File(AppHelper.getCacheDirPath(), getRandomFilename(prefix, suffix));
+        }
+        return tmpFile;
+    }
+
+    private static String getRandomFilename(String prefix, String suffix) {
+        return prefix + new Random(Utils.getTimestamp()).nextInt(1000) + suffix;
     }
 }

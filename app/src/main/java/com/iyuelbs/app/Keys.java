@@ -30,4 +30,5 @@ public class Keys {
     public static final int STYLE_COLOR_ACCENT = 3;
 
     public static final String EXTRA_URL = "url";
+    public static final String FILE_TMP_AVATAR = "tmp_avatar";
 }
