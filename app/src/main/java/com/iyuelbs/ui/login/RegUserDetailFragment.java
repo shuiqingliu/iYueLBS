@@ -44,7 +44,6 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
 
     private RoundedImageView mAvatarView;
     private EditText mNickNameText;
-    private RelativeLayout mSexSelector;
     private TextView mSexText;
     private Spinner mSexSpinner;
     private MaterialEditText mIntroduceText;
@@ -60,22 +59,24 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reg_detail, container, false);
         mAvatarView = (RoundedImageView) view.findViewById(R.id.reg_detail_avatar_preview);
         mNickNameText = (EditText) view.findViewById(R.id.reg_detail_nickname);
         mIntroduceText = (MaterialEditText) view.findViewById(R.id.reg_detail_introduce);
-        mSexSelector = (RelativeLayout) view.findViewById(R.id.reg_detail_sex_layout);
         mSexText = (TextView) view.findViewById(R.id.reg_detail_sex_text);
         mSexSpinner = (Spinner) view.findViewById(R.id.reg_detail_sex_spinner);
+        RelativeLayout sexSelector = (RelativeLayout) view.findViewById(R.id.reg_detail_sex_layout);
         FrameLayout avatarLayout = (FrameLayout) view.findViewById(R.id.reg_detail_avatar_layout);
 
-        mSexSelector.setOnClickListener(this);
+        sexSelector.setOnClickListener(this);
         avatarLayout.setOnClickListener(this);
 
         mSexSpinner.setAdapter(new ArrayAdapter<>(mContext, R.layout.spinner_dropdown_item,
                 getResources().getStringArray(R.array.dropdown_sex)));
         mSexSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String sex = mSexSpinner.getAdapter().getItem(position).toString();
                 mSexText.setText(sex);
@@ -84,6 +85,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
         return view;
     }
 
@@ -93,27 +95,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
             if (checkField()) {
                 mDialog = ViewUtils.createLoadingDialog(mContext, null);
                 if (mAvatarUri != null) {
-                    BmobProFile.getInstance(mContext).upload(mAvatarUri, new UploadListener() {
-
-                        @Override
-                        public void onSuccess(String filename, String url) {
-                            mAvatarUri = AppHelper.signAvatar(mContext, filename, url);
-                            onFinishUpdateUserDetails();
-                        }
-
-                        @Override
-                        public void onProgress(int i) {
-                        }
-
-                        @Override
-                        public void onError(int i, String s) {
-                            if (mDialog != null) {
-                                mDialog.dismiss();
-                            }
-
-                            BmobUtils.onFailure(mContext, i, s);
-                        }
-                    });
+                    BmobProFile.getInstance(mContext).upload(mAvatarUri, new AvatarUploadListener());
                 } else {
                     onFinishUpdateUserDetails();
                 }
@@ -129,10 +111,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
             if (requestCode == Crop.REQUEST_PICK) {
                 File tmpFile = Utils.generateTempFile(Keys.FILE_TMP_AVATAR, ".jpg");
                 mAvatarUri = tmpFile.getPath();
-                new Crop(data.getData())
-                        .asSquare()
-                        .withMaxSize(300, 300)
-                        .output(Uri.fromFile(tmpFile))
+                new Crop(data.getData()).asSquare().withMaxSize(300, 300).output(Uri.fromFile(tmpFile))
                         .start(getActivity());
             } else if (requestCode == Crop.REQUEST_CROP) {
                 mAvatarView.setImageURI(Crop.getOutput(data));
@@ -157,10 +136,6 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
         boolean valid = true;
         if (TextUtils.isEmpty(mNickNameText.getText())) {
             ViewUtils.showToast(mContext, R.string.msg_nickname_required);
-            valid = false;
-        }
-        if (TextUtils.isEmpty(mSexText.getText())) {
-            ViewUtils.showToast(mContext, R.string.msg_sex_required);
             valid = false;
         }
         return valid;
@@ -198,5 +173,27 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
                 BmobUtils.onFailure(mContext, i, s);
             }
         });
+    }
+
+    private class AvatarUploadListener implements UploadListener {
+
+        @Override
+        public void onSuccess(String filename, String url) {
+            mAvatarUri = AppHelper.signAvatar(mContext, filename, url);
+            onFinishUpdateUserDetails();
+        }
+
+        @Override
+        public void onProgress(int i) {
+        }
+
+        @Override
+        public void onError(int i, String s) {
+            if (mDialog != null) {
+                mDialog.dismiss();
+            }
+
+            BmobUtils.onFailure(mContext, i, s);
+        }
     }
 }
