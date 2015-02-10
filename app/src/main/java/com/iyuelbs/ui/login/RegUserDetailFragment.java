@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bmob.BmobProFile;
@@ -41,6 +44,8 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
 
     private RoundedImageView mAvatarView;
     private EditText mNickNameText;
+    private RelativeLayout mSexSelector;
+    private TextView mSexText;
     private Spinner mSexSpinner;
     private MaterialEditText mIntroduceText;
     private MaterialDialog mDialog;
@@ -59,13 +64,26 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
         View view = inflater.inflate(R.layout.reg_detail, container, false);
         mAvatarView = (RoundedImageView) view.findViewById(R.id.reg_detail_avatar_preview);
         mNickNameText = (EditText) view.findViewById(R.id.reg_detail_nickname);
-        mSexSpinner = (Spinner) view.findViewById(R.id.reg_detail_sex_spinner);
         mIntroduceText = (MaterialEditText) view.findViewById(R.id.reg_detail_introduce);
+        mSexSelector = (RelativeLayout) view.findViewById(R.id.reg_detail_sex_layout);
+        mSexText = (TextView) view.findViewById(R.id.reg_detail_sex_text);
+        mSexSpinner = (Spinner) view.findViewById(R.id.reg_detail_sex_spinner);
         FrameLayout avatarLayout = (FrameLayout) view.findViewById(R.id.reg_detail_avatar_layout);
 
+        mSexSelector.setOnClickListener(this);
         avatarLayout.setOnClickListener(this);
-        mSexSpinner.setAdapter(new ArrayAdapter<>(mContext, android.support.v7.appcompat.R.layout
-                .support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.dropdown_sex)));
+
+        mSexSpinner.setAdapter(new ArrayAdapter<>(mContext, R.layout.spinner_dropdown_item,
+                getResources().getStringArray(R.array.dropdown_sex)));
+        mSexSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String sex = mSexSpinner.getAdapter().getItem(position).toString();
+                mSexText.setText(sex);
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         return view;
     }
 
@@ -130,6 +148,8 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     public void onClick(View v) {
         if (v.getId() == R.id.reg_detail_avatar_layout) {
             Crop.pickImage(getActivity());
+        } else if (v.getId() == R.id.reg_detail_sex_layout) {
+            mSexSpinner.performClick();
         }
     }
 
@@ -139,7 +159,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
             ViewUtils.showToast(mContext, R.string.msg_nickname_required);
             valid = false;
         }
-        if (mSexSpinner.getSelectedItemPosition() < 1) {
+        if (TextUtils.isEmpty(mSexText.getText())) {
             ViewUtils.showToast(mContext, R.string.msg_sex_required);
             valid = false;
         }
@@ -147,10 +167,11 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     }
 
     private void onFinishUpdateUserDetails() {
+        // TODO 修复用户信息不更新的问题
         User user = AppHelper.getCurrentUser();
         user.setAvatarUrl(mAvatarUri);
         user.setNickName(mNickNameText.getText().toString());
-        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 1);
+        user.setIsMale(mSexText.getText().equals("男"));
         user.setIntroduce(mIntroduceText.getText().toString());
 
         user.update(mContext, user.getObjectId(), new UpdateListener() {

@@ -52,12 +52,13 @@ public class RegAccountFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
             if (checkField()) {
+                mDialog = ViewUtils.createLoadingDialog(mContext, null);
+
                 User user = new User();
                 user.setUsername(mUserNameText.getText().toString());
                 user.setEmail(mEmailText.getText().toString());
                 user.setPassword(Utils.md5(mPasswordText.getText().toString()));
                 user.signUp(mContext, new SignUpListener());
-                mDialog = ViewUtils.createLoadingDialog(mContext, null);
             }
         }
         return super.onOptionsItemSelected(item);
