@@ -1,6 +1,7 @@
 package com.iyuelbs.entity;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -26,6 +27,7 @@ public class User extends BmobUser {
     private BmobRelation friends;
     private String phoneNumber;
     private String avatarUrl;
+    private String bannerUrl;
     private String nickName;
     private boolean male;
     private String introduce;
@@ -59,6 +61,14 @@ public class User extends BmobUser {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
     }
 
     public String getNickName() {
@@ -113,6 +123,10 @@ public class User extends BmobUser {
      * helper method for user login with phone or email, don't forget set password before it.
      */
     public void multiLogin(final Context context, String key, final SaveListener listener) {
+        if (TextUtils.isEmpty(getPassword())) {
+            throw new NullPointerException("Password cannot be NULL!");
+        }
+
         boolean isEmail = Utils.isEmailString(key);
         if (isEmail || Utils.isPhoneString(key)) {
             BmobQuery<User> query = new BmobQuery<>();
