@@ -16,7 +16,6 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.ui.main.MainActivity;
 import com.iyuelbs.utils.BmobUtils;
-import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 
 import cn.bmob.v3.listener.SaveListener;
@@ -70,14 +69,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
     private void login() {
         User user = new User();
-        user.setPassword(Utils.md5(mPwdText.getText().toString()));
+        user.setPassword(mPwdText.getText().toString());
         user.multiLogin(mContext, mUserText.getText().toString(), new SaveListener() {
             @Override
             public void onSuccess() {
                 if (mDialog != null)
                     mDialog.dismiss();
 
-                AppHelper.updateUser();
+                AppHelper.getUpdatedUser();
                 Intent intent = new Intent(mContext, MainActivity.class);
                 startActivity(intent);
                 getActivity().finish();

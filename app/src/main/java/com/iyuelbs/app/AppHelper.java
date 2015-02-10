@@ -43,8 +43,8 @@ public class AppHelper {
     /**
      * Update cached user.
      */
-    public static void updateUser() {
-        getApplication().updateUser();
+    public static User getUpdatedUser() {
+        return getApplication().updateReferUser();
     }
 
     public static ImageLoader getImageLoader() {
@@ -62,8 +62,8 @@ public class AppHelper {
                 .displayer(new FadeInBitmapDisplayer(600))
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .showImageOnLoading(R.color.hint_dark)
-                .showImageForEmptyUri(R.color.hint_dark)
-                .showImageOnFail(R.color.hint_dark);
+                .showImageForEmptyUri(R.drawable.ic_default_avatar)
+                .showImageOnFail(R.drawable.ic_default_avatar);
     }
 
     public static String getCacheDirPath() {

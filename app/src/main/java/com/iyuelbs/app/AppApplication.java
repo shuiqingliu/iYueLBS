@@ -63,8 +63,9 @@ public class AppApplication extends Application {
         return mUser;
     }
 
-    public void updateUser() {
-        mUser = BmobUser.getCurrentUser(this, User.class);
+    public User updateReferUser() {
+        mUser = null;
+        return getCurrentUser();
     }
 
     public String getCurUserName() {

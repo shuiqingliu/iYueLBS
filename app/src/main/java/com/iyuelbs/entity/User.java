@@ -33,6 +33,10 @@ public class User extends BmobUser {
     private BmobGeoPoint geoLocation;
     private BmobRelation tags;
 
+    public void setPassword(String pwd) {
+        super.setPassword(Utils.md5(pwd));
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }

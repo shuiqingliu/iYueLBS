@@ -21,6 +21,7 @@
     <string name="title_introduce">个性签名</string>
     <string name="title_sex">性别</string>
     <string name="title_register_detail">注册成功，欢迎来到爱约！现在请完善您的个人资料</string>
+    <string name="title_quick_settings">我们需要获取您的地理位置信息，但一切都由你决定 :)</string>
 
     <string name="helper_username">用于登陆爱聊的账号</string>
     <string name="helper_email">常用的电子邮箱，用于密码找回或登陆账号</string>
@@ -30,7 +31,7 @@
     <string name="title_drawer_places">附近</string>
     <string name="title_drawer_restaurant">餐厅</string>
 
-    <string name="title_activity_register">注册账号</string>
+    <string name="title_activity_register">加入爱约</string>
     <string name="title_user_detail">个人资料</string>
 
     <string name="btn_login">登录</string>
@@ -52,6 +53,10 @@
     <string name="msg_pwd_confirm_required">确认密码不能为空</string>
     <string name="msg_pwd_confirm_failed">两次密码输入不一致</string>
     <string name="msg_nickname_required">昵称不能为空</string>
-    <string name="msg_sex_required">告诉小爱，你是GG还是MM呢</string>
+
+    <string name="pref_show_location_status_title">告诉好友你的位置状态</string>
+    <string name="pref_show_location_status_summary">我们会根据您设置的位置与手机的状态来判断您当前的状态并显示给您的好友，以方便随时约你</string>
+    <string name="pref_show_status_to_all_title">向所有人显示位置状态</string>
+    <string name="pref_show_status_to_all_summary">向所有人包括陌生人显示位置状态</string>
 
 </resources>

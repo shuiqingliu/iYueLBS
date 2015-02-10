@@ -1,7 +1,7 @@
 package com.iyuelbs.app;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 /**
  * Created by Bob Peng on 2015/1/20.
@@ -20,7 +20,7 @@ public class AppConfig {
     private static final String PREF_NAME = "preferences";
 
     public static SharedPreferences getPref() {
-        return AppHelper.getAppContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return PreferenceManager.getDefaultSharedPreferences(AppHelper.getAppContext());
     }
 
     public static SharedPreferences.Editor getEditor() {

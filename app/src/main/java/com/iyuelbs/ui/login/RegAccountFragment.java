@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
-import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.utils.BmobUtils;
 import com.iyuelbs.utils.Utils;
@@ -57,7 +56,7 @@ public class RegAccountFragment extends BaseFragment {
                 User user = new User();
                 user.setUsername(mUserNameText.getText().toString());
                 user.setEmail(mEmailText.getText().toString());
-                user.setPassword(Utils.md5(mPasswordText.getText().toString()));
+                user.setPassword(mPasswordText.getText().toString());
                 user.signUp(mContext, new SignUpListener());
             }
         }
@@ -103,15 +102,13 @@ public class RegAccountFragment extends BaseFragment {
         public void onSuccess() {
             User user = new User();
             user.setUsername(mUserNameText.getText().toString());
-            user.setPassword(Utils.md5(mPasswordText.getText().toString()));
+            user.setPassword(mPasswordText.getText().toString());
             user.login(mContext, new SaveListener() {
 
                 public void onSuccess() {
                     if (mDialog != null) {
                         mDialog.dismiss();
                     }
-
-                    AppHelper.updateUser();
 
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.common_container, new RegUserDetailFragment());

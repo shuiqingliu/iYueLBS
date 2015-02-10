@@ -15,6 +15,7 @@ public class Keys {
     public static final int OPEN_FILL_INFO = 4;
     public static final int OPEN_WEIBO_AUTH = 5;
     public static final int OPEN_QQ_AUTH = 6;
+    public static final int OPEN_QUICK_SETTINGS = 7;
     /**
      * temp
      */

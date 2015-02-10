@@ -26,7 +26,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.external.RoundedImageView;
-import com.iyuelbs.ui.main.MainActivity;
+import com.iyuelbs.ui.settings.SettingsActivity;
 import com.iyuelbs.utils.BmobUtils;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -143,23 +143,24 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
 
     private void onFinishUpdateUserDetails() {
         // TODO 修复用户信息不更新的问题
-        User user = AppHelper.getCurrentUser();
+        User user = new User();
         user.setAvatarUrl(mAvatarUri);
         user.setNickName(mNickNameText.getText().toString());
         user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
         user.setIntroduce(mIntroduceText.getText().toString());
 
-        user.update(mContext, user.getObjectId(), new UpdateListener() {
+        user.update(mContext, AppHelper.getUpdatedUser().getObjectId(), new UpdateListener() {
             @Override
             public void onSuccess() {
                 if (mDialog != null) {
                     mDialog.dismiss();
                 }
 
-                AppHelper.updateUser();
+                AppHelper.getUpdatedUser(); // force to refresh user cache
 
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, SettingsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
                 startActivity(intent);
                 getActivity().finish();
             }
