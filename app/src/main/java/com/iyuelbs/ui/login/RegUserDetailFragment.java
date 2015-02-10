@@ -146,7 +146,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
         User user = AppHelper.getCurrentUser();
         user.setAvatarUrl(mAvatarUri);
         user.setNickName(mNickNameText.getText().toString());
-        user.setIsMale(mSexText.getText().equals("男"));
+        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
         user.setIntroduce(mIntroduceText.getText().toString());
 
         user.update(mContext, user.getObjectId(), new UpdateListener() {
