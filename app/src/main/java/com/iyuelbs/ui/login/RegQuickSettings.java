@@ -65,6 +65,7 @@ public class RegQuickSettings extends PreferenceFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
             Intent intent = new Intent(mContext, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             getActivity().finish();
             return true;
