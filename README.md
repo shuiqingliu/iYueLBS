@@ -21,13 +21,14 @@
 >     约人可以去的用餐地点推荐
 
 ##依赖开源项目
->support-v7
->SystemBarTintManager (https://github.com/jgilfelt/SystemBarTint)
->RoundedImageView (https://github.com/vinc3m1/RoundedImageView)
->EventBus (https://github.com/greenrobot/EventBus)
->android-crop (https://github.com/jdamcd/android-crop)
->material-dialogs (https://github.com/afollestad/material-dialogs)
->MaterialEditText (https://github.com/rengwuxian/MaterialEditText)
+
+>       support-v7
+>       SystemBarTintManager (https://github.com/jgilfelt/SystemBarTint)
+>       RoundedImageView (https://github.com/vinc3m1/RoundedImageView)
+>       EventBus (https://github.com/greenrobot/EventBus)
+>       android-crop (https://github.com/jdamcd/android-crop)
+>       material-dialogs (https://github.com/afollestad/material-dialogs)
+>       MaterialEditText (https://github.com/rengwuxian/MaterialEditText)
 
 ##其他依赖支持
 >AVOSCloud (https://leancloud.cn/)
