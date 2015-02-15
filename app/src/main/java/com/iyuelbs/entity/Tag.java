@@ -1,67 +1,64 @@
 package com.iyuelbs.entity;
 
-import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobDate;
+import com.avos.avoscloud.AVClassName;
+import com.avos.avoscloud.AVObject;
+
+import java.util.Date;
 
 /**
  * Created by Bob Peng on 2015/1/24.
  */
-public class Tag extends BmobObject {
+@AVClassName("Tag")
+public class Tag extends AVObject {
 
-    public static final String PLACE_TABLE = "place";
-
-    private String title;
-    private String message;
-    private int tagType;
-    private BmobDate appointTime;
-    private Places place;
-    private User user;
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_DETAIL = "detail";
+    public static final String KEY_APPOINT_TIME = "appotointTime";
+    public static final String KEY_PLACE = "place";
+    public static final String KEY_USER = "user";
 
     public String getTitle() {
-        return title;
+        return getString(KEY_TITLE);
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        put(KEY_TITLE, title);
     }
 
-    public String getMessage() {
-        return message;
+    public String getDetail() {
+        return getString(KEY_DETAIL);
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDetail(String detail) {
+        put(KEY_DETAIL, detail);
     }
 
-    public BmobDate getAppointTime() {
-        return appointTime;
+    public Date getAppointTime() {
+        return getDate(KEY_APPOINT_TIME);
     }
 
-    public void setAppointTime(BmobDate appointTime) {
-        this.appointTime = appointTime;
+    public void setAppointTime(Date appointTime) {
+        put(KEY_APPOINT_TIME, appointTime);
     }
 
-    public Places getPlace() {
-        return place;
+    public Place getPlace() {
+        try {
+            return getAVObject(KEY_PLACE, Place.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public void setPlace(Places place) {
-        this.place = place;
+    public void setPlace(Place place) {
+        put(KEY_PLACE, place);
     }
 
-    public int getTagType() {
-        return tagType;
+    public User getUser() {
+        return getAVUser(KEY_USER, User.class);
     }
 
-    public void setTagType(int tagType) {
-        this.tagType = tagType;
-    }
-
-    public User getUserInfo() {
-        return user;
-    }
-
-    public void setUserInfo(User user) {
-        this.user = user;
+    public void setUser(User user) {
+        put(KEY_USER, user);
     }
 }

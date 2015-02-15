@@ -2,11 +2,15 @@ package com.iyuelbs.utils;
 
 import android.content.Context;
 
+import com.avos.avoscloud.AVException;
+
 /**
  * Created by Bob Peng on 2015/2/6.
  */
-public class BmobUtils {
-    public static void onFailure(Context context, int code, String msg) {
+public class AVUtils {
+    public static void onFailure(Context context, AVException exception) {
+        String msg = exception.getMessage();
+        int code = exception.getCode();
         switch (code) {
             case 101:
                 msg = "用户名或密码错误，请重试";

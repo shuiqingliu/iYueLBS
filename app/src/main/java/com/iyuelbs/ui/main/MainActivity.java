@@ -27,12 +27,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fake_main_acitivity);
-    }
-
-    @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         if (fragment instanceof DrawerFragment) {
@@ -53,6 +47,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 R.string.app_name, R.string.app_name);
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    @Override
+    protected void initView() {
+        setContentView(R.layout.fake_main_acitivity);
+    }
+
+    @Override
+    protected void initFragments(Bundle data) {
     }
 
     private void hackActionBar() {

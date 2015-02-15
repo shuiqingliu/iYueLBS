@@ -1,157 +1,102 @@
 package com.iyuelbs.entity;
 
-import android.content.Context;
-import android.text.TextUtils;
-
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
-
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobGeoPoint;
-import cn.bmob.v3.datatype.BmobRelation;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by Bob Peng on 2015/1/24.
  */
-public class User extends BmobUser {
+public class User extends AVUser {
 
-    public static final String TABLE_NAME = "user";
-    public static final String EMAIL = "email";
-    public static final String PHONE = "phoneNumber";
+    public static final String KEY_NICKNAME = "nickName";
+    public static final String KEY_MALE = "male";
+    public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_BANNER_URL = "bannerUrl";
+    public static final String KEY_SIGNATURE = "signature";
+    public static final String KEY_LOC_STATUS = "locStatus";
+    public static final String KEY_GEO_LOCATION = "geoLocation";
+    public static final String KEY_TAGS = "tags";
 
-    private BmobRelation friends;
-    private String phoneNumber;
-    private String avatarUrl;
-    private String bannerUrl;
-    private String nickName;
-    private boolean male;
-    private String introduce;
-    private String locStatus;
-    private BmobGeoPoint geoLocation;
-    private BmobRelation tags;
-
-    public void setPassword(String pwd) {
-        super.setPassword(Utils.md5(pwd));
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public BmobRelation getFriends() {
-        return friends;
-    }
-
-    public void setFriends(BmobRelation friends) {
-        this.friends = friends;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getBannerUrl() {
-        return bannerUrl;
-    }
-
-    public void setBannerUrl(String bannerUrl) {
-        this.bannerUrl = bannerUrl;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getLocStatus() {
-        return locStatus;
-    }
-
-    public void setLocStatus(String locStatus) {
-        this.locStatus = locStatus;
-    }
-
-    public BmobGeoPoint getGeoLocation() {
-        return geoLocation;
-    }
-
-    public void setGeoLocation(BmobGeoPoint geoLocation) {
-        this.geoLocation = geoLocation;
-    }
-
-    public BmobRelation getTags() {
-        return tags;
-    }
-
-    public void setTags(BmobRelation tags) {
-        this.tags = tags;
-    }
-
-    public boolean isMale() {
-        return male;
-    }
-
-    public void setIsMale(boolean male) {
-        this.male = male;
-    }
-
-    public String getIntroduce() {
-        return introduce;
-    }
-
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
-    }
+//    public void setPassword(String pwd) {
+//        super.setPassword(Utils.md5(pwd));
+//    }
 
     /**
      * helper method for user login with phone or email, don't forget set password before it.
      */
-    public void multiLogin(final Context context, String key, final SaveListener listener) {
-        if (TextUtils.isEmpty(getPassword())) {
-            throw new NullPointerException("Password cannot be NULL!");
-        }
-
-        boolean isEmail = Utils.isEmailString(key);
-        if (isEmail || Utils.isPhoneString(key)) {
-            BmobQuery<User> query = new BmobQuery<>();
-            query.addWhereEqualTo(isEmail ? EMAIL : PHONE, key);
-            query.findObjects(context, new FindListener<User>() {
-                @Override
-                public void onSuccess(List<User> users) {
-                    if (users.size() > 0) {
-                        setUsername(users.get(0).getUsername());
-                        login(context, listener);
-                    }
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    if (listener == null) {
-                        ViewUtils.showToast(context, s);
-                    } else {
-                        listener.onFailure(i, s);
-                    }
-                }
-            });
+    public static void multiLogin(String key, String password, final LogInCallback<User> listener) {
+        boolean isPhone = Utils.isPhoneString(key);
+        if (isPhone) {
+            User.loginByMobilePhoneNumberInBackground(key, password, listener, User.class);
         } else {
-            setUsername(key);
-            login(context, listener);
+            User.logInInBackground(key, password, listener, User.class);
         }
+    }
+
+    public String getNickName() {
+        return getString(KEY_NICKNAME);
+    }
+
+    public void setNickName(String nickName) {
+        put(KEY_NICKNAME, nickName);
+    }
+
+    public boolean isMale() {
+        return getBoolean(KEY_MALE);
+    }
+
+    public void setIsMale(boolean male) {
+        put(KEY_MALE, male);
+    }
+
+    public AVFile getAvatar() {
+        return getAVFile(KEY_AVATAR);
+    }
+
+    public void setAvatar(AVFile avatar) {
+        put(KEY_AVATAR, avatar);
+    }
+
+    public String getBanner() {
+        return getString(KEY_BANNER_URL);
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        put(KEY_BANNER_URL, bannerUrl);
+    }
+
+    public String getSignature() {
+        return getString(KEY_SIGNATURE);
+    }
+
+    public void setSignature(String signature) {
+        put(KEY_SIGNATURE, signature);
+    }
+
+    public String getLocStatus() {
+        return getString(KEY_LOC_STATUS);
+    }
+
+    public void setLocStatus(String locStatus) {
+        put(KEY_LOC_STATUS, locStatus);
+    }
+
+    public AVGeoPoint getGeoLocation() {
+        return getAVGeoPoint(KEY_GEO_LOCATION);
+    }
+
+//    public AVRelation<Tag> getTags() {
+//        return getRelation(KEY_TAGS);
+//    }
+//
+//    public void setTags(Tag tags) {
+//        put(KEY_TAGS, tags);
+//    }
+
+    public void setGeoLocation(AVGeoPoint geoLocation) {
+        put(KEY_GEO_LOCATION, geoLocation);
     }
 }

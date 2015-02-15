@@ -22,4 +22,7 @@
     <color name="login_background">#ff323642</color>
     <color name="editbox_background">#ff464854</color>
     <color name="editor_text">#ff767a83</color>
+
+    <color name="ripple_light">#40ffffff</color>
+    <color name="ripple_dark">#40000000</color>
 </resources>

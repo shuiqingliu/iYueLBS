@@ -2,15 +2,15 @@ package com.iyuelbs.app;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
+import com.iyuelbs.entity.Banner;
+import com.iyuelbs.entity.Place;
+import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
-import cn.bmob.push.BmobPush;
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobInstallation;
-import cn.bmob.v3.BmobUser;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -30,7 +30,7 @@ public class AppApplication extends Application {
         mAppApplication = this;
 
         // 初始化
-        initBmobSdk();
+        initSdk();
         initImageLoader();
     }
 
@@ -44,22 +44,16 @@ public class AppApplication extends Application {
         ImageLoader.getInstance().init(config);
     }
 
-    private void initBmobSdk() {
-        Bmob.initialize(this, AppConfig.BMOB_APP_KEY);
-        BmobInstallation.getCurrentInstallation(this).save();
-
-        // 开启推送消息
-        if (AppConfig.getBoolean(AppConfig.KEY_BMOB_PUSH_ENABLED, true)) {
-            BmobPush.startWork(this, AppConfig.BMOB_APP_KEY);
-        }
-
-        // 初始化用户信息
-        mUser = BmobUser.getCurrentUser(this, User.class);
+    private void initSdk() {
+        AVObject.registerSubclass(Tag.class);
+        AVObject.registerSubclass(Place.class);
+        AVObject.registerSubclass(Banner.class);
+        AVOSCloud.initialize(this, AppConfig.AVOS_APP_ID, AppConfig.AVOS_APP_KEY);
     }
 
     public User getCurrentUser() {
         if (mUser == null)
-            mUser = BmobUser.getCurrentUser(this, User.class);
+            mUser = User.getCurrentUser(User.class);
         return mUser;
     }
 

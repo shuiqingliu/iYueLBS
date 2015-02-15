@@ -18,24 +18,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bmob.BmobProFile;
-import com.bmob.btp.callback.UploadListener;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
-import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
-import com.iyuelbs.entity.User;
 import com.iyuelbs.external.RoundedImageView;
-import com.iyuelbs.ui.settings.SettingsActivity;
-import com.iyuelbs.utils.BmobUtils;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
-
-import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by Bob Peng on 2015/2/6.
@@ -95,7 +87,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
             if (checkField()) {
                 mDialog = ViewUtils.createLoadingDialog(mContext, null);
                 if (mAvatarUri != null) {
-                    BmobProFile.getInstance(mContext).upload(mAvatarUri, new AvatarUploadListener());
+//                    BmobProFile.getInstance(mContext).upload(mAvatarUri, new AvatarUploadListener());
                 } else {
                     onFinishUpdateUserDetails();
                 }
@@ -143,58 +135,58 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
 
     private void onFinishUpdateUserDetails() {
         // TODO 修复用户信息不更新的问题
-        User user = new User();
-        user.setAvatarUrl(mAvatarUri);
-        user.setNickName(mNickNameText.getText().toString());
-        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
-        user.setIntroduce(mIntroduceText.getText().toString());
-
-        user.update(mContext, AppHelper.getUpdatedUser().getObjectId(), new UpdateListener() {
-            @Override
-            public void onSuccess() {
-                if (mDialog != null) {
-                    mDialog.dismiss();
-                }
-
-                AppHelper.getUpdatedUser(); // force to refresh user cache
-
-                Intent intent = new Intent(mContext, SettingsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
-                startActivity(intent);
-                getActivity().finish();
-            }
-
-            @Override
-            public void onFailure(int i, String s) {
-                if (mDialog != null) {
-                    mDialog.dismiss();
-                }
-
-                BmobUtils.onFailure(mContext, i, s);
-            }
-        });
+//        User user = new User();
+//        user.setAvatarUrl(mAvatarUri);
+//        user.setNickName(mNickNameText.getText().toString());
+//        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
+//        user.setIntroduce(mIntroduceText.getText().toString());
+//
+//        user.update(mContext, AppHelper.getUpdatedUser().getObjectId(), new UpdateListener() {
+//            @Override
+//            public void onSuccess() {
+//                if (mDialog != null) {
+//                    mDialog.dismiss();
+//                }
+//
+//                AppHelper.getUpdatedUser(); // force to refresh user cache
+//
+//                Intent intent = new Intent(mContext, SettingsActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
+//                startActivity(intent);
+//                getActivity().finish();
+//            }
+//
+//            @Override
+//            public void onFailure(int i, String s) {
+//                if (mDialog != null) {
+//                    mDialog.dismiss();
+//                }
+//
+//                AVUtils.onFailure(mContext, e);
+//            }
+//        });
     }
 
-    private class AvatarUploadListener implements UploadListener {
-
-        @Override
-        public void onSuccess(String filename, String url) {
-            mAvatarUri = AppHelper.signAvatar(mContext, filename, url);
-            onFinishUpdateUserDetails();
-        }
-
-        @Override
-        public void onProgress(int i) {
-        }
-
-        @Override
-        public void onError(int i, String s) {
-            if (mDialog != null) {
-                mDialog.dismiss();
-            }
-
-            BmobUtils.onFailure(mContext, i, s);
-        }
-    }
+//    private class AvatarUploadListener implements UploadListener {
+//
+//        @Override
+//        public void onSuccess(String filename, String url) {
+//            mAvatarUri = AppHelper.signAvatar(mContext, filename, url);
+//            onFinishUpdateUserDetails();
+//        }
+//
+//        @Override
+//        public void onProgress(int i) {
+//        }
+//
+//        @Override
+//        public void onError(int i, String s) {
+//            if (mDialog != null) {
+//                mDialog.dismiss();
+//            }
+//
+//            AVUtils.onFailure(mContext, , i);
+//        }
+//    }
 }

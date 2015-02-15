@@ -14,15 +14,13 @@ import com.iyuelbs.ui.login.RegQuickSettings;
 public class SettingsActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView() {
         setContentView(R.layout.common_activity);
-        initFragments();
     }
 
     @Override
-    protected void initFragments() {
-        boolean quickSettings = getIntent().getIntExtra(Keys.EXTRA_OPEN_TYPE, 0) > 0;
+    protected void initFragments(Bundle data) {
+        boolean quickSettings = data.getInt(Keys.EXTRA_OPEN_TYPE, 0) > 0;
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.common_container, quickSettings ? new RegQuickSettings() : new
                 SettingsFragment());

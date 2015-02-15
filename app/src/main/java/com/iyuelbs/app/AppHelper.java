@@ -7,7 +7,6 @@ import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.bmob.BmobProFile;
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.external.SystemBarTintManager;
@@ -16,6 +15,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Bob Peng on 2015/1/25.
@@ -78,9 +79,9 @@ public class AppHelper {
         return getCacheDirPath() + File.separator + filename;
     }
 
-    public static String signAvatar(Context context, String filename, String url) {
-        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 0, null);
-    }
+//    public static String signAvatar(Context context, String filename, String url) {
+//        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 0, null);
+//    }
 
     /**
      * set status bar color, better use it in setupWindowStyle() method
@@ -97,5 +98,12 @@ public class AppHelper {
             tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
             tintManager.setTintColor(color);
         }
+    }
+
+    /**
+     * Helper method for {@code EventBus.getDefault()}
+     */
+    public static void postEvent(Object event) {
+        EventBus.getDefault().post(event);
     }
 }

@@ -31,7 +31,7 @@
         android:drawableLeft="@drawable/ic_weibo"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:text="@string/weibo"
+        android:text="@string/btn_weibo_login"
         android:textColor="@color/white"
         android:textSize="20sp"/>
 
@@ -47,7 +47,7 @@
         android:drawableLeft="@drawable/ic_qq"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:text="@string/qq"
+        android:text="@string/btn_qq_login"
         android:textColor="@color/white"
 
         android:textSize="20sp"/>

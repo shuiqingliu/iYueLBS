@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <ImageView
+            android:id="@+id/third_login_arrow_back"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_transparent_dark"
+            android:scaleType="center"
+            android:src="@drawable/ic_arrow_back_grey600_24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/third_login_arrow_back"
+            android:gravity="center"
+            android:text="@string/btn_login"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/third_login_register"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_transparent_dark"
+            android:gravity="center"
+            android:minWidth="56dp"
+            android:text="@string/btn_register"
+            android:textColor="@color/teal"
+            android:textSize="14sp"/>
+    </RelativeLayout>
+
+    <!--<include layout="@layout/view_divider"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/third_login_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:floatingLabel="normal"
+                app:floatingLabelAlwaysShown="true"
+                app:floatingLabelText="@string/title_phone_number"
+                app:primaryColor="@color/teal"/>
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/third_login_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionGo"
+                android:inputType="textPassword"
+                app:floatingLabel="normal"
+                app:floatingLabelAlwaysShown="true"
+                app:floatingLabelText="@string/title_password"
+                app:primaryColor="@color/teal"/>
+
+            <Button
+                android:id="@+id/third_login_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_teal"
+                android:text="@string/btn_login"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/title_login_third"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="54dp"
+            android:paddingRight="54dp">
+
+            <TextView
+                android:id="@+id/third_login_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@drawable/btn_transparent_dark"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/btn_weibo_login"/>
+
+            <TextView
+                android:id="@+id/third_login_qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/btn_transparent_dark"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/btn_qq_login"/>
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

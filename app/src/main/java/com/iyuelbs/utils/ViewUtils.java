@@ -2,6 +2,7 @@ package com.iyuelbs.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.TextView;
@@ -91,5 +92,27 @@ public class ViewUtils {
                 .customView(view, false)
                 .cancelable(false)
                 .show();
+    }
+
+    public static void setDrawableTop(TextView textView, int id) {
+        Drawable drawable = getCompoundDrawable(textView.getContext(), id);
+        textView.setCompoundDrawables(null, drawable, null, null);
+    }
+
+    public static void setDrawableTop(TextView textView, int id, int xDp, int yDp) {
+        Drawable drawable = getCompoundDrawable(textView.getContext(), id, xDp, yDp);
+        textView.setCompoundDrawables(null, drawable, null, null);
+    }
+
+    public static Drawable getCompoundDrawable(Context context, int id) {
+        Drawable drawable = context.getResources().getDrawable(id);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        return drawable;
+    }
+
+    public static Drawable getCompoundDrawable(Context context, int id, int xDp, int yDp) {
+        Drawable drawable = context.getResources().getDrawable(id);
+        drawable.setBounds(0, 0, getPixels(xDp), getPixels(yDp));
+        return drawable;
     }
 }

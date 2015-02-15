@@ -115,7 +115,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     private void initUserInfo() {
         if (AppHelper.checkLogin()) {
             User user = AppHelper.getCurrentUser();
-            getImageLoader().displayImage(user.getAvatarUrl(), mAvatarImage, mImageOptions);
+            getImageLoader().displayImage(user.getAvatar().getUrl(), mAvatarImage, mImageOptions);
             mAvatarImage.setVisibility(View.VISIBLE);
             mUserNameText.setText(user.getNickName());
             mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());

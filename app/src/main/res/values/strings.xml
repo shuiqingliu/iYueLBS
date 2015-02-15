@@ -22,9 +22,12 @@
     <string name="title_sex">性别</string>
     <string name="title_register_detail">注册成功，欢迎来到爱约！现在请完善您的个人资料</string>
     <string name="title_quick_settings">我们需要获取您的地理位置信息，但一切都由你决定 :)</string>
+    <string name="title_login_phone">手机登录</string>
+    <string name="title_login_third">社交账号登录</string>
+    <string name="title_register">立即注册</string>
 
     <string name="helper_username">用于登陆爱聊的账号</string>
-    <string name="helper_email">常用的电子邮箱，用于密码找回或登陆账号</string>
+    <string name="helper_phone">常用手机号，用于登陆账号以及密码找回</string>
     <string name="helper_password">8&#8211;16位密码</string>
 
     <string name="title_drawer_index">首页</string>
@@ -35,19 +38,23 @@
     <string name="title_user_detail">个人资料</string>
 
     <string name="btn_login">登录</string>
+    <string name="btn_other_login">其他登录方式</string>
+    <string name="btn_account_register">账号注册</string>
+    <string name="btn_phone_register">手机号注册</string>
     <string name="btn_register">注册</string>
     <string name="btn_save">保存</string>
     <string name="btn_next">下一步</string>
-    <string name="weibo">微博登录</string>
-    <string name="qq">QQ登录</string>
+    <string name="btn_weibo_login">微博登录</string>
+    <string name="btn_qq_login">QQ登录</string>
     <string name="default_login">直接登录</string>
 
     <string name="msg_loading">请稍候&#8230;</string>
     <string name="msg_login_in">正在登录&#8230;</string>
     <string name="msg_please_input_account">请输入用户名/密码</string>
     <string name="msg_username_required">用户名不能为空</string>
-    <string name="msg_email_required">邮箱不能为空</string>
-    <string name="msg_email_invalid">请输入正确的电子邮箱</string>
+    <string name="msg_username_cant_be_phone">用户名不能为手机号</string>
+    <string name="msg_phone_required">手机号不能为空</string>
+    <string name="msg_phone_invalid">请输入正确的手机号</string>
     <string name="msg_password_required">密码不能为空</string>
     <string name="msg_pwd_too_short">密码不得少于8位</string>
     <string name="msg_pwd_confirm_required">确认密码不能为空</string>

@@ -4,27 +4,21 @@ package com.iyuelbs.ui.user;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.bmob.BmobProFile;
-import com.bmob.btp.callback.UploadListener;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
-import com.iyuelbs.entity.User;
 import com.iyuelbs.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.util.Random;
-
-import cn.bmob.v3.listener.UpdateListener;
 
 public class AvatarFragment extends BaseFragment implements View.OnClickListener {
 
@@ -42,8 +36,8 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
         mUploadBtn.setOnClickListener(this);
         mPreviewImage.setOnClickListener(this);
 
-        if (AppHelper.getCurrentUser().getAvatarUrl() != null) {
-            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatarUrl(),
+        if (AppHelper.getCurrentUser().getAvatar() != null) {
+            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatar().getUrl(),
                     mPreviewImage, DisplayImageOptions.createSimple());
         }
         return view;
@@ -70,41 +64,41 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
         if (v == mPreviewImage) {
             Crop.pickImage(getActivity(), Crop.REQUEST_PICK);
         } else if (v == mUploadBtn) {
-            BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
-                @Override
-                public void onSuccess(String filename, String url) {
-                    User user = AppHelper.getCurrentUser();
-                    if (user == null) {
-                        // TODO login
-                    } else {
-                        String signedUrl = AppHelper.signAvatar(mContext, filename, url);
-                        Log.e("xifan", "signed Url " + signedUrl);
-                        user.setAvatarUrl(signedUrl);
-                        user.update(mContext, new UpdateListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.e("xifan", "onSuccess");
-                            }
-
-                            @Override
-                            public void onFailure(int i, String s) {
-                                Log.e("xifan", s);
-                            }
-                        });
-                        getTmpAvatarFile().delete();
-                    }
-                }
-
-                @Override
-                public void onProgress(int i) {
-                    Log.e("xifan", "onProgress, " + i);
-                }
-
-                @Override
-                public void onError(int i, String s) {
-                    Log.e("xifan", "onError, " + i + " ," + s);
-                }
-            });
+//            BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
+//                @Override
+//                public void onSuccess(String filename, String url) {
+//                    User user = AppHelper.getCurrentUser();
+//                    if (user == null) {
+//                        // TODO login
+//                    } else {
+//                        String signedUrl = AppHelper.signAvatar(mContext, filename, url);
+//                        Log.e("xifan", "signed Url " + signedUrl);
+//                        user.setAvatarUrl(signedUrl);
+//                        user.update(mContext, new UpdateListener() {
+//                            @Override
+//                            public void onSuccess() {
+//                                Log.e("xifan", "onSuccess");
+//                            }
+//
+//                            @Override
+//                            public void onFailure(int i, String s) {
+//                                Log.e("xifan", s);
+//                            }
+//                        });
+//                        getTmpAvatarFile().delete();
+//                    }
+//                }
+//
+//                @Override
+//                public void onProgress(int i) {
+//                    Log.e("xifan", "onProgress, " + i);
+//                }
+//
+//                @Override
+//                public void onError(int i, String s) {
+//                    Log.e("xifan", "onError, " + i + " ," + s);
+//                }
+//            });
         }
     }
 

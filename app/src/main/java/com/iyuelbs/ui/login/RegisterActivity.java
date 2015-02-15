@@ -11,25 +11,22 @@ import com.iyuelbs.app.Keys;
 public class RegisterActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initView() {
         setContentView(R.layout.common_activity);
-        initFragment();
     }
 
-    private void initFragment() {
+    @Override
+    protected void initFragments(Bundle bundle) {
         Fragment fragment;
-        Bundle bundle = getIntent().getExtras();
         int step = bundle == null ? 0 : bundle.getInt(Keys.EXTRA_REGISTER_STEP);
         switch (step) {
-            case Keys.REG_STEP_USER_INTERFACE:
-                fragment = null;
-                break;
-            case Keys.REG_STEP_USER_BRIEF:
-                fragment = null;
+            case Keys.REG_STEP_USER_DETAIL:
+                fragment = new RegUserDetailFragment();
                 break;
             case Keys.REG_STEP_USER_CONFIG:
-                fragment = null;
+                fragment = null; // RegQuickSettings is using app.Fragment not v4.app.Fragment
+                getFragmentManager().beginTransaction().replace(R.id.common_container,
+                        new RegQuickSettings()).commit();
                 break;
             default:
                 fragment = new RegAccountFragment();
