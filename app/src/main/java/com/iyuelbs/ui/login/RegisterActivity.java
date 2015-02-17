@@ -3,10 +3,13 @@ package com.iyuelbs.ui.login;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.utils.ViewUtils;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -43,5 +46,24 @@ public class RegisterActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (AppHelper.checkLogin()) {
+            // TODO 已注册，确认取消
+            ViewUtils.showToast(this, "已注册，确认取消");
+        } else {
+            super.onBackPressed();
+        }
     }
 }

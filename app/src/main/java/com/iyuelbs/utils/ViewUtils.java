@@ -82,14 +82,12 @@ public class ViewUtils {
     }
 
     public static MaterialDialog createLoadingDialog(Context context, String message) {
-        View view = View.inflate(context, R.layout.dialog_loading_view, null);
-        if (message != null) {
-            TextView msgText = (TextView) view.findViewById(R.id.dialog_loading_msg);
-            msgText.setText(message);
+        if (message == null) {
+            message = context.getString(R.string.msg_loading);
         }
-
-        return new MaterialDialog.Builder(context)
-                .customView(view, false)
+        return  new MaterialDialog.Builder(context)
+                .progress(true,0)
+                .content(message)
                 .cancelable(false)
                 .show();
     }

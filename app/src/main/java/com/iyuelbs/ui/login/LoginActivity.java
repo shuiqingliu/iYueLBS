@@ -19,7 +19,6 @@ public class LoginActivity extends BaseActivity {
         }
 
         super.onCreate(savedInstanceState);
-        registerEvent(false);
     }
 
     @Override

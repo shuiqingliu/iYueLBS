@@ -24,8 +24,6 @@ import com.iyuelbs.ui.main.MainActivity;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.ViewUtils;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by qingliu on 1/31/15.
  */
@@ -55,12 +53,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         registerBtn.setOnClickListener(this);
         confirmBtn.setOnClickListener(this);
         return view;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        AppHelper.postEvent(new DialogEvent(null));
     }
 
     public void onClick(View v) {
@@ -97,15 +89,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     protected void doLogin() {
-        EventBus.getDefault().post(new DialogEvent(getString(R.string.msg_login_in)));
+        AppHelper.postEvent(new DialogEvent(getString(R.string.msg_loging_in)));
         User.multiLogin(mLoginText.getText().toString(), mPasswordText.getText().toString(),
                 new LogInCallback<User>() {
                     public void done(User user, AVException e) {
+                        AppHelper.postEvent(new DialogEvent(null));
+
                         if (user != null) {
-                            AppHelper.postEvent(new DialogEvent(null));
                             onLoginSuccess();
                         } else {
-                            AppHelper.postEvent(new DialogEvent(null));
                             AVUtils.onFailure(mContext, e);
                         }
                     }
@@ -113,6 +105,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     protected void onLoginSuccess() {
+        AppHelper.getUpdatedUser();
         Intent intent = new Intent(mContext, MainActivity.class);
         startActivity(intent);
         getActivity().finish();

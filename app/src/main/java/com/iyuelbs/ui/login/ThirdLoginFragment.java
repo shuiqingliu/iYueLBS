@@ -12,7 +12,13 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.entity.User;
+import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -98,12 +104,29 @@ public class ThirdLoginFragment extends LoginFragment {
         }
 
         if (valid) {
-            if (Utils.isPhoneString(loginText)) {
+            if (!Utils.isPhoneString(loginText)) {
                 ViewUtils.showToast(mContext, R.string.msg_phone_invalid);
                 valid = false;
             }
         }
 
         return valid;
+    }
+
+    @Override
+    protected void doLogin() {
+        AppHelper.postEvent(new DialogEvent(getString(R.string.msg_loging_in)));
+        User.loginByMobilePhoneNumberInBackground(mLoginText.getText().toString(), mPasswordText.getText().toString(),
+                new LogInCallback<User>() {
+                    public void done(User user, AVException e) {
+                        AppHelper.postEvent(new DialogEvent(null));
+
+                        if (user != null) {
+                            onLoginSuccess();
+                        } else {
+                            AVUtils.onFailure(mContext, e);
+                        }
+                    }
+                },User.class);
     }
 }

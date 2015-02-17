@@ -17,10 +17,11 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.event.DialogEvent;
 import com.iyuelbs.external.RoundedImageView;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -39,7 +40,6 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     private TextView mSexText;
     private Spinner mSexSpinner;
     private MaterialEditText mIntroduceText;
-    private MaterialDialog mDialog;
 
     private String mAvatarUri;
 
@@ -47,7 +47,6 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.title_user_detail);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
             if (checkField()) {
-                mDialog = ViewUtils.createLoadingDialog(mContext, null);
+                AppHelper.postEvent(new DialogEvent());
                 if (mAvatarUri != null) {
 //                    BmobProFile.getInstance(mContext).upload(mAvatarUri, new AvatarUploadListener());
                 } else {
@@ -182,8 +181,8 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
 //
 //        @Override
 //        public void onError(int i, String s) {
-//            if (mDialog != null) {
-//                mDialog.dismiss();
+//            if (mLoadingDialog != null) {
+//                mLoadingDialog.dismiss();
 //            }
 //
 //            AVUtils.onFailure(mContext, , i);

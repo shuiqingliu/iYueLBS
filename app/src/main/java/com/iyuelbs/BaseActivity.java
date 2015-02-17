@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -25,9 +27,7 @@ import de.greenrobot.event.EventBus;
  */
 public abstract class BaseActivity extends ActionBarActivity {
     protected Context mContext;
-    protected MaterialDialog mDialog;
-
-    private boolean mEventBusEnabled = false;
+    protected MaterialDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +67,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     protected abstract void initFragments(Bundle data);
 
-    /**
-     * If be called in onCreate(), leave @param force as false, other else leave as true;
-     */
-    protected void registerEvent(boolean force) {
-        mEventBusEnabled = true;
-        if (force) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,38 +90,50 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (mEventBusEnabled) {
-            EventBus.getDefault().register(this);
-        }
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mEventBusEnabled) {
-            EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        } else {
+            super.onBackPressed();
         }
     }
 
     protected void showDialog(String msg) {
-        if (mDialog != null) {
-            mDialog.show();
+        // TODO handle if dialog is showing.
+        if (mLoadingDialog != null) {
+            if (TextUtils.isEmpty(msg)) {
+                msg = getString(R.string.msg_loading);
+            }
+            mLoadingDialog.setContent(msg);
+            mLoadingDialog.show();
         } else {
-            mDialog = ViewUtils.createLoadingDialog(this, msg);
+            mLoadingDialog = ViewUtils.createLoadingDialog(this, msg);
         }
     }
 
     protected void dismissDialog() {
-        if (mDialog != null) {
-            mDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 
     public void onEventMainThread(DialogEvent event) {
         if (event.msg == null) {
             dismissDialog();
+            Log.e("xifan", "dismissDialog");
         } else {
             showDialog(event.msg);
+            Log.e("xifan", "showDialog");
         }
     }
 }

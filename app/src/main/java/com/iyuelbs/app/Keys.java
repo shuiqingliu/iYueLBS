@@ -32,4 +32,7 @@ public class Keys {
 
     public static final String EXTRA_URL = "url";
     public static final String FILE_TMP_AVATAR = "tmp_avatar";
+
+    public static final String EXTRA_PHONE_NUMBER = "phoneNumber";
+    public static final String EXTRA_PASSWORD = "password";
 }

@@ -22,9 +22,11 @@
     <string name="title_sex">性别</string>
     <string name="title_register_detail">注册成功，欢迎来到爱约！现在请完善您的个人资料</string>
     <string name="title_quick_settings">我们需要获取您的地理位置信息，但一切都由你决定 :)</string>
+    <string name="title_phone_confirm">我们已经向您的手机发送了验证号码，请将接收到的验证码输入到下方，如果没收到请重新发送</string>
     <string name="title_login_phone">手机登录</string>
     <string name="title_login_third">社交账号登录</string>
     <string name="title_register">立即注册</string>
+    <string name="title_verify_code">验证码</string>
 
     <string name="helper_username">用于登陆爱聊的账号</string>
     <string name="helper_phone">常用手机号，用于登陆账号以及密码找回</string>
@@ -47,9 +49,11 @@
     <string name="btn_weibo_login">微博登录</string>
     <string name="btn_qq_login">QQ登录</string>
     <string name="default_login">直接登录</string>
+    <string name="btn_resent_verify_code">重新发送</string>
 
     <string name="msg_loading">请稍候&#8230;</string>
-    <string name="msg_login_in">正在登录&#8230;</string>
+    <string name="msg_loging_in">正在登录&#8230;</string>
+    <string name="msg_registering">正在注册&#8230;</string>
     <string name="msg_please_input_account">请输入用户名/密码</string>
     <string name="msg_username_required">用户名不能为空</string>
     <string name="msg_username_cant_be_phone">用户名不能为手机号</string>
@@ -60,6 +64,8 @@
     <string name="msg_pwd_confirm_required">确认密码不能为空</string>
     <string name="msg_pwd_confirm_failed">两次密码输入不一致</string>
     <string name="msg_nickname_required">昵称不能为空</string>
+    <string name="msg_verify_code_required">验证码不能为空</string>
+    <string name="msg_sending">正在发送&#8230;</string>
 
     <string name="pref_show_location_status_title">告诉好友你的位置状态</string>
     <string name="pref_show_location_status_summary">我们会根据您设置的位置与手机的状态来判断您当前的状态并显示给您的好友，以方便随时约你</string>
