@@ -1,122 +1,113 @@
 package com.iyuelbs.ui.login;
 
-
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
-import com.iyuelbs.app.Keys;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.ui.main.MainActivity;
+import com.iyuelbs.utils.AVUtils;
+import com.iyuelbs.utils.ViewUtils;
 
-import cn.bmob.v3.listener.SaveListener;
-
+/**
+ * Created by qingliu on 1/31/15.
+ */
 public class LoginFragment extends BaseFragment implements View.OnClickListener {
-
-    private boolean mIsLogin;
-    private EditText mUsername, mPassword, mPasswordConfirm, mEmail;
-    private Button mConfirmBtn;
-
-    public static LoginFragment getInstance(Bundle data) {
-        LoginFragment fragment = new LoginFragment();
-        fragment.setArguments(data);
-        return fragment;
-    }
+    protected EditText mLoginText, mPasswordText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-        mUsername = (EditText) view.findViewById(R.id.username);
-        mPassword = (EditText) view.findViewById(R.id.password);
-        mConfirmBtn = (Button) view.findViewById(R.id.confirm_btn);
-        mIsLogin = getArguments().getString(Keys.OPEN_TYPE, Keys.OPEN_LOGIN).equals(Keys.OPEN_LOGIN);
-        if (!mIsLogin) {
-            mPasswordConfirm = (EditText) view.findViewById(R.id.confirm_pwd);
-            mEmail = (EditText) view.findViewById(R.id.email);
+        View view = inflater.inflate(R.layout.login_fragment, container, false);
+        mLoginText = (EditText) view.findViewById(R.id.login_username);
+        mPasswordText = (EditText) view.findViewById(R.id.login_password);
+        final Button confirmBtn = (Button) view.findViewById(R.id.login_confirm_btn);
+        Button registerBtn = (Button) view.findViewById(R.id.login_other_btn);
 
-            mPasswordConfirm.setVisibility(View.VISIBLE);
-            mEmail.setVisibility(View.VISIBLE);
-        }
+        mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    confirmBtn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-        mConfirmBtn.setOnClickListener(this);
-        mConfirmBtn.setText(getString(mIsLogin ? R.string.btn_login : R.string.btn_register));
+        registerBtn.setOnClickListener(this);
+        confirmBtn.setOnClickListener(this);
         return view;
     }
 
-
-    @Override
     public void onClick(View v) {
-        if (v == mConfirmBtn) {
-            if (mIsLogin) {
-                onLoginRequest();
-            } else {
-                onRegisterRequest();
+        int id = v.getId();
+        if (id == R.id.login_confirm_btn) {
+            if (checkField()) {
+                doLogin();
             }
+        } else if (id == R.id.login_other_btn) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.common_container, new ThirdLoginFragment());
+            transaction.addToBackStack(null);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            transaction.commit();
         }
     }
 
-    private void onLoginRequest() {
-        if (fieldCheck()) {
-            mConfirmBtn.setEnabled(false);
-            User user = new User();
-            user.setUsername(mUsername.getText().toString());
-            user.setPassword(mPassword.getText().toString());
-            user.login(mContext, new UserSaveListener());
+    protected boolean checkField() {
+        boolean valid = true;
+        if (TextUtils.isEmpty(mLoginText.getText())) {
+            mLoginText.requestFocus();
+            ViewUtils.showToast(mContext, R.string.msg_username_required);
+            valid = false;
         }
+        if (TextUtils.isEmpty(mPasswordText.getText())) {
+            if (valid) {
+                mPasswordText.requestFocus();
+                ViewUtils.showToast(mContext, R.string.msg_password_required);
+            }
+            valid = false;
+        }
+
+        return valid;
     }
 
-    private void onRegisterRequest() {
-        if (fieldCheck()) {
-            mConfirmBtn.setEnabled(false);
-            User user = new User();
-            user.setUsername(mUsername.getText().toString());
-            user.setPassword(mPassword.getText().toString());
-            user.setEmail(mEmail.getText().toString());
-            user.signUp(mContext, new UserSaveListener());
-        }
+    protected void doLogin() {
+        AppHelper.postEvent(new DialogEvent(getString(R.string.msg_loging_in)));
+        User.multiLogin(mLoginText.getText().toString(), mPasswordText.getText().toString(),
+                new LogInCallback<User>() {
+                    public void done(User user, AVException e) {
+                        AppHelper.postEvent(new DialogEvent(null));
+
+                        if (user != null) {
+                            onLoginSuccess();
+                        } else {
+                            AVUtils.onFailure(mContext, e);
+                        }
+                    }
+                });
     }
 
-    private boolean fieldCheck() {
-        ViewGroup parent = (ViewGroup) getView();
-        if (parent == null)
-            return false;
-
-        if (mIsLogin) {
-            if (TextUtils.isEmpty(mUsername.getText()) || TextUtils.isEmpty(mPassword.getText())) {
-                return false;
-            }
-        } else {
-            if (TextUtils.isEmpty(mUsername.getText()) || TextUtils.isEmpty(mPassword.getText())
-                    || TextUtils.isEmpty(mPasswordConfirm.getText()) || TextUtils.isEmpty(mEmail.getText())) {
-                return false;
-            }
-            if (!mPassword.getText().toString().equals(mPasswordConfirm.getText().toString())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private class UserSaveListener extends SaveListener {
-
-        @Override
-        public void onSuccess() {
-            mConfirmBtn.setEnabled(true);
-            Toast.makeText(mContext, mIsLogin ? "登陆成功！" : "注册成功！", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onFailure(int errorCode, String msg) {
-            mConfirmBtn.setEnabled(true);
-            Toast.makeText(mContext, "错误：" + msg, Toast.LENGTH_SHORT).show();
-        }
+    protected void onLoginSuccess() {
+        AppHelper.getUpdatedUser();
+        Intent intent = new Intent(mContext, MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
     }
 }

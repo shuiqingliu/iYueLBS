@@ -1,51 +1,102 @@
 package com.iyuelbs.entity;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobPointer;
-import cn.bmob.v3.datatype.BmobRelation;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.LogInCallback;
+import com.iyuelbs.utils.Utils;
 
 /**
  * Created by Bob Peng on 2015/1/24.
  */
-public class User extends BmobUser {
-    public static final String USERINFO_TABLE_NAME = "userInfo";
+public class User extends AVUser {
 
-    private BmobPointer userInfo;
-    private BmobRelation friends;
-    private String phoneNumber;
-    private String avatarUrl;
+    public static final String KEY_NICKNAME = "nickName";
+    public static final String KEY_MALE = "male";
+    public static final String KEY_AVATAR = "avatar";
+    public static final String KEY_BANNER_URL = "bannerUrl";
+    public static final String KEY_SIGNATURE = "signature";
+    public static final String KEY_LOC_STATUS = "locStatus";
+    public static final String KEY_GEO_LOCATION = "geoLocation";
+    public static final String KEY_TAGS = "tags";
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+//    public void setPassword(String pwd) {
+//        super.setPassword(Utils.md5(pwd));
+//    }
+
+    /**
+     * helper method for user login with phone or email, don't forget set password before it.
+     */
+    public static void multiLogin(String key, String password, final LogInCallback<User> listener) {
+        boolean isPhone = Utils.isPhoneString(key);
+        if (isPhone) {
+            User.loginByMobilePhoneNumberInBackground(key, password, listener, User.class);
+        } else {
+            User.logInInBackground(key, password, listener, User.class);
+        }
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public String getNickName() {
+        return getString(KEY_NICKNAME);
     }
 
-    public BmobPointer getUserInfo() {
-        return userInfo;
+    public void setNickName(String nickName) {
+        put(KEY_NICKNAME, nickName);
     }
 
-    public void setUserInfo(BmobPointer userInfo) {
-        this.userInfo = userInfo;
+    public boolean isMale() {
+        return getBoolean(KEY_MALE);
     }
 
-
-    public BmobRelation getFriends() {
-        return friends;
+    public void setIsMale(boolean male) {
+        put(KEY_MALE, male);
     }
 
-    public void setFriends(BmobRelation friends) {
-        this.friends = friends;
+    public AVFile getAvatar() {
+        return getAVFile(KEY_AVATAR);
     }
 
-
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public void setAvatar(AVFile avatar) {
+        put(KEY_AVATAR, avatar);
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public String getBanner() {
+        return getString(KEY_BANNER_URL);
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        put(KEY_BANNER_URL, bannerUrl);
+    }
+
+    public String getSignature() {
+        return getString(KEY_SIGNATURE);
+    }
+
+    public void setSignature(String signature) {
+        put(KEY_SIGNATURE, signature);
+    }
+
+    public String getLocStatus() {
+        return getString(KEY_LOC_STATUS);
+    }
+
+    public void setLocStatus(String locStatus) {
+        put(KEY_LOC_STATUS, locStatus);
+    }
+
+    public AVGeoPoint getGeoLocation() {
+        return getAVGeoPoint(KEY_GEO_LOCATION);
+    }
+
+//    public AVRelation<Tag> getTags() {
+//        return getRelation(KEY_TAGS);
+//    }
+//
+//    public void setTags(Tag tags) {
+//        put(KEY_TAGS, tags);
+//    }
+
+    public void setGeoLocation(AVGeoPoint geoLocation) {
+        put(KEY_GEO_LOCATION, geoLocation);
     }
 }

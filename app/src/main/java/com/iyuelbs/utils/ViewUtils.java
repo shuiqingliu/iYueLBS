@@ -2,10 +2,13 @@ package com.iyuelbs.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
@@ -76,5 +79,38 @@ public class ViewUtils {
 
     public static void showToast(Context context, int stringId) {
         showToast(context, context.getString(stringId));
+    }
+
+    public static MaterialDialog createLoadingDialog(Context context, String message) {
+        if (message == null) {
+            message = context.getString(R.string.msg_loading);
+        }
+        return  new MaterialDialog.Builder(context)
+                .progress(true,0)
+                .content(message)
+                .cancelable(false)
+                .show();
+    }
+
+    public static void setDrawableTop(TextView textView, int id) {
+        Drawable drawable = getCompoundDrawable(textView.getContext(), id);
+        textView.setCompoundDrawables(null, drawable, null, null);
+    }
+
+    public static void setDrawableTop(TextView textView, int id, int xDp, int yDp) {
+        Drawable drawable = getCompoundDrawable(textView.getContext(), id, xDp, yDp);
+        textView.setCompoundDrawables(null, drawable, null, null);
+    }
+
+    public static Drawable getCompoundDrawable(Context context, int id) {
+        Drawable drawable = context.getResources().getDrawable(id);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        return drawable;
+    }
+
+    public static Drawable getCompoundDrawable(Context context, int id, int xDp, int yDp) {
+        Drawable drawable = context.getResources().getDrawable(id);
+        drawable.setBounds(0, 0, getPixels(xDp), getPixels(yDp));
+        return drawable;
     }
 }

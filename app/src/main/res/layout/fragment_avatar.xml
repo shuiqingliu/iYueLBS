@@ -15,6 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="@string/title_upload_avatar"/>
+        android:text="@string/title_set_avatar"/>
 
 </LinearLayout>

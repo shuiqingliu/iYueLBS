@@ -7,7 +7,16 @@
         <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">@color/teal_dark</item>
         <item name="colorAccent">@color/pink</item>
-        <item name="android:textColorPrimary">@color/text_gray</item>
+        <item name="android:textColorPrimary">@color/text_dark</item>
+    </style>
+
+    <style name="Login" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimary">@color/login_background</item>
+        <item name="colorPrimaryDark">@color/login_background</item>
+        <item name="colorAccent">@color/pink</item>
+        <item name="android:textColorPrimary">@color/white</item>
     </style>
 
 </resources>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/reg_account_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        app:floatingLabel="normal"
+        app:floatingLabelAlwaysShown="true"
+        app:floatingLabelText="@string/title_username"
+        app:helperText="@string/helper_username"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/reg_account_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:inputType="phone"
+        android:singleLine="true"
+        app:floatingLabel="normal"
+        app:floatingLabelAlwaysShown="true"
+        app:floatingLabelText="@string/title_phone_number"
+        app:helperText="@string/helper_phone"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/reg_account_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        app:floatingLabel="normal"
+        app:floatingLabelAlwaysShown="true"
+        app:floatingLabelText="@string/title_password"
+        app:helperText="@string/helper_password"/>
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/reg_account_pwd_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:imeOptions="actionGo"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        app:floatingLabel="normal"
+        app:floatingLabelAlwaysShown="true"
+        app:floatingLabelText="@string/title_confirm_pwd"/>
+</LinearLayout>

@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.iyuelbs"
         minSdkVersion 16
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -17,11 +17,39 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    // android support
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'eu.the4thfloor.volley:com.android.volley:2015.01.06'
+
+    // network
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+
+    // ui
+    compile 'com.afollestad:material-dialogs:0.6.3.0'
+    compile 'com.rengwuxian.materialedittext:library:1.8.2'
+    compile project(':android-crop')
+
+    // leancloud
+    compile 'cn.leancloud.android:avoscloud-sdk:v2.6.11'
+    compile 'cn.leancloud.android:avoscloud-push:v2.6.11@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v2.6.11@aar'
+//    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+//    avoscloud-feedback 为 LeanCloud 用户反馈包
+//    compile 'cn.leancloud.android:avoscloud-feedback:2.6.11@aar'
+//    avoscloud-sns 为 LeanCloud 第三方登陆包
+//    compile 'cn.leancloud.android:avoscloud-sns:2.6.11@aar'
+//    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+//    compile 'cn.leancloud.android:weibo-sdk-android-sso:1.0.0-leancloud'
 }

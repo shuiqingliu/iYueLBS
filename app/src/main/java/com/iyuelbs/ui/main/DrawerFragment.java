@@ -21,8 +21,12 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.entity.User;
 import com.iyuelbs.external.RoundedImageView;
 import com.iyuelbs.utils.ViewUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +37,16 @@ import java.util.List;
 public class DrawerFragment extends ListFragment implements DrawerController {
 
     private Context mContext;
+    private ImageLoader mImageLoader;
+    private DisplayImageOptions mImageOptions;
 
     private List<MenuItem> mDrawerList;
     private MenuItem mDividerItem;
     private DrawerAdapter mAdapter;
+
+    private RoundedImageView mAvatarImage;
+    private TextView mUserNameText;
+    private TextView mStatusText;
 
     private int mCurrentIndex = 0;
 
@@ -53,7 +63,27 @@ public class DrawerFragment extends ListFragment implements DrawerController {
 
         initDrawerItem();
         setupListView();
-        attachListHeader();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initUserInfo();
+        getListView().setItemChecked(mCurrentIndex, true);
+    }
+
+    private void initDrawerItem() {
+        mDrawerList = new ArrayList<>();
+        mDividerItem = new MenuItem(0, null);
+        mDrawerList.add(new MenuItem(R.drawable.ic_explore_grey600_24dp,
+                getString(R.string.title_drawer_index)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_place_grey600_24dp,
+                getString(R.string.title_drawer_places)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
+                getString(R.string.title_drawer_restaurant)));
+        mDrawerList.add(mDividerItem);
+        mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
+                getString(R.string.action_settings)));
     }
 
     private void setupListView() {
@@ -64,28 +94,36 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         listView.setBackgroundColor(getResources().getColor(R.color.white));
         listView.setCacheColorHint(Color.TRANSPARENT);
 
+        attachListHeader();
         setListAdapter(mAdapter = new DrawerAdapter());
     }
 
     private void attachListHeader() {
         View view = View.inflate(mContext, R.layout.view_drawer_header, null);
 
-        RoundedImageView userAvatar = (RoundedImageView) view.findViewById(R.id.drawer_user_avatar);
+        mAvatarImage = (RoundedImageView) view.findViewById(R.id.drawer_user_avatar);
         if (AppConfig.TRANSLUCENT_BAR_ENABLED) {
-            ((LinearLayout.LayoutParams) userAvatar.getLayoutParams()).topMargin += ViewUtils.getPixels
-                    (24);
+            ((LinearLayout.LayoutParams) mAvatarImage.getLayoutParams()).topMargin += ViewUtils.getPixels(24);
         }
-
-        TextView userNameText = (TextView) view.findViewById(R.id.drawer_user_name);
-        userNameText.setText(AppHelper.getApplication().getCurrentUser().getUsername());
-
+        mUserNameText = (TextView) view.findViewById(R.id.drawer_user_name);
+        mStatusText = (TextView) view.findViewById(R.id.drawer_user_status);
         getListView().addHeaderView(view, null, false);
+
+        initUserInfo();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getListView().setItemChecked(mCurrentIndex, true);
+    private void initUserInfo() {
+        if (AppHelper.checkLogin()) {
+            User user = AppHelper.getCurrentUser();
+            getImageLoader().displayImage(user.getAvatar().getUrl(), mAvatarImage, mImageOptions);
+            mAvatarImage.setVisibility(View.VISIBLE);
+            mUserNameText.setText(user.getNickName());
+            mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());
+        } else {
+            mAvatarImage.setVisibility(View.INVISIBLE);
+            mUserNameText.setText(R.string.title_not_login);
+            mStatusText.setText(R.string.title_no_loc_status);
+        }
     }
 
     @Override
@@ -112,24 +150,18 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         }
     }
 
-    private void initDrawerItem() {
-        mDrawerList = new ArrayList<>();
-        mDividerItem = new MenuItem(0, null);
-        mDrawerList.add(new MenuItem(R.drawable.ic_explore_grey600_24dp,
-                getString(R.string.title_drawer_index)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_place_grey600_24dp,
-                getString(R.string.title_drawer_places)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
-                getString(R.string.title_drawer_restaurant)));
-        mDrawerList.add(mDividerItem);
-        mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
-                getString(R.string.action_settings)));
-    }
-
     private DrawerAdapter getAdapter() {
         if (mAdapter == null)
             mAdapter = new DrawerAdapter();
         return mAdapter;
+    }
+
+    private ImageLoader getImageLoader() {
+        if (mImageLoader == null) {
+            mImageLoader = AppHelper.getImageLoader();
+            mImageOptions = AppHelper.getDefaultOptsBuilder().displayer(new SimpleBitmapDisplayer()).build();
+        }
+        return mImageLoader;
     }
 
     @Override
@@ -182,7 +214,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null) {
-                view = mInflater.inflate(R.layout.view_drawer_item, null);
+                view = mInflater.inflate(R.layout.list_drawer_item, null);
             }
 
             if (getItemId(position) == 0) {
@@ -209,7 +241,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 }
 
                 if (getListView().getCheckedItemPosition() == position) {
-                    view.setBackgroundResource(R.color.divider_gray);
+                    view.setBackgroundResource(R.color.divider_dark);
                     int color = ViewUtils.getThemeColor(mRes, Keys.STYLE_COLOR_PRIMARY);
                     titleText.setTextColor(color);
                     iconView.setColorFilter(color);
