@@ -107,7 +107,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                                         mLoginText.getText().toString());
                                 intent.putExtra(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
                                 startActivity(intent);
-                                // TODO
                             }
                         }
                     }

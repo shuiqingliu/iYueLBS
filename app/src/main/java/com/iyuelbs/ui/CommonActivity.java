@@ -8,6 +8,7 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.ui.login.LoginChooserFragment;
 import com.iyuelbs.ui.login.LoginFragment;
+import com.iyuelbs.ui.login.WeiboAuthFragment;
 import com.iyuelbs.ui.user.AvatarFragment;
 
 public class CommonActivity extends BaseActivity {
@@ -31,6 +32,9 @@ public class CommonActivity extends BaseActivity {
                     break;
                 case Keys.OPEN_AVATAR:
                     fragment = new AvatarFragment();
+                    break;
+                case Keys.OPEN_WEIBO_AUTH:
+                    fragment = new WeiboAuthFragment();
                     break;
                 default:
                     fragment = null;

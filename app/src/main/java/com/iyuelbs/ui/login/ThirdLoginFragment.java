@@ -16,8 +16,10 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.ui.CommonActivity;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -70,7 +72,9 @@ public class ThirdLoginFragment extends LoginFragment {
                 }
                 break;
             case R.id.third_login_weibo:
-                //TODO Auth
+                Intent intent = new Intent(mContext, CommonActivity.class);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE,Keys.OPEN_WEIBO_AUTH);
+                startActivityForResult(intent, 1);
                 break;
             case R.id.third_login_qq:
                 //TODO Auth
@@ -79,7 +83,7 @@ public class ThirdLoginFragment extends LoginFragment {
                 getActivity().onBackPressed();
                 break;
             case R.id.third_login_register:
-                Intent intent = new Intent(mContext, RegisterActivity.class);
+                intent = new Intent(mContext, RegisterActivity.class);
                 startActivity(intent);
                 break;
         }

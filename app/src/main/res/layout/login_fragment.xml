@@ -69,6 +69,7 @@
             android:layout_marginLeft="8dp"
             android:background="@null"
             android:hint="@string/title_password"
+            android:imeOptions="actionGo"
             android:inputType="textPassword"
             android:singleLine="true"
             android:textColor="@color/white"

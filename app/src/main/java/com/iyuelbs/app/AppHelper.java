@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.external.SystemBarTintManager;
+import com.loopj.android.http.AsyncHttpClient;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
@@ -54,6 +55,10 @@ public class AppHelper {
 
     public static ImageLoader getImageLoader() {
         return ImageLoader.getInstance();
+    }
+
+    public static AsyncHttpClient getHttpClient() {
+        return AppHelper.getApplication().getHttpClient();
     }
 
     public static DisplayImageOptions getDefaultOption() {

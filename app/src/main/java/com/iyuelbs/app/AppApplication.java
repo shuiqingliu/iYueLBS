@@ -8,6 +8,7 @@ import com.iyuelbs.entity.Banner;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+import com.loopj.android.http.AsyncHttpClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -18,6 +19,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class AppApplication extends Application {
 
     private static AppApplication mAppApplication;
+    private AsyncHttpClient mHttpClient;
     private User mUser;
 
     public static AppApplication getApplication() {
@@ -76,4 +78,12 @@ public class AppApplication extends Application {
             mUser = null;
         }
     }
+
+    public AsyncHttpClient getHttpClient() {
+        if (mHttpClient == null) {
+            mHttpClient = new AsyncHttpClient();
+        }
+        return mHttpClient;
+    }
+
 }
