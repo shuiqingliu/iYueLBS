@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import java.util.TimeZone;
 public class Utils {
     private static final String REGEX_PHONE = "^0?(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$";
     private static final String REGEX_EMAIL = "^[a-zA-Z0-9_\\.]+@[a-zA-Z0-9-]+[\\.a-zA-Z]+$";
+    private static final String KEY_RANDOM_FILES = "random_files";
 
     public static long getTimestamp() {
         return Calendar.getInstance(TimeZone.getTimeZone("GMT")).getTimeInMillis() / 1000l;
@@ -73,17 +75,62 @@ public class Utils {
         return null;
     }
 
+    /**
+     * generate new temp file
+     */
     public static File generateTempFile(String prefix, String suffix) {
         String filename = getRandomFilename(prefix, suffix);
-        File tmpFile = new File(AppHelper.getCacheDirPath(), filename);
-        if (tmpFile.exists()) {
-            tmpFile.delete();
-            tmpFile = new File(AppHelper.getCacheDirPath(), getRandomFilename(prefix, suffix));
+        String fileStr = AppConfig.getString(KEY_RANDOM_FILES, "");
+
+        if (!TextUtils.isEmpty(fileStr)) {
+            String[] temps = fileStr.split("\n");
+            boolean needClear = false;
+            for (String temp : temps) {
+                if (temp.equals(filename)) {
+                    needClear = true;
+                    break;
+                }
+            }
+            if (needClear) {
+                clearTempFileArray(temps);
+            }
         }
-        return tmpFile;
+
+        return new File(AppHelper.getCacheDirPath(), filename);
+    }
+
+    public static File getLatestTempFile() {
+        String fileStr = AppConfig.getString(KEY_RANDOM_FILES, "");
+        if (TextUtils.isEmpty(fileStr))
+            return null;
+
+        String filename = fileStr.substring(fileStr.lastIndexOf("\n") + 1, fileStr.length());
+        File file = new File(AppHelper.getCacheDirPath(), filename);
+        return file.exists() ? file : null;
     }
 
     private static String getRandomFilename(String prefix, String suffix) {
-        return prefix + new Random(Utils.getTimestamp()).nextInt(1000) + suffix;
+        String fileName = prefix + new Random(Utils.getTimestamp()).nextInt(1000) + suffix;
+        AppConfig.putString(KEY_RANDOM_FILES, AppConfig.getString(KEY_RANDOM_FILES, "") + "\n" + fileName);
+        return fileName;
+    }
+
+    public static void clearTempFiles() {
+        String[] files = AppConfig.getString(KEY_RANDOM_FILES, "").split("\n");
+        clearTempFileArray(files);
+    }
+
+    public static void clearTempFileArray(String[] files) {
+        for (String str : files) {
+            File file = new File(AppHelper.getCacheDirPath(), str);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+        AppConfig.putString(KEY_RANDOM_FILES, "");
+    }
+
+    public static boolean onUpKeySelected(int id) {
+        return id == android.R.id.home;
     }
 }

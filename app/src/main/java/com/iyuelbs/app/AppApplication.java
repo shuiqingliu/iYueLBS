@@ -49,17 +49,17 @@ public class AppApplication extends Application {
         AVObject.registerSubclass(Place.class);
         AVObject.registerSubclass(Banner.class);
         AVOSCloud.initialize(this, AppConfig.AVOS_APP_ID, AppConfig.AVOS_APP_KEY);
+        updateCurUser();
     }
 
-    public User getCurrentUser() {
+    public User getCurUser() {
         if (mUser == null)
             mUser = User.getCurrentUser(User.class);
         return mUser;
     }
 
-    public User updateReferUser() {
-        mUser = null;
-        return getCurrentUser();
+    public User updateCurUser() {
+        return mUser = User.getCurrentUser(User.class);
     }
 
     public String getCurUserName() {
@@ -68,5 +68,12 @@ public class AppApplication extends Application {
 
     public boolean isLogin() {
         return mUser != null;
+    }
+
+    public void logoff() {
+        if (updateCurUser() != null) {
+            User.logOut();
+            mUser = null;
+        }
     }
 }

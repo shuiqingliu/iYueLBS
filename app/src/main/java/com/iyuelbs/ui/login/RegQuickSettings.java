@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.iyuelbs.R;
 import com.iyuelbs.ui.main.MainActivity;
+import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 
 /**
@@ -44,7 +45,7 @@ public class RegQuickSettings extends PreferenceFragment {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         TextView alertText = new TextView(mContext);
-        alertText.setText(getString(R.string.title_quick_settings));
+        alertText.setText(getString(R.string.title_quick_settings_summary));
         int padding = ViewUtils.getPixels(8);
         alertText.setPadding(padding, padding, padding, padding);
 
@@ -56,6 +57,12 @@ public class RegQuickSettings extends PreferenceFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_quick_settings);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_register, menu);
@@ -63,7 +70,8 @@ public class RegQuickSettings extends PreferenceFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_next) {
+        int id = item.getItemId();
+        if (id == R.id.action_next || Utils.onUpKeySelected(id)) {
             Intent intent = new Intent(mContext, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

@@ -109,7 +109,7 @@
     <include layout="@layout/view_divider"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/reg_detail_introduce"
+        android:id="@+id/reg_detail_signature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title_introduce"

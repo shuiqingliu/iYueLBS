@@ -18,6 +18,7 @@ import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
 import com.iyuelbs.ui.main.MainActivity;
@@ -99,6 +100,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                             onLoginSuccess();
                         } else {
                             AVUtils.onFailure(mContext, e);
+                            if (e.getCode() == AVException.USER_MOBILEPHONE_NOT_VERIFIED) {
+                                Intent intent = new Intent(mContext, RegisterActivity.class);
+                                intent.putExtra(Keys.EXTRA_REGISTER_STEP,Keys.REG_STEP_PHONE_VERIFY);
+                                intent.putExtra(Keys.EXTRA_PHONE_NUMBER,
+                                        mLoginText.getText().toString());
+                                intent.putExtra(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
+                                startActivity(intent);
+                                // TODO
+                            }
                         }
                     }
                 });

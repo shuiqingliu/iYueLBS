@@ -34,7 +34,7 @@ public class AppHelper {
     }
 
     public static User getCurrentUser() {
-        return getApplication().getCurrentUser();
+        return getApplication().getCurUser();
     }
 
     public static boolean checkLogin() {
@@ -45,7 +45,11 @@ public class AppHelper {
      * Update cached user.
      */
     public static User getUpdatedUser() {
-        return getApplication().updateReferUser();
+        return getApplication().updateCurUser();
+    }
+
+    public static void clearLoginState() {
+        getApplication().logoff();
     }
 
     public static ImageLoader getImageLoader() {

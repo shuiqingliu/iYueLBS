@@ -16,6 +16,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.event.DialogEvent;
 import com.iyuelbs.external.SystemBarTintManager;
+import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (Utils.onUpKeySelected(item.getItemId())) {
             finish();
         }
         return super.onOptionsItemSelected(item);

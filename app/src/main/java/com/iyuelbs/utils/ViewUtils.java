@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +92,20 @@ public class ViewUtils {
                 .content(message)
                 .cancelable(false)
                 .show();
+    }
+
+    /**
+     * @param editor one of EditText
+     */
+    public static void closeKeyboard(EditText editor) {
+        ((InputMethodManager) editor.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .hideSoftInputFromWindow(editor.getWindowToken(), 0);
+    }
+
+    public static void showKeyboard(EditText editor) {
+        ((InputMethodManager) editor.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        editor.requestFocus();
     }
 
     public static void setDrawableTop(TextView textView, int id) {

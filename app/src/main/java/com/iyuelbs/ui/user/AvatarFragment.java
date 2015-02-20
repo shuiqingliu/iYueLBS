@@ -67,7 +67,7 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
 //            BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
 //                @Override
 //                public void onSuccess(String filename, String url) {
-//                    User user = AppHelper.getCurrentUser();
+//                    User user = AppHelper.getCurUser();
 //                    if (user == null) {
 //                        // TODO login
 //                    } else {

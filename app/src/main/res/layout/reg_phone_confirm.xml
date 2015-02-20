@@ -22,8 +22,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="@string/title_verify_code"
+            android:imeOptions="actionGo"
             android:inputType="number"
             android:maxLength="6"
+            android:minWidth="68dp"
             app:floatingLabel="normal"/>
 
         <Button

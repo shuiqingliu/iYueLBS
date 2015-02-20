@@ -2,6 +2,7 @@ package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -13,6 +14,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.RequestMobileCodeCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
@@ -22,6 +25,7 @@ import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.Utils;
+import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
@@ -32,6 +36,8 @@ public class RegAccountFragment extends BaseFragment {
     private static final int MIN_PWD_LENGTH = 8;
 
     private MaterialEditText mUserNameText, mPhoneText, mPasswordText, mConfirmPwdText;
+    private User mUser;
+    private boolean mHasSignedUp = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +57,16 @@ public class RegAccountFragment extends BaseFragment {
                 return false;
             }
         });
+        mPhoneText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (mHasSignedUp) {
+                    doRegister();
+                    return true;
+                }
+                return false;
+            }
+        });
         return view;
     }
 
@@ -58,6 +74,23 @@ public class RegAccountFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserNameText.requestFocus();
+        AppHelper.clearLoginState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle(R.string.title_register);
+
+        if (mHasSignedUp) {
+            mUserNameText.setEnabled(false);
+            mPasswordText.setEnabled(false);
+            mConfirmPwdText.setEnabled(false);
+            mPhoneText.requestFocus();
+            if (isAdded()) {
+                ViewUtils.showToast(mContext, R.string.msg_register_already_done);
+            }
+        }
     }
 
     @Override
@@ -71,13 +104,39 @@ public class RegAccountFragment extends BaseFragment {
     }
 
     private void doRegister() {
-        AppHelper.postEvent(new DialogEvent(getString(R.string.msg_registering)));
+        ViewUtils.closeKeyboard(mConfirmPwdText);
 
-        User user = new User();
-        user.setUsername(mUserNameText.getText().toString());
-        user.setMobilePhoneNumber(mPhoneText.getText().toString());
-        user.setPassword(mPasswordText.getText().toString());
-        user.signUpInBackground(new SignUpListener());
+        if (mUser == null) {
+            mUser = new User();
+            mUser.setUsername(mUserNameText.getText().toString());
+            mUser.setMobilePhoneNumber(mPhoneText.getText().toString());
+            mUser.setPassword(mPasswordText.getText().toString());
+        }
+
+        if (!mHasSignedUp) {
+            AppHelper.postEvent(new DialogEvent(getString(R.string.msg_registering)));
+            mUser.signUpInBackground(new SignUpListener());
+        } else {
+            AppHelper.postEvent(new DialogEvent(""));
+            String phone = mPhoneText.getText().toString();
+            if (mUser.getMobilePhoneNumber().equals(phone)) {
+                User.requestMobilePhoneVerifyInBackground(phone, new RequestMobileCodeCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        AppHelper.postEvent(new DialogEvent(null));
+                        if (e == null) {
+                            onSignUpSuccess();
+                        } else {
+                            AVUtils.onFailure(mContext, e);
+                        }
+                    }
+                });
+            } else {
+                mUser.setMobilePhoneNumber(phone);
+                mUser.saveInBackground(new UpdateListener());
+            }
+
+        }
     }
 
     private boolean checkField() {
@@ -120,19 +179,43 @@ public class RegAccountFragment extends BaseFragment {
         return valid;
     }
 
+    private void onSignUpSuccess() {
+        mHasSignedUp = true;
+        Bundle intent = new Bundle();
+        intent.putString(Keys.EXTRA_PHONE_NUMBER, mPhoneText.getText().toString());
+        intent.putString(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
+
+        Fragment fragment = getFragmentManager().findFragmentByTag(RegPhoneVerify.TAG);
+        if (fragment == null) {
+            fragment = RegPhoneVerify.newInstance(intent);
+        }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.common_container, fragment, RegPhoneVerify.TAG);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
     private class SignUpListener extends SignUpCallback {
         public void done(AVException e) {
+            AppHelper.postEvent(new DialogEvent(null));
             if (e == null) {
-                AppHelper.postEvent(new DialogEvent(null));
-                Bundle intent = new Bundle();
-                intent.putString(Keys.EXTRA_PHONE_NUMBER, mPhoneText.getText().toString());
-                intent.putString(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.common_container, RegPhoneConfirm.newInstance(intent));
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
+                onSignUpSuccess();
             } else {
-                AppHelper.postEvent(new DialogEvent(null));
+                AVUtils.onFailure(mContext, e);
+            }
+        }
+    }
+
+    private class UpdateListener extends SaveCallback {
+
+        @Override
+        public void done(AVException e) {
+            AppHelper.postEvent(new DialogEvent(null));
+            if (e == null) {
+                onSignUpSuccess();
+            } else {
                 AVUtils.onFailure(mContext, e);
             }
         }

@@ -9,6 +9,7 @@ import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 
 public class RegisterActivity extends BaseActivity {
@@ -26,20 +27,20 @@ public class RegisterActivity extends BaseActivity {
             case Keys.REG_STEP_USER_DETAIL:
                 fragment = new RegUserDetailFragment();
                 break;
+            case Keys.REG_STEP_PHONE_VERIFY:
+                fragment = RegPhoneVerify.newInstance(bundle);
+                break;
             case Keys.REG_STEP_USER_CONFIG:
-                fragment = null; // RegQuickSettings is using app.Fragment not v4.app.Fragment
                 getFragmentManager().beginTransaction().replace(R.id.common_container,
                         new RegQuickSettings()).commit();
-                break;
+                return;
             default:
                 fragment = new RegAccountFragment();
                 break;
         }
 
-        if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.common_container,
-                    fragment).commit();
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.common_container,
+                fragment).commit();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (Utils.onUpKeySelected(item.getItemId())) {
             onBackPressed();
             return true;
         }
@@ -61,7 +62,7 @@ public class RegisterActivity extends BaseActivity {
     public void onBackPressed() {
         if (AppHelper.checkLogin()) {
             // TODO 已注册，确认取消
-            ViewUtils.showToast(this, "已注册，确认取消");
+            ViewUtils.showToast(this, "已登录，确认取消");
         } else {
             super.onBackPressed();
         }

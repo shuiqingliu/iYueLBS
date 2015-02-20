@@ -24,7 +24,8 @@ public class Keys {
     public static final String EXTRA_REGISTER_STEP = "regStep";
     public static final int REG_STEP_USER_INTERFACE = 1;
     public static final int REG_STEP_USER_DETAIL = 2;
-    public static final int REG_STEP_USER_CONFIG = 3;
+    public static final int REG_STEP_PHONE_VERIFY = 3;
+    public static final int REG_STEP_USER_CONFIG = 4;
 
     public static final int STYLE_COLOR_PRIMARY = 1;
     public static final int STYLE_COLOR_PRIMARY_DARK = 2;
