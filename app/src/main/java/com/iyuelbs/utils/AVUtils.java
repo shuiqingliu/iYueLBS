@@ -3,6 +3,7 @@ package com.iyuelbs.utils;
 import android.content.Context;
 
 import com.avos.avoscloud.AVException;
+import com.iyuelbs.entity.User;
 
 /**
  * Created by Bob Peng on 2015/2/6.
@@ -14,7 +15,7 @@ public class AVUtils {
         int code = exception.getCode();
         switch (code) {
             case AVException.INTERNAL_SERVER_ERROR:
-                msg="服务器发生错误，请稍候再试";
+                msg = "服务器发生错误，请稍候再试";
                 break;
             case 101:
                 msg = "用户名或密码错误，请重试";
@@ -36,5 +37,9 @@ public class AVUtils {
                 msg = "请输入正确的电子邮箱";
         }
         ViewUtils.showToast(context, "code " + code + ": " + msg);
+    }
+
+    public static boolean isUserInfoComplete(User user) {
+        return user.getNickName() != null && user.getAvatar() != null;
     }
 }

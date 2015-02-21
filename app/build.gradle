@@ -37,7 +37,7 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
 
     // ui
-    compile 'com.afollestad:material-dialogs:0.6.3.0'
+    compile 'com.afollestad:material-dialogs:0.6.3.1'
     compile 'com.rengwuxian.materialedittext:library:1.8.2'
     compile project(':android-crop')
 

@@ -63,6 +63,14 @@ public class ThirdLoginFragment extends LoginFragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1 && requestCode == Keys.FOR_COMMON_RESULT) {
+            onLoginSuccess();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
@@ -73,8 +81,8 @@ public class ThirdLoginFragment extends LoginFragment {
                 break;
             case R.id.third_login_weibo:
                 Intent intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE,Keys.OPEN_WEIBO_AUTH);
-                startActivityForResult(intent, 1);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_WEIBO_AUTH);
+                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
                 break;
             case R.id.third_login_qq:
                 //TODO Auth
@@ -131,6 +139,6 @@ public class ThirdLoginFragment extends LoginFragment {
                             AVUtils.onFailure(mContext, e);
                         }
                     }
-                },User.class);
+                }, User.class);
     }
 }

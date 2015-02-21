@@ -155,7 +155,8 @@ public class WeiboAuthFragment extends BaseFragment {
             User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
                 public void done(User user, AVException e) {
                     if (user != null) {
-                        // TODO 检测用户是否注册过
+                        getActivity().setResult(-1);
+                        getActivity().finish();
                     } else {
                         AVUtils.onFailure(mContext, e);
                     }

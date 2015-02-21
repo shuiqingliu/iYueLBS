@@ -118,7 +118,7 @@ public abstract class BaseActivity extends ActionBarActivity {
             mLoadingDialog.setContent(msg);
             mLoadingDialog.show();
         } else {
-            mLoadingDialog = ViewUtils.createLoadingDialog(this, msg);
+            mLoadingDialog = ViewUtils.showLoadingDialog(this, msg);
         }
     }
 

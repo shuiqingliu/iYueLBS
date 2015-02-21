@@ -1,7 +1,6 @@
 package com.iyuelbs.ui.login;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
@@ -72,9 +71,7 @@ public class RegQuickSettings extends PreferenceFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_next || Utils.onUpKeySelected(id)) {
-            Intent intent = new Intent(mContext, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            MainActivity.goWithClear(mContext);
             getActivity().finish();
             return true;
         }

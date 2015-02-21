@@ -159,7 +159,8 @@ public class RegUserDetailFragment extends BaseFragment implements View.OnClickL
                 if (e == null) {
                     AppHelper.getUpdatedUser(); // force to refresh user cache
                     Intent intent = new Intent(mContext, SettingsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
                     startActivity(intent);
                     getActivity().finish();

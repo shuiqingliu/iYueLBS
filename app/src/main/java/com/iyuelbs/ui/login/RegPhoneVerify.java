@@ -24,6 +24,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.ui.main.MainActivity;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -45,6 +46,7 @@ public class RegPhoneVerify extends BaseFragment implements View.OnClickListener
     private String mPassword;
     private String mResentStr;
     private int mResentCounter = 60;
+    private int mNextAction = 0;
 
     private Timer mTimer;
     private ResentTask mTask;
@@ -65,6 +67,7 @@ public class RegPhoneVerify extends BaseFragment implements View.OnClickListener
             if (TextUtils.isEmpty(mPhoneNumber) || TextUtils.isEmpty(mPassword)) {
                 throw new IllegalArgumentException();
             }
+            mNextAction = data.getInt(Keys.EXTRA_ACTION_NEXT, 0);
         }
         mResentStr = getString(R.string.btn_resent_verify_code);
     }
@@ -106,7 +109,12 @@ public class RegPhoneVerify extends BaseFragment implements View.OnClickListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
-            verifyCode();
+            if (mNextAction == 0) {
+                verifyCode();
+            } else if (mNextAction == Keys.ACTION_GO_HOME) {
+                MainActivity.go(mContext);
+                getActivity().finish();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

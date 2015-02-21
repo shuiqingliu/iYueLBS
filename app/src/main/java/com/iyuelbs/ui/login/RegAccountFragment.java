@@ -23,6 +23,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.event.RegisterEvent;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
@@ -83,13 +84,15 @@ public class RegAccountFragment extends BaseFragment {
         getActivity().setTitle(R.string.title_register);
 
         if (mHasSignedUp) {
+            if (isAdded() && mUserNameText.isEnabled()) {
+                //mUserNameText.isEnabled() to ensure onetime show up
+                ViewUtils.showToast(mContext, R.string.msg_register_already_done);
+            }
             mUserNameText.setEnabled(false);
             mPasswordText.setEnabled(false);
             mConfirmPwdText.setEnabled(false);
             mPhoneText.requestFocus();
-            if (isAdded()) {
-                ViewUtils.showToast(mContext, R.string.msg_register_already_done);
-            }
+            AppHelper.postEvent(new RegisterEvent());
         }
     }
 
@@ -115,10 +118,21 @@ public class RegAccountFragment extends BaseFragment {
 
         if (!mHasSignedUp) {
             AppHelper.postEvent(new DialogEvent(getString(R.string.msg_registering)));
-            mUser.signUpInBackground(new SignUpListener());
+            mUser.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(AVException e) {
+                    AppHelper.postEvent(new DialogEvent(null));
+                    if (e == null) {
+                        onSignUpSuccess();
+                    } else {
+                        AVUtils.onFailure(mContext, e);
+                    }
+                }
+            });
         } else {
             AppHelper.postEvent(new DialogEvent(""));
             String phone = mPhoneText.getText().toString();
+
             if (mUser.getMobilePhoneNumber().equals(phone)) {
                 User.requestMobilePhoneVerifyInBackground(phone, new RequestMobileCodeCallback() {
                     @Override
@@ -133,9 +147,18 @@ public class RegAccountFragment extends BaseFragment {
                 });
             } else {
                 mUser.setMobilePhoneNumber(phone);
-                mUser.saveInBackground(new UpdateListener());
+                mUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        AppHelper.postEvent(new DialogEvent(null));
+                        if (e == null) {
+                            onSignUpSuccess();
+                        } else {
+                            AVUtils.onFailure(mContext, e);
+                        }
+                    }
+                });
             }
-
         }
     }
 
@@ -195,29 +218,5 @@ public class RegAccountFragment extends BaseFragment {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    private class SignUpListener extends SignUpCallback {
-        public void done(AVException e) {
-            AppHelper.postEvent(new DialogEvent(null));
-            if (e == null) {
-                onSignUpSuccess();
-            } else {
-                AVUtils.onFailure(mContext, e);
-            }
-        }
-    }
-
-    private class UpdateListener extends SaveCallback {
-
-        @Override
-        public void done(AVException e) {
-            AppHelper.postEvent(new DialogEvent(null));
-            if (e == null) {
-                onSignUpSuccess();
-            } else {
-                AVUtils.onFailure(mContext, e);
-            }
-        }
     }
 }

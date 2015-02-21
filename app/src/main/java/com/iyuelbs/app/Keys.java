@@ -27,6 +27,9 @@ public class Keys {
     public static final int REG_STEP_PHONE_VERIFY = 3;
     public static final int REG_STEP_USER_CONFIG = 4;
 
+    public static final String EXTRA_ACTION_NEXT = "actionNext";
+    public static final int ACTION_GO_HOME = 1;
+
     public static final int STYLE_COLOR_PRIMARY = 1;
     public static final int STYLE_COLOR_PRIMARY_DARK = 2;
     public static final int STYLE_COLOR_ACCENT = 3;

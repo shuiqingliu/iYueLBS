@@ -3,6 +3,7 @@ package com.iyuelbs.utils;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -83,14 +84,28 @@ public class ViewUtils {
         showToast(context, context.getString(stringId));
     }
 
-    public static MaterialDialog createLoadingDialog(Context context, String message) {
+    public static MaterialDialog showLoadingDialog(Context context, String message) {
         if (message == null) {
             message = context.getString(R.string.msg_loading);
         }
-        return  new MaterialDialog.Builder(context)
-                .progress(true,0)
+        return new MaterialDialog.Builder(context)
+                .progress(true, 0)
                 .content(message)
                 .cancelable(false)
+                .show();
+    }
+
+    public static MaterialDialog showSimpleDialog(Context context, String title, String msg,
+                                                  MaterialDialog.ButtonCallback callback) {
+        if (TextUtils.isEmpty(title)) {
+            title = context.getString(android.R.string.dialog_alert_title);
+        }
+        return new MaterialDialog.Builder(context)
+                .title(title)
+                .content(msg)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .callback(callback)
                 .show();
     }
 

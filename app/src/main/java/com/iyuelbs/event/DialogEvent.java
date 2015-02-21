@@ -16,6 +16,7 @@ public class DialogEvent {
     /**
      * new loading dialog with specified message.
      * passing null for dismiss existing dialog
+     * and empty string for default loading msg.
      */
     public DialogEvent(String msg) {
         this.msg = msg;

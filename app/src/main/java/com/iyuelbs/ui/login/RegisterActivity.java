@@ -5,14 +5,19 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.event.RegisterEvent;
 import com.iyuelbs.utils.Utils;
 import com.iyuelbs.utils.ViewUtils;
 
 public class RegisterActivity extends BaseActivity {
+
+    private boolean mHasRegistered = false;
+    private boolean mCallFromCallback = false;
 
     @Override
     protected void initView() {
@@ -60,11 +65,29 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (AppHelper.checkLogin()) {
-            // TODO 已注册，确认取消
-            ViewUtils.showToast(this, "已登录，确认取消");
+        MaterialDialog.ButtonCallback callback = new MaterialDialog.ButtonCallback() {
+            @Override
+            public void onPositive(MaterialDialog dialog) {
+                mCallFromCallback = true;
+                onBackPressed();
+            }
+        };
+
+        if (!mCallFromCallback) {
+            if (AppHelper.checkLogin()) {
+                ViewUtils.showSimpleDialog(this, null,
+                        getString(R.string.msg_register_login_cancel_confirm), callback);
+            } else if (mHasRegistered) {
+                ViewUtils.showSimpleDialog(this, null,
+                        getString(R.string.msg_register_cancel_confirm), callback);
+            }
         } else {
             super.onBackPressed();
         }
+        mCallFromCallback = false;
+    }
+
+    public void onEvent(RegisterEvent event) {
+        mHasRegistered = true;
     }
 }

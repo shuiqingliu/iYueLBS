@@ -21,7 +21,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.event.DialogEvent;
-import com.iyuelbs.ui.main.MainActivity;
+import com.iyuelbs.event.LoginEvent;
 import com.iyuelbs.utils.AVUtils;
 import com.iyuelbs.utils.ViewUtils;
 
@@ -45,6 +45,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
                     confirmBtn.performClick();
+                    ViewUtils.closeKeyboard(mPasswordText);
                     return true;
                 }
                 return false;
@@ -100,11 +101,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                             onLoginSuccess();
                         } else {
                             AVUtils.onFailure(mContext, e);
+
                             if (e.getCode() == AVException.USER_MOBILEPHONE_NOT_VERIFIED) {
                                 Intent intent = new Intent(mContext, RegisterActivity.class);
-                                intent.putExtra(Keys.EXTRA_REGISTER_STEP,Keys.REG_STEP_PHONE_VERIFY);
+                                intent.putExtra(Keys.EXTRA_REGISTER_STEP, Keys.REG_STEP_PHONE_VERIFY);
                                 intent.putExtra(Keys.EXTRA_PHONE_NUMBER,
                                         mLoginText.getText().toString());
+                                intent.putExtra(Keys.EXTRA_ACTION_NEXT, Keys.ACTION_GO_HOME);
                                 intent.putExtra(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
                                 startActivity(intent);
                             }
@@ -114,9 +117,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
     }
 
     protected void onLoginSuccess() {
-        AppHelper.getUpdatedUser();
-        Intent intent = new Intent(mContext, MainActivity.class);
-        startActivity(intent);
-        getActivity().finish();
+        AppHelper.postEvent(new LoginEvent());
     }
 }

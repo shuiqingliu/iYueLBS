@@ -38,8 +38,12 @@ public class AppHelper {
         return getApplication().getCurUser();
     }
 
-    public static boolean checkLogin() {
+    public static boolean checkLoginCache() {
         return getApplication().isLogin();
+    }
+
+    public static boolean checkLogin() {
+        return getUpdatedUser() != null;
     }
 
     /**

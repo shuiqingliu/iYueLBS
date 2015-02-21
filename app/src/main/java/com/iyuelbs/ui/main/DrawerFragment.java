@@ -113,7 +113,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     }
 
     private void initUserInfo() {
-        if (AppHelper.checkLogin()) {
+        if (AppHelper.checkLoginCache()) {
             User user = AppHelper.getCurrentUser();
             getImageLoader().displayImage(user.getAvatar().getUrl(), mAvatarImage, mImageOptions);
             mAvatarImage.setVisibility(View.VISIBLE);
