@@ -40,7 +40,7 @@ import java.io.IOException;
 /**
  * Created by Bob Peng on 2015/2/6.
  */
-public class RegUserDetailFragment extends BaseFragment implements View.OnClickListener {
+public class RegisterUserDetail extends BaseFragment implements View.OnClickListener {
 
     private RoundedImageView mAvatarView;
     private EditText mNickNameText;

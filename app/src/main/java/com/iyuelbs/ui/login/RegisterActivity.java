@@ -30,17 +30,17 @@ public class RegisterActivity extends BaseActivity {
         int step = bundle == null ? 0 : bundle.getInt(Keys.EXTRA_REGISTER_STEP);
         switch (step) {
             case Keys.REG_STEP_USER_DETAIL:
-                fragment = new RegUserDetailFragment();
+                fragment = new RegisterUserDetail();
                 break;
             case Keys.REG_STEP_PHONE_VERIFY:
-                fragment = RegPhoneVerify.newInstance(bundle);
+                fragment = RegisterPhoneVerify.newInstance(bundle);
                 break;
             case Keys.REG_STEP_USER_CONFIG:
                 getFragmentManager().beginTransaction().replace(R.id.common_container,
-                        new RegQuickSettings()).commit();
+                        new RegisterQuickSettings()).commit();
                 return;
             default:
-                fragment = new RegAccountFragment();
+                fragment = new RegisterAccount();
                 break;
         }
 

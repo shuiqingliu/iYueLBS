@@ -4,51 +4,62 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:padding="16dp">
+              android:paddingBottom="16dp"
+              android:paddingLeft="8dp"
+              android:paddingRight="16dp"
+              android:paddingTop="16dp">
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/title_username"
         android:singleLine="true"
         app:floatingLabel="normal"
-        app:floatingLabelAlwaysShown="true"
         app:floatingLabelText="@string/title_username"
-        app:helperText="@string/helper_username"/>
+        app:helperText="@string/helper_username"
+        app:iconLeft="@drawable/ic_person_grey600_24dp"
+        app:iconPadding="0dp"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="2dp"
+        android:hint="@string/title_phone_number"
         android:inputType="phone"
         android:singleLine="true"
         app:floatingLabel="normal"
-        app:floatingLabelAlwaysShown="true"
         app:floatingLabelText="@string/title_phone_number"
-        app:helperText="@string/helper_phone"/>
+        app:helperText="@string/helper_phone"
+        app:iconLeft="@drawable/ic_phone_android_grey600_24dp"
+        app:iconPadding="0dp"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="2dp"
+        android:hint="@string/title_password"
         android:inputType="textPassword"
         android:singleLine="true"
         app:floatingLabel="normal"
-        app:floatingLabelAlwaysShown="true"
         app:floatingLabelText="@string/title_password"
-        app:helperText="@string/helper_password"/>
+        app:helperText="@string/helper_password"
+        app:iconLeft="@drawable/ic_lock_grey600_24dp"
+        app:iconPadding="0dp"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_account_pwd_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="2dp"
+        android:hint="@string/title_confirm_pwd"
         android:imeOptions="actionGo"
         android:inputType="textPassword"
         android:singleLine="true"
         app:floatingLabel="normal"
-        app:floatingLabelAlwaysShown="true"
-        app:floatingLabelText="@string/title_confirm_pwd"/>
+        app:floatingLabelText="@string/title_confirm_pwd"
+        app:iconLeft="@drawable/ic_lock_grey600_24dp"
+        app:iconPadding="0dp"/>
 </LinearLayout>

@@ -45,7 +45,7 @@
             android:name=".receiver.MessageReceiver"
             android:exported="false">
             <!--<intent-filter>-->
-                <!--&lt;!&ndash;<action android:name="cn.bmob.push.action.MESSAGE"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<action android:name="cn.bmob.push.action.MESSAGE"/>&ndash;&gt;-->
             <!--</intent-filter>-->
         </receiver>
 

@@ -36,7 +36,7 @@ import java.util.TimerTask;
 /**
  * Created by Bob Peng on 2015/2/15.
  */
-public class RegPhoneVerify extends BaseFragment implements View.OnClickListener {
+public class RegisterPhoneVerify extends BaseFragment implements View.OnClickListener {
     public static final String TAG = "RegPhoneVerify";
 
     private MaterialEditText mCodeText;
@@ -51,8 +51,8 @@ public class RegPhoneVerify extends BaseFragment implements View.OnClickListener
     private Timer mTimer;
     private ResentTask mTask;
 
-    public static RegPhoneVerify newInstance(Bundle data) {
-        RegPhoneVerify fragment = new RegPhoneVerify();
+    public static RegisterPhoneVerify newInstance(Bundle data) {
+        RegisterPhoneVerify fragment = new RegisterPhoneVerify();
         fragment.setArguments(data);
         return fragment;
     }
@@ -176,10 +176,10 @@ public class RegPhoneVerify extends BaseFragment implements View.OnClickListener
                         if (user != null) {
                             List<Fragment> fragments = getFragmentManager().getFragments();
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.common_container, new RegUserDetailFragment());
+                            transaction.replace(R.id.common_container, new RegisterUserDetail());
                             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
-                            String className = RegUserDetailFragment.class.getSimpleName();
+                            String className = RegisterUserDetail.class.getSimpleName();
                             for (Fragment fragment : fragments) {
                                 if (!fragment.getClass().getSimpleName().equals(className)) {
                                     transaction.remove(fragment);

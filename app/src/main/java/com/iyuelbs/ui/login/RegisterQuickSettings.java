@@ -20,7 +20,7 @@ import com.iyuelbs.utils.ViewUtils;
 /**
  * Created by Bob Peng on 2015/2/10.
  */
-public class RegQuickSettings extends PreferenceFragment {
+public class RegisterQuickSettings extends PreferenceFragment {
 
     private static final String KEY_SHOW_LOCATION_STATUS = "key_show_location_status";
     private static final String KEY_SHOW_STATUS_TO_ALL = "key_show_status_to_all";

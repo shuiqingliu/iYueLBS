@@ -32,7 +32,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 /**
  * Created by Bob Peng on 2015/2/3.
  */
-public class RegAccountFragment extends BaseFragment {
+public class RegisterAccount extends BaseFragment {
 
     private static final int MIN_PWD_LENGTH = 8;
 
@@ -208,13 +208,13 @@ public class RegAccountFragment extends BaseFragment {
         intent.putString(Keys.EXTRA_PHONE_NUMBER, mPhoneText.getText().toString());
         intent.putString(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
 
-        Fragment fragment = getFragmentManager().findFragmentByTag(RegPhoneVerify.TAG);
+        Fragment fragment = getFragmentManager().findFragmentByTag(RegisterPhoneVerify.TAG);
         if (fragment == null) {
-            fragment = RegPhoneVerify.newInstance(intent);
+            fragment = RegisterPhoneVerify.newInstance(intent);
         }
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.common_container, fragment, RegPhoneVerify.TAG);
+        transaction.replace(R.id.common_container, fragment, RegisterPhoneVerify.TAG);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commit();
