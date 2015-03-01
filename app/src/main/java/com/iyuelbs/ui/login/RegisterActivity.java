@@ -17,7 +17,7 @@ import com.iyuelbs.utils.ViewUtils;
 public class RegisterActivity extends BaseActivity {
 
     private boolean mHasRegistered = false;
-    private boolean mCallFromCallback = false;
+    private boolean mIsCallback = false;
 
     @Override
     protected void initView() {
@@ -68,23 +68,25 @@ public class RegisterActivity extends BaseActivity {
         MaterialDialog.ButtonCallback callback = new MaterialDialog.ButtonCallback() {
             @Override
             public void onPositive(MaterialDialog dialog) {
-                mCallFromCallback = true;
+                mIsCallback = true;
                 onBackPressed();
             }
         };
 
-        if (!mCallFromCallback) {
+        if (!mIsCallback) {
             if (AppHelper.checkLogin()) {
                 ViewUtils.showSimpleDialog(this, null,
                         getString(R.string.msg_register_login_cancel_confirm), callback);
+                return;
             } else if (mHasRegistered) {
                 ViewUtils.showSimpleDialog(this, null,
                         getString(R.string.msg_register_cancel_confirm), callback);
+                return;
             }
-        } else {
-            super.onBackPressed();
         }
-        mCallFromCallback = false;
+
+        super.onBackPressed();
+        mIsCallback = false;
     }
 
     public void onEvent(RegisterEvent event) {
