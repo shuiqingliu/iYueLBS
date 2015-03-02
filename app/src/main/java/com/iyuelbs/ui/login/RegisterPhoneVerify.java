@@ -20,13 +20,12 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
-import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.NavUtils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.main.MainActivity;
-import com.iyuelbs.utils.AVUtils;
-import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.List;
@@ -112,7 +111,7 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
             if (mNextAction == 0) {
                 verifyCode();
             } else if (mNextAction == Keys.ACTION_GO_HOME) {
-                MainActivity.go(mContext);
+                NavUtils.go(mContext, MainActivity.class);
                 getActivity().finish();
             }
         }
@@ -123,7 +122,7 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
         if (TextUtils.isEmpty(mCodeText.getText())) {
             ViewUtils.showToast(mContext, getString(R.string.msg_verify_code_required));
         } else {
-            AppHelper.postEvent(new DialogEvent());
+            showDialog();
             ViewUtils.closeKeyboard(mCodeText);
             User.verifyMobilePhoneInBackground(mCodeText.getText().toString(), new VerifyCallBack());
         }
@@ -172,7 +171,7 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
                 User.loginByMobilePhoneNumberInBackground(mPhoneNumber, mPassword, new LogInCallback<User>() {
                     @Override
                     public void done(User user, AVException e) {
-                        AppHelper.postEvent(new DialogEvent(null));
+                        dismissDialog();
                         if (user != null) {
                             List<Fragment> fragments = getFragmentManager().getFragments();
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -192,7 +191,7 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
                     }
                 }, User.class);
             } else {
-                AppHelper.postEvent(new DialogEvent(null));
+                dismissDialog();
                 AVUtils.onFailure(mContext, e);
             }
         }

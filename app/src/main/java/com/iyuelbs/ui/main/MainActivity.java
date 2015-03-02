@@ -1,11 +1,11 @@
 package com.iyuelbs.ui.main;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +15,8 @@ import android.widget.FrameLayout;
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.app.Keys;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.CommonActivity;
-import com.iyuelbs.utils.ViewUtils;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -26,21 +26,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DrawerController mDrawerController;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-
-    /**
-     * I'm really hate this.
-     */
-    public static void go(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
-    }
-
-    public static void goWithClear(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
 
     @Override
     public void onAttachFragment(Fragment fragment) {
@@ -134,6 +119,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_AVATAR);
                 startActivity(intent);
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else {
+            super.onBackPressed();
         }
     }
 }

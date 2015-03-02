@@ -6,21 +6,21 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
-import com.iyuelbs.event.LoginEvent;
+import com.iyuelbs.support.event.LoginEvent;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.NavUtils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.main.MainActivity;
-import com.iyuelbs.utils.AVUtils;
-import com.iyuelbs.utils.ViewUtils;
+
+import de.greenrobot.event.EventBus;
 
 public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (checkUserState()) {
-            MainActivity.go(this);
-            finish();
-        }
-
+        checkUserLogin();
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -40,19 +40,26 @@ public class LoginActivity extends BaseActivity {
                 .commit();
     }
 
-    public void onEventMainThread(LoginEvent event) {
-        if (checkUserState()) {
-            MainActivity.go(this);
-            finish();
-        }
+    @Override
+    public void registerEventBus() {
+        EventBus.getDefault().register(this);
     }
 
-    private boolean checkUserState() {
+    @Override
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(LoginEvent event) {
+        checkUserLogin();
+    }
+
+    private boolean checkUserLogin() {
         if (!AppHelper.checkLogin()) {
             return false;
         }
         if (!AVUtils.isUserInfoComplete(AppHelper.getUpdatedUser())) {
-            ViewUtils.showSimpleDialog(this, null, getString(R.string.msg_user_info_not_complete),
+            ViewUtils.showSimpleDialog(this, null, getString(R.string.msg_register_cancel_confirm),
                     new MaterialDialog.ButtonCallback() {
                         @Override
                         public void onPositive(MaterialDialog dialog) {
@@ -61,6 +68,10 @@ public class LoginActivity extends BaseActivity {
                     });
             return false;
         }
+
+        NavUtils.go(this, MainActivity.class);
+        finish();
         return true;
     }
+
 }

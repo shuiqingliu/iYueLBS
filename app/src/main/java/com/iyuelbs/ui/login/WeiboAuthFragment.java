@@ -3,6 +3,7 @@ package com.iyuelbs.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,8 @@ import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.utils.AVUtils;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -47,6 +49,7 @@ public class WeiboAuthFragment extends BaseFragment {
     private WebView mWebView;
     private ProgressBar mProgressBar;
     private int mAuthType = 0;
+    private int counter = 0;
 
     public static WeiboAuthFragment getInstance(Bundle data) {
         WeiboAuthFragment fragment = new WeiboAuthFragment();
@@ -107,20 +110,7 @@ public class WeiboAuthFragment extends BaseFragment {
                     return true;
                 } else if (url.startsWith(AppConfig.REDIRECT_URL + "?code=")) {
                     // 处理成功回调
-                    String code = url.replace(AppConfig.REDIRECT_URL + "?code=", "");
-                    url = String.format(WEIBO_AT_URL, code);
-                    RequestParams params = new RequestParams();
-                    params.put("client_id", AppConfig.WEIBO_KEY);
-                    params.put("client_secret", AppConfig.WEIBO_SECRET);
-                    params.put("grant_type", "authorization_code");
-                    params.put("code", code);
-                    params.put("redirect_uri", AppConfig.REDIRECT_URL);
-                    AppHelper.getHttpClient().post(url, new JsonHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                            handleAuthResult(response);
-                        }
-                    });
+                    onAuthSuccess(url);
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, url);
@@ -142,29 +132,54 @@ public class WeiboAuthFragment extends BaseFragment {
         return view;
     }
 
-    private void handleAuthResult(JSONObject response) {
-        if (response == null) {
-            return;
-        }
+    private void onAuthSuccess(String url) {
+        Log.e("xifan", "call 1");
+        showDialog();
+        String code = url.replace(AppConfig.REDIRECT_URL + "?code=", "");
+        url = String.format(WEIBO_AT_URL, code);
+        RequestParams params = new RequestParams();
+        params.put("client_id", AppConfig.WEIBO_KEY);
+        params.put("client_secret", AppConfig.WEIBO_SECRET);
+        params.put("grant_type", "authorization_code");
+        params.put("code", code);
+        params.put("redirect_uri", AppConfig.REDIRECT_URL);
+        AppHelper.getHttpClient().post(url, new JsonHttpResponseHandler() {
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.e("xifan", "call 2");
+                dismissDialog();
 
-        try {
-            User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(response.getString
-                    (KEY_ACCESS_TOKEN), response.getString(KEY_EXPIRES_IN),
-                    User.AVThirdPartyUserAuth.SNS_SINA_WEIBO, response.getString(KEY_UID));
+                try {
+                    User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(response
+                            .getString(KEY_ACCESS_TOKEN), response.getString(KEY_EXPIRES_IN),
+                            User.AVThirdPartyUserAuth.SNS_SINA_WEIBO,
+                            response.getString(KEY_UID));
 
-            User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
-                public void done(User user, AVException e) {
-                    if (user != null) {
-                        getActivity().setResult(-1);
-                        getActivity().finish();
-                    } else {
-                        AVUtils.onFailure(mContext, e);
-                    }
+                    User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
+                        public void done(User user, AVException e) {
+                            if (user != null) {
+                                getActivity().setResult(-1);
+                                Log.e("","auth success");
+                            } else {
+                                AVUtils.onFailure(mContext, e);
+                            }
+                            getActivity().finish();
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    ViewUtils.showToast(mContext, R.string.msg_request_error);
+                    getActivity().finish();
                 }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+            }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Log.e("xifan", "call 2.5");
+                dismissDialog();
+                ViewUtils.showToast(mContext, throwable.getMessage());
+                getActivity().finish();
+            }
+        });
+    }
 }

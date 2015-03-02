@@ -9,15 +9,13 @@ import android.view.WindowManager;
 
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.external.SystemBarTintManager;
+import com.iyuelbs.support.widget.SystemBarTintManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Bob Peng on 2015/1/25.
@@ -111,12 +109,5 @@ public class AppHelper {
             tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
             tintManager.setTintColor(color);
         }
-    }
-
-    /**
-     * Helper method for {@code EventBus.getDefault()}
-     */
-    public static void postEvent(Object event) {
-        EventBus.getDefault().post(event);
     }
 }

@@ -70,9 +70,9 @@
     <string name="msg_sending">正在发送&#8230;</string>
     <string name="msg_invalid_uri">图片路径读取出错</string>
     <string name="msg_register_already_done">您已成功注册当前账号，如需修改密码请到设置中进行修改</string>
-    <string name="msg_user_info_not_complete">您的个人资料暂未完善，请完善后继续</string>
     <string name="msg_register_cancel_confirm">您已注册当前账号但还没有完成后续设置，是否继续？</string>
     <string name="msg_register_login_cancel_confirm">您已登录当前账号但还没有完成后续设置，是否继续？</string>
+    <string name="msg_request_error">请求出错，请重试</string>
 
     <string name="pref_show_location_status_title">告诉好友你的位置状态</string>
     <string name="pref_show_location_status_summary">我们会根据您设置的位置与手机的状态来判断您当前的状态并显示给您的好友，以方便随时约你</string>

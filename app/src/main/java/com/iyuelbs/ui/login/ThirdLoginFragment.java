@@ -15,14 +15,12 @@ import android.widget.TextView;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.R;
-import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.event.DialogEvent;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.CommonActivity;
-import com.iyuelbs.utils.AVUtils;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
@@ -127,11 +125,11 @@ public class ThirdLoginFragment extends LoginFragment {
 
     @Override
     protected void doLogin() {
-        AppHelper.postEvent(new DialogEvent(getString(R.string.msg_loging_in)));
+        showDialog(getString(R.string.msg_loging_in));
         User.loginByMobilePhoneNumberInBackground(mLoginText.getText().toString(), mPasswordText.getText().toString(),
                 new LogInCallback<User>() {
                     public void done(User user, AVException e) {
-                        AppHelper.postEvent(new DialogEvent(null));
+                        dismissDialog();
 
                         if (user != null) {
                             onLoginSuccess();

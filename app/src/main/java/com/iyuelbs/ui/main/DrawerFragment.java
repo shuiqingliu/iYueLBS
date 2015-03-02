@@ -22,8 +22,8 @@ import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.external.RoundedImageView;
-import com.iyuelbs.utils.ViewUtils;
+import com.iyuelbs.support.utils.ViewUtils;
+import com.iyuelbs.support.widget.RoundedImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -115,7 +115,7 @@ public class DrawerFragment extends ListFragment implements DrawerController {
     private void initUserInfo() {
         if (AppHelper.checkLoginCache()) {
             User user = AppHelper.getCurrentUser();
-            getImageLoader().displayImage(user.getAvatar().getUrl(), mAvatarImage, mImageOptions);
+            getImageLoader().displayImage(user.getAvatarUrl(), mAvatarImage, mImageOptions);
             mAvatarImage.setVisibility(View.VISIBLE);
             mUserNameText.setText(user.getNickName());
             mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());

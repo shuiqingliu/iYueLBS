@@ -11,11 +11,23 @@ import com.iyuelbs.ui.login.LoginFragment;
 import com.iyuelbs.ui.login.WeiboAuthFragment;
 import com.iyuelbs.ui.user.AvatarFragment;
 
+import de.greenrobot.event.EventBus;
+
 public class CommonActivity extends BaseActivity {
 
     @Override
     protected void initView() {
         setContentView(R.layout.common_activity);
+    }
+
+    @Override
+    public void registerEventBus() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

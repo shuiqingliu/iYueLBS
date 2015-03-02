@@ -10,9 +10,11 @@ import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
-import com.iyuelbs.event.RegisterEvent;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
+import com.iyuelbs.support.event.RegisterEvent;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
+
+import de.greenrobot.event.EventBus;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -87,6 +89,16 @@ public class RegisterActivity extends BaseActivity {
 
         super.onBackPressed();
         mIsCallback = false;
+    }
+
+    @Override
+    public void registerEventBus() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void unregisterEventBus() {
+        EventBus.getDefault().unregister(this);
     }
 
     public void onEvent(RegisterEvent event) {

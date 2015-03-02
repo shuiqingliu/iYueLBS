@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
-import com.iyuelbs.utils.Utils;
+import com.iyuelbs.support.utils.Utils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.soundcloud.android.crop.Crop;
 
@@ -36,10 +36,8 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
         mUploadBtn.setOnClickListener(this);
         mPreviewImage.setOnClickListener(this);
 
-        if (AppHelper.getCurrentUser().getAvatar() != null) {
-            AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatar().getUrl(),
-                    mPreviewImage, DisplayImageOptions.createSimple());
-        }
+        AppHelper.getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatarUrl(),
+                mPreviewImage, DisplayImageOptions.createSimple());
         return view;
     }
 
@@ -62,7 +60,7 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if (v == mPreviewImage) {
-            Crop.pickImage(getActivity(), Crop.REQUEST_PICK);
+            Crop.pickImage(getActivity());
         } else if (v == mUploadBtn) {
 //            BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
 //                @Override

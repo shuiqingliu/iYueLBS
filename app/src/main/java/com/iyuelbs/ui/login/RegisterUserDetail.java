@@ -25,12 +25,11 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.event.DialogEvent;
-import com.iyuelbs.external.RoundedImageView;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
+import com.iyuelbs.support.widget.RoundedImageView;
 import com.iyuelbs.ui.settings.SettingsActivity;
-import com.iyuelbs.utils.AVUtils;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.soundcloud.android.crop.Crop;
 
@@ -90,7 +89,7 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
             if (checkField()) {
-                AppHelper.postEvent(new DialogEvent());
+                showDialog();
                 if (mAvatarUri != null) {
                     try {
                         AVFile avatarFile = AVFile.withAbsoluteLocalPath("avatar.jpg", mAvatarUri);
@@ -105,6 +104,43 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private boolean checkField() {
+        boolean valid = true;
+        if (TextUtils.isEmpty(mNickNameText.getText())) {
+            ViewUtils.showToast(mContext, R.string.msg_nickname_required);
+            valid = false;
+        }
+        return valid;
+    }
+
+    private void onFinishUpdateUserDetails() {
+        User user = AppHelper.getUpdatedUser();
+        user.setNickName(mNickNameText.getText().toString());
+        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
+        user.setSignature(mSignatureText.getText().toString());
+        if (mAvatarUri == null) {
+            user.setAvatar(null);
+        }
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                dismissDialog();
+                if (e == null) {
+                    AppHelper.getUpdatedUser(); // force to refresh user cache
+                    Intent intent = new Intent(mContext, SettingsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
+                    startActivity(intent);
+                    getActivity().finish();
+                } else {
+                    AVUtils.onFailure(mContext, e);
+                }
+            }
+        });
     }
 
     @Override
@@ -135,42 +171,6 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
         }
     }
 
-    private boolean checkField() {
-        boolean valid = true;
-        if (TextUtils.isEmpty(mNickNameText.getText())) {
-            ViewUtils.showToast(mContext, R.string.msg_nickname_required);
-            valid = false;
-        }
-        return valid;
-    }
-
-    private void onFinishUpdateUserDetails() {
-        User user = AppHelper.getUpdatedUser();
-        user.setNickName(mNickNameText.getText().toString());
-        user.setIsMale(mSexSpinner.getSelectedItemPosition() == 0);
-        user.setSignature(mSignatureText.getText().toString());
-        if (mAvatarUri == null) {
-            user.setAvatar(new AVFile());
-        }
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                AppHelper.postEvent(new DialogEvent(null));
-                if (e == null) {
-                    AppHelper.getUpdatedUser(); // force to refresh user cache
-                    Intent intent = new Intent(mContext, SettingsActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QUICK_SETTINGS);
-                    startActivity(intent);
-                    getActivity().finish();
-                } else {
-                    AVUtils.onFailure(mContext, e);
-                }
-            }
-        });
-    }
-
     private class AvatarUploadCallback extends SaveCallback {
         private AVFile avFile;
 
@@ -180,7 +180,7 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
 
         @Override
         public void done(AVException e) {
-            AppHelper.postEvent(new DialogEvent(null));
+            dismissDialog();
             if (e == null) {
                 AppHelper.getUpdatedUser().setAvatar(avFile);
                 onFinishUpdateUserDetails();

@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="crop_saving">正在保存&#8230;</string>
+    <string name="crop_wait">请稍后&#8230;</string>
+    <string name="crop_pick_error">没有可用的图片来源</string>
+
+</resources>

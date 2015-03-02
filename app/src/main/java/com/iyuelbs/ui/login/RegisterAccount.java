@@ -22,11 +22,10 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.event.DialogEvent;
-import com.iyuelbs.event.RegisterEvent;
-import com.iyuelbs.utils.AVUtils;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
+import com.iyuelbs.support.event.RegisterEvent;
+import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 /**
@@ -92,7 +91,7 @@ public class RegisterAccount extends BaseFragment {
             mPasswordText.setEnabled(false);
             mConfirmPwdText.setEnabled(false);
             mPhoneText.requestFocus();
-            AppHelper.postEvent(new RegisterEvent());
+            postEvent(new RegisterEvent());
         }
     }
 
@@ -117,11 +116,11 @@ public class RegisterAccount extends BaseFragment {
         }
 
         if (!mHasSignedUp) {
-            AppHelper.postEvent(new DialogEvent(getString(R.string.msg_registering)));
+            showDialog(getString(R.string.msg_registering));
             mUser.signUpInBackground(new SignUpCallback() {
                 @Override
                 public void done(AVException e) {
-                    AppHelper.postEvent(new DialogEvent(null));
+                    dismissDialog();
                     if (e == null) {
                         onSignUpSuccess();
                     } else {
@@ -130,14 +129,14 @@ public class RegisterAccount extends BaseFragment {
                 }
             });
         } else {
-            AppHelper.postEvent(new DialogEvent(""));
+            showDialog();
             String phone = mPhoneText.getText().toString();
 
             if (mUser.getMobilePhoneNumber().equals(phone)) {
                 User.requestMobilePhoneVerifyInBackground(phone, new RequestMobileCodeCallback() {
                     @Override
                     public void done(AVException e) {
-                        AppHelper.postEvent(new DialogEvent(null));
+                        dismissDialog();
                         if (e == null) {
                             onSignUpSuccess();
                         } else {
@@ -150,7 +149,7 @@ public class RegisterAccount extends BaseFragment {
                 mUser.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {
-                        AppHelper.postEvent(new DialogEvent(null));
+                        dismissDialog();
                         if (e == null) {
                             onSignUpSuccess();
                         } else {

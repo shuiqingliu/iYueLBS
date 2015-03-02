@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.LayoutInflater;
@@ -13,9 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.iyuelbs.R;
+import com.iyuelbs.support.utils.NavUtils;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.main.MainActivity;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
 
 /**
  * Created by Bob Peng on 2015/2/10.
@@ -71,7 +73,7 @@ public class RegisterQuickSettings extends PreferenceFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_next || Utils.onUpKeySelected(id)) {
-            MainActivity.goWithClear(mContext);
+            NavUtils.go(mContext, MainActivity.class, Intent.FLAG_ACTIVITY_CLEAR_TASK);
             getActivity().finish();
             return true;
         }

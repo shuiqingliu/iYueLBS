@@ -7,17 +7,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.app.AppConfig;
-import com.iyuelbs.event.DialogEvent;
-import com.iyuelbs.external.SystemBarTintManager;
-import com.iyuelbs.utils.Utils;
-import com.iyuelbs.utils.ViewUtils;
+import com.iyuelbs.support.event.EventBusBinder;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.widget.SystemBarTintManager;
 
 import java.util.List;
 
@@ -26,9 +22,8 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Bob Peng on 2015/1/21.
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity implements EventBusBinder {
     protected Context mContext;
-    protected MaterialDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +69,9 @@ public abstract class BaseActivity extends ActionBarActivity {
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
         if (fragmentList != null && fragmentList.size() > 0) {
             for (Fragment fragment : fragmentList) {
-                if (fragment != null && fragment.isVisible())
+                if (fragment != null && fragment.isVisible()) {
                     fragment.onActivityResult(requestCode, resultCode, data);
+                }
             }
         }
     }
@@ -91,50 +87,31 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        registerEventBus();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        unregisterEventBus();
     }
 
     @Override
     public void onBackPressed() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
-    protected void showDialog(String msg) {
-        // TODO handle if dialog is showing.
-        if (mLoadingDialog != null) {
-            if (TextUtils.isEmpty(msg)) {
-                msg = getString(R.string.msg_loading);
-            }
-            mLoadingDialog.setContent(msg);
-            mLoadingDialog.show();
-        } else {
-            mLoadingDialog = ViewUtils.showLoadingDialog(this, msg);
-        }
+    @Override
+    public void registerEventBus() {
     }
 
-    protected void dismissDialog() {
-        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
-            mLoadingDialog.dismiss();
-        }
+    @Override
+    public void unregisterEventBus() {
     }
 
-    public void onEventMainThread(DialogEvent event) {
-        if (event.msg == null) {
-            dismissDialog();
-            Log.e("xifan", "dismissDialog");
-        } else {
-            showDialog(event.msg);
-            Log.e("xifan", "showDialog");
-        }
+    @Override
+    public void postEvent(Object event) {
+        EventBus.getDefault().post(event);
     }
+
 }

@@ -4,7 +4,9 @@ import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
-import com.iyuelbs.utils.Utils;
+import com.iyuelbs.R;
+import com.iyuelbs.support.utils.Utils;
+import com.iyuelbs.support.utils.ViewUtils;
 
 /**
  * Created by Bob Peng on 2015/1/24.
@@ -36,6 +38,12 @@ public class User extends AVUser {
         }
     }
 
+    @Override
+    public void setUsername(String username) {
+        username = username.toLowerCase().trim();
+        super.setUsername(username);
+    }
+
     public String getNickName() {
         return getString(KEY_NICKNAME);
     }
@@ -52,8 +60,9 @@ public class User extends AVUser {
         put(KEY_MALE, male);
     }
 
-    public AVFile getAvatar() {
-        return getAVFile(KEY_AVATAR);
+    public String getAvatarUrl() {
+        AVFile file = getAVFile(KEY_AVATAR);
+        return file == null ? ViewUtils.getDrawableUri(R.drawable.ic_default_avatar) : file.getUrl();
     }
 
     public void setAvatar(AVFile avatar) {
