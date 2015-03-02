@@ -28,6 +28,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  */
 public class ThirdLoginFragment extends LoginFragment {
 
+    private boolean mLoginCallback = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.third_login_fragment, container, false);
@@ -64,8 +66,18 @@ public class ThirdLoginFragment extends LoginFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1 && requestCode == Keys.FOR_COMMON_RESULT) {
+            mLoginCallback = true;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // EventBus is registered after onStart, so delay it to be registered.
+        if (mLoginCallback) {
             onLoginSuccess();
         }
+        mLoginCallback = false;
     }
 
     @Override

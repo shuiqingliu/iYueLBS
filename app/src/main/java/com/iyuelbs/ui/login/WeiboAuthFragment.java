@@ -3,7 +3,6 @@ package com.iyuelbs.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +48,6 @@ public class WeiboAuthFragment extends BaseFragment {
     private WebView mWebView;
     private ProgressBar mProgressBar;
     private int mAuthType = 0;
-    private int counter = 0;
 
     public static WeiboAuthFragment getInstance(Bundle data) {
         WeiboAuthFragment fragment = new WeiboAuthFragment();
@@ -133,7 +131,6 @@ public class WeiboAuthFragment extends BaseFragment {
     }
 
     private void onAuthSuccess(String url) {
-        Log.e("xifan", "call 1");
         showDialog();
         String code = url.replace(AppConfig.REDIRECT_URL + "?code=", "");
         url = String.format(WEIBO_AT_URL, code);
@@ -145,7 +142,6 @@ public class WeiboAuthFragment extends BaseFragment {
         params.put("redirect_uri", AppConfig.REDIRECT_URL);
         AppHelper.getHttpClient().post(url, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.e("xifan", "call 2");
                 dismissDialog();
 
                 try {
@@ -158,7 +154,6 @@ public class WeiboAuthFragment extends BaseFragment {
                         public void done(User user, AVException e) {
                             if (user != null) {
                                 getActivity().setResult(-1);
-                                Log.e("","auth success");
                             } else {
                                 AVUtils.onFailure(mContext, e);
                             }
@@ -175,7 +170,6 @@ public class WeiboAuthFragment extends BaseFragment {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Log.e("xifan", "call 2.5");
                 dismissDialog();
                 ViewUtils.showToast(mContext, throwable.getMessage());
                 getActivity().finish();
