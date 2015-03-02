@@ -76,8 +76,8 @@ public class ThirdLoginFragment extends LoginFragment {
         // EventBus is registered after onStart, so delay it to be registered.
         if (mLoginCallback) {
             onLoginSuccess();
+            mLoginCallback = false;
         }
-        mLoginCallback = false;
     }
 
     @Override
