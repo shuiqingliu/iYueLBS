@@ -35,18 +35,13 @@ dependencies {
     // network
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     // ui
+    compile project(':androidCrop')
     compile 'com.afollestad:material-dialogs:0.6.3.1'
     compile 'com.rengwuxian.materialedittext:library:1.8.2'
     // leancloud
     compile 'cn.leancloud.android:avoscloud-sdk:v2.6.11'
     compile 'cn.leancloud.android:avoscloud-push:v2.6.11@aar'
     compile 'cn.leancloud.android:avoscloud-statistics:v2.6.11@aar'
-    //    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-    //    avoscloud-feedback 为 LeanCloud 用户反馈包
-    //    compile 'cn.leancloud.android:avoscloud-feedback:2.6.11@aar'
-    //    avoscloud-sns 为 LeanCloud 第三方登陆包
-    //    compile 'cn.leancloud.android:avoscloud-sns:2.6.11@aar'
-    //    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-    //    compile 'cn.leancloud.android:weibo-sdk-android-sso:1.0.0-leancloud'
-    compile project(':androidCrop')
+    // avoscloud-feedback 为 LeanCloud 用户反馈包
+    // compile 'cn.leancloud.android:avoscloud-feedback:2.6.11@aar'
 }
