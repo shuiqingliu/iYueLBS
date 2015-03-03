@@ -62,7 +62,7 @@ public class AvatarFragment extends BaseFragment implements View.OnClickListener
         if (v == mPreviewImage) {
             Crop.pickImage(getActivity());
         } else if (v == mUploadBtn) {
-//            BmobProFile.getInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
+//            BmobProFile.newInstance(mContext).upload(getTmpAvatarFile().getPath(), new UploadListener() {
 //                @Override
 //                public void onSuccess(String filename, String url) {
 //                    User user = AppHelper.getCurUser();

@@ -96,7 +96,9 @@ public class ThirdLoginFragment extends LoginFragment {
                 startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
                 break;
             case R.id.third_login_qq:
-                //TODO Auth
+                intent = new Intent(mContext, CommonActivity.class);
+                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_QQ_AUTH);
+                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
                 break;
             case R.id.third_login_arrow_back:
                 getActivity().onBackPressed();

@@ -90,10 +90,6 @@ public class AppHelper {
         return getCacheDirPath() + File.separator + filename;
     }
 
-//    public static String signAvatar(Context context, String filename, String url) {
-//        return BmobProFile.getInstance(context).signURL(filename, url, AppConfig.BMOB_AK, 0, null);
-//    }
-
     /**
      * set status bar color, better use it in setupWindowStyle() method
      */

@@ -20,7 +20,6 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         checkUserLogin();
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -34,10 +33,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    protected void initFragments(Bundle data) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.common_container, new LoginFragment())
-                .commit();
+    protected void initFragments(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.common_container, new LoginFragment())
+                    .commit();
+        }
     }
 
     @Override

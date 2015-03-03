@@ -1,6 +1,5 @@
 package com.iyuelbs.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -14,9 +13,7 @@ import android.widget.FrameLayout;
 
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
-import com.iyuelbs.app.Keys;
 import com.iyuelbs.support.utils.ViewUtils;
-import com.iyuelbs.ui.CommonActivity;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -50,15 +47,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    @Override
-    protected void initView() {
-        setContentView(R.layout.fake_main_acitivity);
-    }
-
-    @Override
-    protected void initFragments(Bundle data) {
-    }
-
     private void hackActionBar() {
         ViewGroup decor = (ViewGroup) getWindow().getDecorView();
         View actionBar = decor.getChildAt(0);
@@ -66,13 +54,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         DrawerLayout drawerLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.main_activity, null);
         FrameLayout container = (FrameLayout) drawerLayout.findViewById(R.id.main_fake_content);
         container.setFitsSystemWindows(true);
-        ((ViewGroup.MarginLayoutParams) drawerLayout.findViewById(R.id.main_content).getLayoutParams())
-                .topMargin = ViewUtils.getPixels(56); // content missing actionbar
+        // correct system bar margin
+        ViewGroup.MarginLayoutParams params = ((ViewGroup.MarginLayoutParams) drawerLayout.findViewById
+                (R.id.main_content).getLayoutParams());
+        params.topMargin = ViewUtils.getPixels(56);
+        params.bottomMargin = ViewUtils.getPixels(48);
+
         decor.removeView(actionBar);
         container.addView(actionBar);
         decor.addView(drawerLayout);
 
         mDrawerLayout = drawerLayout;
+        initView();
+    }
+
+    @Override
+    protected void initView() {
+        // hacked R.layout.main_activity
+    }
+
+    @Override
+    protected void initFragments(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+        }
     }
 
     @Override
@@ -89,37 +93,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.login:
-                Intent intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_LOGIN);
-                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
-                break;
-            case R.id.register:
-                intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_REGISTER);
-                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
-                break;
-            case R.id.add_friend:
-                if (mDrawerController != null)
-                    mDrawerController.setItemCount(2, 5);
-                break;
-            case R.id.view_friend:
-                break;
-            case R.id.fill_info:
-                intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_FILL_INFO);
-                startActivity(intent);
-                break;
-            case R.id.new_tag:
-                break;
-            case R.id.upload_avatar:
-                intent = new Intent(mContext, CommonActivity.class);
-                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_AVATAR);
-                startActivity(intent);
-                break;
-        }
+//        int id = v.getId();
+//        switch (id) {
+//            case R.id.login:
+//                Intent intent = new Intent(mContext, CommonActivity.class);
+//                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_LOGIN);
+//                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
+//                break;
+//            case R.id.register:
+//                intent = new Intent(mContext, CommonActivity.class);
+//                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_REGISTER);
+//                startActivityForResult(intent, Keys.FOR_COMMON_RESULT);
+//                break;
+//            case R.id.add_friend:
+//                if (mDrawerController != null)
+//                    mDrawerController.setItemCount(2, 5);
+//                break;
+//            case R.id.view_friend:
+//                break;
+//            case R.id.fill_info:
+//                intent = new Intent(mContext, CommonActivity.class);
+//                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_FILL_INFO);
+//                startActivity(intent);
+//                break;
+//            case R.id.new_tag:
+//                break;
+//            case R.id.upload_avatar:
+//                intent = new Intent(mContext, CommonActivity.class);
+//                intent.putExtra(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_AVATAR);
+//                startActivity(intent);
+//                break;
+//        }
     }
 
     @Override
@@ -130,4 +134,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             super.onBackPressed();
         }
     }
+
 }

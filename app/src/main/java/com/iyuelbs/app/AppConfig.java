@@ -9,9 +9,11 @@ import android.preference.PreferenceManager;
 public class AppConfig {
     public static final String AVOS_APP_ID = "nbu2pmnfk3heomm0naqkrvaji848rd0xwfgs7vb55is5jkz1";
     public static final String AVOS_APP_KEY = "gwjh7evm1cwee3d1rf2j71l741li3f8dwel2n5q55ms3vf7r";
-    public static final String WEIBO_KEY = "2729685708";
+    public static final String WEIBO_ID = "2729685708";
     public static final String WEIBO_SECRET = "79f1d519042f2b1cf609970a876add5a";
-    public static final String REDIRECT_URL = "http://dating.bmob.cn/";
+    public static final String QQ_ID = "101196423";
+    public static final String QQ_SECRET = "7acba16d8ef62ecd49ed20535c1d8de9";
+    public static final String REDIRECT_URL = "dating.bmob.cn";
     public static final boolean TRANSLUCENT_BAR_ENABLED = true;
 
     public static SharedPreferences getPref() {

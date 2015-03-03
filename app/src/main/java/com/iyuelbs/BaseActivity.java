@@ -33,7 +33,7 @@ public abstract class BaseActivity extends ActionBarActivity implements EventBus
 
         setupActionBar(getResources().getColor(R.color.teal));
         initView();
-        initFragments(getIntent().getExtras());
+        initFragments(savedInstanceState);
     }
 
     protected void setupWindowStyle() {
@@ -61,7 +61,7 @@ public abstract class BaseActivity extends ActionBarActivity implements EventBus
 
     protected abstract void initView();
 
-    protected abstract void initFragments(Bundle data);
+    protected abstract void initFragments(Bundle savedInstanceState);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -131,4 +131,25 @@ public class Utils {
     public static boolean onUpKeySelected(int id) {
         return id == android.R.id.home;
     }
+
+    public static JSONObject getUrlParams(String url) {
+        String str = url.substring(url.indexOf("?") + 1, url.length());
+        if (str.startsWith("#")) {
+            str = str.substring(1, str.length());
+        }
+        String[] params = str.split("&");
+        JSONObject json = new JSONObject();
+        String[] set;
+        try {
+            for (String param : params) {
+                set = param.split("=");
+                if (set.length == 2) {
+                    json.put(set[0], set[1]);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
 }

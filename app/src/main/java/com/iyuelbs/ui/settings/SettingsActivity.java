@@ -19,11 +19,13 @@ public class SettingsActivity extends BaseActivity {
     }
 
     @Override
-    protected void initFragments(Bundle data) {
-        boolean quickSettings = data.getInt(Keys.EXTRA_OPEN_TYPE, 0) > 0;
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.common_container, quickSettings ? new RegisterQuickSettings() : new
-                SettingsFragment());
-        transaction.commit();
+    protected void initFragments(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            boolean quickSettings = getIntent().getIntExtra(Keys.EXTRA_OPEN_TYPE, 0) > 0;
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.common_container, quickSettings ? new RegisterQuickSettings() : new
+                    SettingsFragment());
+            transaction.commit();
+        }
     }
 }

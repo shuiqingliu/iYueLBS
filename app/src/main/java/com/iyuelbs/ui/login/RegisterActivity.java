@@ -27,15 +27,15 @@ public class RegisterActivity extends BaseActivity {
     }
 
     @Override
-    protected void initFragments(Bundle bundle) {
+    protected void initFragments(Bundle savedInstanceState) {
         Fragment fragment;
-        int step = bundle == null ? 0 : bundle.getInt(Keys.EXTRA_REGISTER_STEP);
+        int step = getIntent() == null ? 0 : getIntent().getIntExtra(Keys.EXTRA_REGISTER_STEP, -1);
         switch (step) {
             case Keys.REG_STEP_USER_DETAIL:
                 fragment = new RegisterUserDetail();
                 break;
             case Keys.REG_STEP_PHONE_VERIFY:
-                fragment = RegisterPhoneVerify.newInstance(bundle);
+                fragment = RegisterPhoneVerify.newInstance(getIntent().getExtras());
                 break;
             case Keys.REG_STEP_USER_CONFIG:
                 getFragmentManager().beginTransaction().replace(R.id.common_container,

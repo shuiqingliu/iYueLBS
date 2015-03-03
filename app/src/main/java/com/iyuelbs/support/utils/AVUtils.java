@@ -40,6 +40,6 @@ public class AVUtils {
     }
 
     public static boolean isUserInfoComplete(User user) {
-        return user.getNickName() != null;
+        return user.getNickName() != null && user.getMobilePhoneNumber() != null;
     }
 }
