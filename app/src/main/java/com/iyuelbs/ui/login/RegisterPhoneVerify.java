@@ -1,5 +1,6 @@
 package com.iyuelbs.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.RequestMobileCodeCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.support.utils.AVUtils;
@@ -108,12 +110,7 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_next) {
-            if (mNextAction == 0) {
-                verifyCode();
-            } else if (mNextAction == Keys.ACTION_GO_HOME) {
-                NavUtils.go(mContext, MainActivity.class);
-                getActivity().finish();
-            }
+            verifyCode();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -172,19 +169,26 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
                     @Override
                     public void done(User user, AVException e) {
                         dismissDialog();
-                        if (user != null) {
-                            List<Fragment> fragments = getFragmentManager().getFragments();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.common_container, new RegisterUserDetail());
-                            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
-                            String className = RegisterUserDetail.class.getSimpleName();
-                            for (Fragment fragment : fragments) {
-                                if (!fragment.getClass().getSimpleName().equals(className)) {
-                                    transaction.remove(fragment);
+                        if (user != null) {
+                            if (mNextAction == Keys.ACTION_GO_HOME) {
+                                AppHelper.getUpdatedUser();
+                                NavUtils.go(mContext, MainActivity.class, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                getActivity().finish();
+                            } else {
+                                List<Fragment> fragments = getFragmentManager().getFragments();
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.common_container, new RegisterUserDetail());
+                                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+
+                                String className = RegisterUserDetail.class.getSimpleName();
+                                for (Fragment fragment : fragments) {
+                                    if (!fragment.getClass().getSimpleName().equals(className)) {
+                                        transaction.remove(fragment);
+                                    }
                                 }
+                                transaction.commit();
                             }
-                            transaction.commit();
                         } else {
                             AVUtils.onFailure(mContext, e);
                         }

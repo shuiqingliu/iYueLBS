@@ -15,7 +15,7 @@ public class NavUtils {
     }
 
     public static void go(Context context, Class<?> clazz, Bundle bundle) {
-        go(context, clazz, null, 0);
+        go(context, clazz, bundle, 0);
     }
 
     public static void go(Context context, Class<?> clazz, int flags) {

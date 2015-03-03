@@ -1,6 +1,5 @@
 package com.iyuelbs.ui.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -21,6 +20,7 @@ import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.support.event.LoginEvent;
 import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.NavUtils;
 import com.iyuelbs.support.utils.ViewUtils;
 
 /**
@@ -101,13 +101,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
                             AVUtils.onFailure(mContext, e);
 
                             if (e.getCode() == AVException.USER_MOBILEPHONE_NOT_VERIFIED) {
-                                Intent intent = new Intent(mContext, RegisterActivity.class);
-                                intent.putExtra(Keys.EXTRA_REGISTER_STEP, Keys.REG_STEP_PHONE_VERIFY);
-                                intent.putExtra(Keys.EXTRA_PHONE_NUMBER,
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(Keys.EXTRA_REGISTER_STEP, Keys.REG_STEP_PHONE_VERIFY);
+                                bundle.putString(Keys.EXTRA_PHONE_NUMBER,
                                         mLoginText.getText().toString());
-                                intent.putExtra(Keys.EXTRA_ACTION_NEXT, Keys.ACTION_GO_HOME);
-                                intent.putExtra(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
-                                startActivity(intent);
+                                bundle.putInt(Keys.EXTRA_ACTION_NEXT, Keys.ACTION_GO_HOME);
+                                bundle.putString(Keys.EXTRA_PASSWORD, mPasswordText.getText().toString());
+                                NavUtils.go(mContext, RegisterActivity.class, bundle);
                             }
                         }
                     }

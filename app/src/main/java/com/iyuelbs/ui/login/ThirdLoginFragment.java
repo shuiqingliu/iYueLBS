@@ -18,6 +18,7 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.support.utils.AVUtils;
+import com.iyuelbs.support.utils.NavUtils;
 import com.iyuelbs.support.utils.Utils;
 import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.CommonActivity;
@@ -101,8 +102,7 @@ public class ThirdLoginFragment extends LoginFragment {
                 getActivity().onBackPressed();
                 break;
             case R.id.third_login_register:
-                intent = new Intent(mContext, RegisterActivity.class);
-                startActivity(intent);
+                NavUtils.go(mContext, RegisterActivity.class);
                 break;
         }
     }

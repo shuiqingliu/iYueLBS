@@ -34,7 +34,7 @@ import org.json.JSONObject;
 /**
  * Created by Bob Peng on 2015/2/20.
  */
-public class WeiboAuthFragment extends BaseFragment {
+public class AuthLoginFragment extends BaseFragment {
     private static final String WEIBO_AUTHORIZE_URL =
             "https://api.weibo.com/oauth2/authorize?client_id=" + AppConfig.WEIBO_KEY
                     + "&display=mobile&response_type=code&redirect_uri=" + AppConfig.REDIRECT_URL;
@@ -42,6 +42,7 @@ public class WeiboAuthFragment extends BaseFragment {
             "https://api.weibo.com/oauth2/access_token?client_id=" + AppConfig.WEIBO_KEY
                     + "&client_secret=" + AppConfig.WEIBO_SECRET + "&grant_type" +
                     "=authorization_code&code=%s&redirect_uri=" + AppConfig.REDIRECT_URL;
+    private static final String QQ_AUTHORIZE_URL = "https://graph.qq.com/oauth2.0/authorize?response_type=token&client_id=[YOUR_APPID]&redirect_uri=[YOUR_REDIRECT_URI]";
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_EXPIRES_IN = "expires_in";
     private static final String KEY_UID = "uid";
@@ -50,8 +51,8 @@ public class WeiboAuthFragment extends BaseFragment {
     private ProgressBar mProgressBar;
     private int mAuthType = 0;
 
-    public static WeiboAuthFragment getInstance(Bundle data) {
-        WeiboAuthFragment fragment = new WeiboAuthFragment();
+    public static AuthLoginFragment getInstance(Bundle data) {
+        AuthLoginFragment fragment = new AuthLoginFragment();
         fragment.setArguments(data);
         return fragment;
     }
@@ -105,7 +106,7 @@ public class WeiboAuthFragment extends BaseFragment {
                     Intent sendIntent = new Intent(Intent.ACTION_VIEW);
                     sendIntent.putExtra("address", url.replace("sms:", ""));
                     sendIntent.setType("vnd.android-dir/mms-sms");
-                    WeiboAuthFragment.this.startActivity(sendIntent);
+                    AuthLoginFragment.this.startActivity(sendIntent);
                     return true;
                 } else if (url.startsWith(AppConfig.REDIRECT_URL + "?code=")) {
                     // 处理成功回调
