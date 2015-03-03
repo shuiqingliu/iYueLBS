@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -114,6 +115,9 @@ public class WeiboAuthFragment extends BaseFragment {
                 return super.shouldOverrideUrlLoading(view, url);
             }
         });
+
+        mWebView.clearCache(true);
+        CookieManager.getInstance().removeSessionCookie();
 
         String url = WEIBO_AUTHORIZE_URL;
         if (getArguments() != null) {
