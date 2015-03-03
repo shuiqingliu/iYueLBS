@@ -90,14 +90,14 @@ public class RegisterPhoneVerify extends BaseFragment implements View.OnClickLis
                 return false;
             }
         });
-        return view;
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initTimer();
-        mResentBtn.setEnabled(false);
+        if (mNextAction == Keys.ACTION_GO_HOME) {
+            onClick(mResentBtn);
+        } else {
+            initTimer();
+            mResentBtn.setEnabled(false);
+        }
+        return view;
     }
 
     @Override
