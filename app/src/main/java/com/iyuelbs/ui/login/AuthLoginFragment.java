@@ -8,13 +8,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 import android.widget.ProgressBar;
-
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.BaseFragment;
@@ -27,9 +22,7 @@ import com.iyuelbs.support.utils.AVUtils;
 import com.iyuelbs.support.utils.Utils;
 import com.iyuelbs.support.utils.ViewUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
-
 import org.apache.http.Header;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -41,11 +34,11 @@ import java.net.URLEncoder;
 public class AuthLoginFragment extends BaseFragment {
     private static final String WEIBO_AUTHORIZE_URL =
             "https://api.weibo.com/oauth2/authorize?client_id=" + AppConfig.WEIBO_ID
-                    + "&display=mobile&response_type=code&redirect_uri=" + AppConfig.REDIRECT_URL;
+                    + "&display=mobile&response_type=code&redirect_uri=" + AppConfig.REDIRECT_WEIBO_URL;
     private static final String WEIBO_AT_URL =
             "https://api.weibo.com/oauth2/access_token?client_id=" + AppConfig.WEIBO_ID
                     + "&client_secret=" + AppConfig.WEIBO_SECRET + "&grant_type" +
-                    "=authorization_code&code=%s&redirect_uri=" + AppConfig.REDIRECT_URL;
+                    "=authorization_code&code=%s&redirect_uri=" + AppConfig.REDIRECT_WEIBO_URL;
     private static final String QQ_BASE_URL =
             "https://graph.qq.com/oauth2.0/authorize";
     private static final String KEY_ACCESS_TOKEN = "access_token";
@@ -115,7 +108,7 @@ public class AuthLoginFragment extends BaseFragment {
                     sendIntent.setType("vnd.android-dir/mms-sms");
                     AuthLoginFragment.this.startActivity(sendIntent);
                     return true;
-                } else if (url.startsWith(AppConfig.REDIRECT_URL + "?code=")) {
+                } else if (url.startsWith(AppConfig.REDIRECT_WEIBO_URL + "?code=")) {
                     onWeiboAuthSuccess(url);
                     return true;
                 } else if (url.contains("access_token")) {
@@ -160,7 +153,7 @@ public class AuthLoginFragment extends BaseFragment {
     private void onWeiboAuthSuccess(String url) {
         showDialog();
 
-        String code = url.replace(AppConfig.REDIRECT_URL + "?code=", "");
+        String code = url.replace(AppConfig.REDIRECT_WEIBO_URL + "?code=", "");
         url = String.format(WEIBO_AT_URL, code);
 
         AppHelper.getHttpClient().post(url, new AuthResponseHandler());
@@ -174,11 +167,10 @@ public class AuthLoginFragment extends BaseFragment {
     }
 
     private void onAuthSuccess(JSONObject json) {
-        try {
-            User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(json.getString
-                    (KEY_ACCESS_TOKEN), json.getString(KEY_EXPIRES_IN),
+            User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(json.optString
+                    (KEY_ACCESS_TOKEN), json.optString(KEY_EXPIRES_IN),
                     mAuthType == Keys.OPEN_WEIBO_AUTH ? "weibo" : "qq",
-                    json.optString(KEY_UID, json.getString(KEY_OPENID)));
+                    json.optString(KEY_UID, json.optString(KEY_OPENID)));
 
             User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
                 public void done(User user, AVException e) {
@@ -190,11 +182,6 @@ public class AuthLoginFragment extends BaseFragment {
                     getActivity().finish();
                 }
             });
-        } catch (JSONException e) {
-            e.printStackTrace();
-            ViewUtils.showToast(mContext, R.string.msg_request_error);
-            getActivity().finish();
-        }
     }
 
     private class AuthResponseHandler extends JsonHttpResponseHandler {

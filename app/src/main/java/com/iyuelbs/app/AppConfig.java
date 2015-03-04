@@ -14,6 +14,7 @@ public class AppConfig {
     public static final String QQ_ID = "101196423";
     public static final String QQ_SECRET = "7acba16d8ef62ecd49ed20535c1d8de9";
     public static final String REDIRECT_URL = "dating.bmob.cn";
+    public static final String REDIRECT_WEIBO_URL = "http://dating.bmob.cn/";
     public static final boolean TRANSLUCENT_BAR_ENABLED = true;
 
     public static SharedPreferences getPref() {
