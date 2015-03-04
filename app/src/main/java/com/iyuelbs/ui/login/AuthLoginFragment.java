@@ -8,8 +8,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.*;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.LogInCallback;
 import com.iyuelbs.BaseFragment;
@@ -22,6 +26,7 @@ import com.iyuelbs.support.utils.AVUtils;
 import com.iyuelbs.support.utils.Utils;
 import com.iyuelbs.support.utils.ViewUtils;
 import com.loopj.android.http.JsonHttpResponseHandler;
+
 import org.apache.http.Header;
 import org.json.JSONObject;
 
@@ -48,7 +53,7 @@ public class AuthLoginFragment extends BaseFragment {
 
     private WebView mWebView;
     private ProgressBar mProgressBar;
-    private int mAuthType = 0;
+    private int mAuthType = Keys.OPEN_WEIBO_AUTH;
 
     public static AuthLoginFragment newInstance(Bundle data) {
         AuthLoginFragment fragment = new AuthLoginFragment();
@@ -123,13 +128,9 @@ public class AuthLoginFragment extends BaseFragment {
 
         String url = WEIBO_AUTHORIZE_URL;
         if (getArguments() != null) {
-            mAuthType = getArguments().getInt(Keys.EXTRA_OPEN_TYPE, 0);
-            if (mAuthType > 0) {
-                if (mAuthType == Keys.OPEN_WEIBO_AUTH) {
-                    url = WEIBO_AUTHORIZE_URL;
-                } else if (mAuthType == Keys.OPEN_QQ_AUTH) {
-                    url = getQQAuthorizeUrl();
-                }
+            mAuthType = getArguments().getInt(Keys.EXTRA_OPEN_TYPE, Keys.OPEN_WEIBO_AUTH);
+            if (mAuthType == Keys.OPEN_QQ_AUTH) {
+                url = getQQAuthorizeUrl();
             }
         }
         mWebView.loadUrl(url);
@@ -165,21 +166,21 @@ public class AuthLoginFragment extends BaseFragment {
     }
 
     private void onAuthSuccess(JSONObject json) {
-            User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(json.optString
-                    (KEY_ACCESS_TOKEN), json.optString(KEY_EXPIRES_IN),
-                    mAuthType == Keys.OPEN_WEIBO_AUTH ? "weibo" : "qq",
-                    json.optString(KEY_UID, json.optString(KEY_OPENID)));
+        boolean isWeibo = mAuthType == Keys.OPEN_WEIBO_AUTH;
+        User.AVThirdPartyUserAuth userAuth = new User.AVThirdPartyUserAuth(json.optString
+                (KEY_ACCESS_TOKEN), json.optString(KEY_EXPIRES_IN), isWeibo ? "weibo" : "qq",
+                json.optString(isWeibo ? KEY_UID : KEY_OPENID));
 
-            User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
-                public void done(User user, AVException e) {
-                    if (user != null) {
-                        getActivity().setResult(-1);
-                    } else {
-                        AVUtils.onFailure(mContext, e);
-                    }
-                    getActivity().finish();
+        User.loginWithAuthData(User.class, userAuth, new LogInCallback<User>() {
+            public void done(User user, AVException e) {
+                if (user != null) {
+                    getActivity().setResult(-1);
+                } else {
+                    AVUtils.onFailure(mContext, e);
                 }
-            });
+                getActivity().finish();
+            }
+        });
     }
 
     private class AuthResponseHandler extends JsonHttpResponseHandler {
