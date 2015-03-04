@@ -120,8 +120,6 @@ public class AuthLoginFragment extends BaseFragment {
             }
         });
 
-        mWebView.clearCache(true);
-        CookieManager.getInstance().removeSessionCookie();
 
         String url = WEIBO_AUTHORIZE_URL;
         if (getArguments() != null) {
