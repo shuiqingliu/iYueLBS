@@ -53,6 +53,10 @@
 
         <activity android:name=".ui.settings.SettingsActivity"/>
 
+        <activity android:name=".ui.main.MyInfoDetail"
+                  android:label="@string/title_activity_my_detail">
+        </activity>
+
         <receiver
             android:name=".support.receiver.MessageReceiver"
             android:exported="false">

@@ -29,6 +29,7 @@
     <string name="title_verify_code">验证码</string>
     <string name="title_quick_settings">快捷设置</string>
     <string name="title_verify_phone">验证手机号</string>
+    <string name="title_activity_my_detail">我的</string>
 
     <string name="helper_username">用于登陆爱聊的账号</string>
     <string name="helper_phone">常用手机号，用于登陆账号以及密码找回</string>
@@ -37,6 +38,7 @@
     <string name="title_drawer_index">首页</string>
     <string name="title_drawer_places">附近</string>
     <string name="title_drawer_restaurant">餐厅</string>
+    <string name="title_drawer_me">我的</string>
 
     <string name="title_activity_register">加入爱约</string>
     <string name="title_user_detail">个人资料</string>

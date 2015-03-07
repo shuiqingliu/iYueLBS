@@ -2,6 +2,7 @@ package com.iyuelbs.ui.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,12 +12,7 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
@@ -81,6 +77,8 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 getString(R.string.title_drawer_places)));
         mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
                 getString(R.string.title_drawer_restaurant)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_arrow_back_grey600_24dp,
+                getString(R.string.title_drawer_me)));
         mDrawerList.add(mDividerItem);
         mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
                 getString(R.string.action_settings)));
@@ -143,6 +141,10 @@ public class DrawerFragment extends ListFragment implements DrawerController {
                 case 1: // place
                     break;
                 case 2: // restaurant
+                    break;
+                case 3:
+                    Intent intent = new Intent(mContext, MyInfoDetail.class);
+                    startActivity(intent);
                     break;
             }
         } else {
