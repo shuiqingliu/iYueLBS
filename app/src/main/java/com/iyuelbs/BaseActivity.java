@@ -9,15 +9,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
-
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.support.event.EventBusBinder;
 import com.iyuelbs.support.utils.Utils;
 import com.iyuelbs.support.widget.SystemBarTintManager;
+import de.greenrobot.event.EventBus;
 
 import java.util.List;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -74,6 +72,10 @@ public abstract class BaseActivity extends ActionBarActivity implements EventBus
                 }
             }
         }
+    }
+
+    protected int getScreenHeight() {
+        return findViewById(android.R.id.content).getHeight();
     }
 
     @Override

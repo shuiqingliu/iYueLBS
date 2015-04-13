@@ -36,8 +36,10 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     // network
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-    //floating actionbutton
+
+    compile 'com.github.kanytu:android-parallax-recyclerview:v1.2'
     compile 'com.getbase:floatingactionbutton:1.8.0'
+    compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     // ui
     compile project(':androidCrop')
     compile 'com.afollestad:material-dialogs:0.6.3.1'
