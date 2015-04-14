@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.iyuelbs"
         minSdkVersion 16
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -30,9 +30,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     // android support
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:cardview-v7:21.0.+'
-    compile 'com.android.support:recyclerview-v7:21.0.+'
+    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:cardview-v7:22.0.0'
+    compile 'com.android.support:recyclerview-v7:22.0.0'
     compile 'de.greenrobot:eventbus:2.4.0'
     // network
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
@@ -42,12 +42,10 @@ dependencies {
     compile 'com.github.ksoichiro:android-observablescrollview:1.5.0'
     // ui
     compile project(':androidCrop')
-    compile 'com.afollestad:material-dialogs:0.6.3.1'
+    compile 'com.afollestad:material-dialogs:0.7.1.3'
     compile 'com.rengwuxian.materialedittext:library:1.8.2'
     // leancloud
-    compile 'cn.leancloud.android:avoscloud-sdk:v2.6.11'
-    compile 'cn.leancloud.android:avoscloud-push:v2.6.11@aar'
-    compile 'cn.leancloud.android:avoscloud-statistics:v2.6.11@aar'
-    // avoscloud-feedback 为 LeanCloud 用户反馈包
-    // compile 'cn.leancloud.android:avoscloud-feedback:2.6.11@aar'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.1.2'
+    compile 'cn.leancloud.android:avoscloud-push:v3.1.2@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.1.2@aar'
 }
