@@ -137,10 +137,6 @@ public class MyInfoDetail extends BaseActivity {
     }
 
     @Override
-    protected void initFragments(Bundle savedInstanceState) {
-    }
-
-    @Override
     protected void initView() {
     }
 

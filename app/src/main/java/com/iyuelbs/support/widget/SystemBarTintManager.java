@@ -329,7 +329,7 @@ public class SystemBarTintManager {
         mStatusBarTintView.setLayoutParams(params);
         mStatusBarTintView.setBackgroundColor(DEFAULT_TINT_COLOR);
         mStatusBarTintView.setVisibility(View.GONE);
-        decorViewGroup.addView(mStatusBarTintView);
+        decorViewGroup.addView(mStatusBarTintView,0);
     }
 
     private void setupNavBarView(Context context, ViewGroup decorViewGroup) {

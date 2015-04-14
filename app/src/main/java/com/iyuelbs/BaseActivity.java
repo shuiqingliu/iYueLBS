@@ -5,17 +5,20 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewStub;
 import android.view.WindowManager;
+
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.support.event.EventBusBinder;
 import com.iyuelbs.support.utils.Utils;
 import com.iyuelbs.support.widget.SystemBarTintManager;
-import de.greenrobot.event.EventBus;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -28,38 +31,51 @@ public abstract class BaseActivity extends ActionBarActivity implements EventBus
         setupWindowStyle();
         super.onCreate(savedInstanceState);
         mContext = this;
+    }
+
+    /**
+     * @param useToolbar true to use base toolbar layout
+     */
+    protected void setContentView(int resId, boolean useToolbar) {
+        if (useToolbar) {
+            setContentView(R.layout.base_activity);
+            ViewStub stub = (ViewStub) findViewById(R.id.base_stub);
+            stub.setLayoutResource(resId);
+            stub.inflate();
+        } else {
+            setContentView(resId);
+        }
 
         setupActionBar(getResources().getColor(R.color.teal));
         initView();
-        initFragments(savedInstanceState);
     }
 
     protected void setupWindowStyle() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
     }
-
 
     /**
      * config actionBar or systemBar style.
      * only effect if actionBar exists.
      */
     protected void setupActionBar(int themeColor) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(themeColor);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                SystemBarTintManager tintManager = new SystemBarTintManager(this);
-                tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
-                tintManager.setTintColor(themeColor);
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(AppConfig.TRANSLUCENT_BAR_ENABLED);
+            tintManager.setTintColor(themeColor);
         }
     }
 
     protected abstract void initView();
-
-    protected abstract void initFragments(Bundle savedInstanceState);
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -80,7 +96,7 @@ public abstract class BaseActivity extends ActionBarActivity implements EventBus
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (Utils.onUpKeySelected(item.getItemId())) {
+        if (Utils.onUpKeyClick(item.getItemId())) {
             finish();
         }
         return super.onOptionsItemSelected(item);

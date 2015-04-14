@@ -72,7 +72,7 @@ public class RegisterQuickSettings extends PreferenceFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_next || Utils.onUpKeySelected(id)) {
+        if (id == R.id.action_next || Utils.onUpKeyClick(id)) {
             NavUtils.go(mContext, MainActivity.class, Intent.FLAG_ACTIVITY_CLEAR_TASK);
             getActivity().finish();
             return true;

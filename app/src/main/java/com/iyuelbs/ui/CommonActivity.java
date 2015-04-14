@@ -12,12 +12,13 @@ import com.iyuelbs.ui.user.AvatarFragment;
 public class CommonActivity extends BaseActivity {
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.common_activity);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.common_activity, true);
+        initFragments(savedInstanceState);
     }
 
-    @Override
-    protected void initFragments(Bundle savedInstanceState) {
+    private void initFragments(Bundle savedInstanceState) {
         if (savedInstanceState == null && getIntent() != null) {
             final Fragment fragment;
             int type = getIntent().getIntExtra(Keys.EXTRA_OPEN_TYPE, -1);
@@ -41,6 +42,11 @@ public class CommonActivity extends BaseActivity {
                         fragment).commit();
             }
         }
+    }
+
+    @Override
+    protected void initView() {
+
     }
 
 }

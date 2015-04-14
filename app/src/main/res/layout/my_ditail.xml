@@ -41,13 +41,6 @@
             fab:fab_colorPressed="@color/white_pressed"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            card_view:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
-            card_view:theme="@style/Toolbar" />
+    <include layout="@layout/toolbar"/>
 
 </RelativeLayout>

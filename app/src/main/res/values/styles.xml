@@ -1,9 +1,5 @@
 <resources>
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    </style>
-
-    <style name="AppTheme.Default">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/teal</item>
         <item name="colorPrimaryDark">@color/teal_dark</item>
         <item name="colorAccent">@color/pink</item>
@@ -15,18 +11,10 @@
         <item name="colorPrimaryDark">@color/login_background</item>
         <item name="colorAccent">@color/pink</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="menu_labels_style">
         <item name="android:background">@drawable/fab_label_background</item>
         <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Toolbar" parent="Theme.AppCompat">
-        <item name="colorPrimary">@color/teal</item>
-        <item name="colorPrimaryDark">@color/teal_dark</item>
-        <item name="colorAccent">@color/accent</item>
     </style>
 </resources>

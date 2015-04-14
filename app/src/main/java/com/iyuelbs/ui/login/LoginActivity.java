@@ -20,6 +20,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         checkUserLogin();
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.common_activity, false);
+        initFragments(savedInstanceState);
     }
 
     @Override
@@ -29,10 +32,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        setContentView(R.layout.common_activity);
+
     }
 
-    @Override
     protected void initFragments(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

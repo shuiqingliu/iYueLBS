@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
+import com.baidu.mapapi.SDKInitializer;
 import com.iyuelbs.entity.Banner;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
@@ -52,6 +53,8 @@ public class AppApplication extends Application {
         AVObject.registerSubclass(Banner.class);
         AVOSCloud.initialize(this, AppConfig.AVOS_APP_ID, AppConfig.AVOS_APP_KEY);
         updateCurUser();
+
+        SDKInitializer.initialize(this);
     }
 
     public User getCurUser() {

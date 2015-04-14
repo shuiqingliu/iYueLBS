@@ -128,7 +128,7 @@ public class Utils {
         AppConfig.putString(KEY_RANDOM_FILES, "");
     }
 
-    public static boolean onUpKeySelected(int id) {
+    public static boolean onUpKeyClick(int id) {
         return id == android.R.id.home;
     }
 

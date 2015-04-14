@@ -14,11 +14,17 @@ import com.iyuelbs.ui.login.RegisterQuickSettings;
 public class SettingsActivity extends BaseActivity {
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.common_activity);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.common_activity, true);
+        initFragments(savedInstanceState);
     }
 
     @Override
+    protected void initView() {
+
+    }
+
     protected void initFragments(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             boolean quickSettings = getIntent().getIntExtra(Keys.EXTRA_OPEN_TYPE, 0) > 0;

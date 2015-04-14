@@ -22,11 +22,17 @@ public class RegisterActivity extends BaseActivity {
     private boolean mIsCallback = false;
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.common_activity);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.common_activity, false);
+        initFragments(savedInstanceState);
     }
 
     @Override
+    protected void initView() {
+    }
+
     protected void initFragments(Bundle savedInstanceState) {
         Fragment fragment;
         int step = getIntent() == null ? 0 : getIntent().getIntExtra(Keys.EXTRA_REGISTER_STEP, -1);
@@ -58,7 +64,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (Utils.onUpKeySelected(item.getItemId())) {
+        if (Utils.onUpKeyClick(item.getItemId())) {
             onBackPressed();
             return true;
         }
