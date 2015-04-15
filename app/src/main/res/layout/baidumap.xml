@@ -51,4 +51,12 @@
         android:layout_marginTop="488dp"
         android:background="@color/teal"/>
 
+    <Button
+        android:id="@+id/location_req"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="400dp"
+        android:background="@color/teal_light"/>
+
 </RelativeLayout>

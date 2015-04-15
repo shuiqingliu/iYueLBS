@@ -33,6 +33,7 @@ import com.iyuelbs.R;
 public class MapFragment extends Fragment implements View.OnClickListener {
 
     private Button mRequestLocButton;
+    private Button mLocationReq;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient = null;
@@ -54,6 +55,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mRequestLocButton = (Button) view.findViewById(R.id.request);
+        mLocationReq = (Button) view.findViewById(R.id.location_req);
         RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
 
         mBaiduMap = mMapView.getMap();
@@ -65,13 +67,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);// 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
+        option.setScanSpan(999);
         mLocationClient.setLocOption(option);
         mLocationClient.start();
 
         // common ui
         mRequestLocButton.setText("普通");
         mRequestLocButton.setOnClickListener(this);
+        mLocationReq.setText("+");
+        mLocationReq.setOnClickListener(this);
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -147,6 +151,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v == mRequestLocButton) {
             onRequestLocation();
+        }else if (v == mLocationReq){
+            mLocationClient.requestLocation();
         }
     }
 
