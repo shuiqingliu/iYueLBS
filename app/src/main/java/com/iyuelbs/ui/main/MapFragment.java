@@ -124,11 +124,13 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        mMapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mMapView.onPause();
     }
 
     @Override
