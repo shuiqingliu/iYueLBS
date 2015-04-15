@@ -16,6 +16,7 @@ public class Tag extends AVObject {
     public static final String KEY_APPOINT_TIME = "appotointTime";
     public static final String KEY_PLACE = "place";
     public static final String KEY_USER = "user";
+    public static final String KEY_IS_COMPLETED = "isCompleted";
 
     public String getTitle() {
         return getString(KEY_TITLE);
@@ -60,5 +61,13 @@ public class Tag extends AVObject {
 
     public void setUser(User user) {
         put(KEY_USER, user);
+    }
+
+    public boolean isCompleted() {
+        return getBoolean(KEY_IS_COMPLETED);
+    }
+
+    public void setIsCompleted(boolean isCompleted) {
+        put(KEY_IS_COMPLETED, isCompleted);
     }
 }

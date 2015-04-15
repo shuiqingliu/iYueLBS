@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Created by Bob Peng on 2015/1/27.
  */
-public class DrawerFragment extends ListFragment implements DrawerController {
+public class DrawerFragment extends ListFragment {
 
     private Context mContext;
     private ImageLoader mImageLoader;
@@ -166,18 +166,8 @@ public class DrawerFragment extends ListFragment implements DrawerController {
         return mImageLoader;
     }
 
-    @Override
-    public int getCurrentFragmentIndex() {
-        return mCurrentIndex;
-    }
-
     private boolean isDivider(int position) {
         return mDrawerList.get(position).equals(mDividerItem);
-    }
-
-    @Override
-    public void setItemCount(int position, int count) {
-        getAdapter().setItemCounter(position, count);
     }
 
     private class DrawerAdapter extends BaseAdapter {

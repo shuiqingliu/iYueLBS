@@ -3,12 +3,26 @@ package com.iyuelbs.support.utils;
 import android.content.Context;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVQuery;
+import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+
+import java.util.List;
 
 /**
  * Created by Bob Peng on 2015/2/6.
  */
 public class AVUtils {
+
+    public static List<Tag> getUserTags() {
+        AVQuery<User> userQuery = User.getQuery(User.class);
+        userQuery.whereEqualTo("objectId",AppHelper.getCurrentUser().getObjectId());
+        AVQuery<Tag> query = Tag.getQuery(Tag.class);
+        query.whereMatchesQuery("user",userQuery);
+//        query.findInBackground();
+        return null;
+    }
 
     public static void onFailure(Context context, AVException exception) {
         String msg = exception.getMessage();
