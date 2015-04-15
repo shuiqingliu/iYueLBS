@@ -3,6 +3,7 @@ package com.iyuelbs.ui.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,13 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.CircleOptions;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
 import com.iyuelbs.R;
 
@@ -145,6 +148,21 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void drawCircle(LatLng latLng){
+        CircleOptions circleOptions = new CircleOptions();
+        circleOptions.center(latLng);
+        circleOptions.fillColor(0x204DB6AC);
+        circleOptions.radius(300);
+        Stroke stroke = new Stroke(3, 0xff00796B);
+        //设置圆边框信息
+        circleOptions.stroke(stroke);
+        //地图添加一个覆盖物,并尝试重绘覆盖物
+        mBaiduMap.clear();
+        mBaiduMap.addOverlay(circleOptions);
+        Log.e("绘制","绘制完成");
+    }
+
+
     public class MyLocationListener implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -166,6 +184,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
+            drawCircle(new LatLng(location.getLatitude(),location.getLongitude()));
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
