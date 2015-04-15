@@ -43,6 +43,8 @@
     <string name="title_activity_register">加入爱约</string>
     <string name="title_user_detail">个人资料</string>
 
+    <string name="title_date_content">约会信息</string>
+
     <string name="btn_login">登录</string>
     <string name="btn_other_login">其他登录方式</string>
     <string name="btn_account_register">账号注册</string>
@@ -54,6 +56,7 @@
     <string name="btn_qq_login">QQ登录</string>
     <string name="default_login">直接登录</string>
     <string name="btn_resent_verify_code">重新发送</string>
+    <string name="btn_send_date">立即发布</string>
 
     <string name="msg_loading">请稍候&#8230;</string>
     <string name="msg_loging_in">正在登录&#8230;</string>

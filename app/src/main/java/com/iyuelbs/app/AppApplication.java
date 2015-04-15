@@ -2,6 +2,7 @@ package com.iyuelbs.app;
 
 import android.app.Application;
 
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 import com.baidu.mapapi.SDKInitializer;
@@ -52,6 +53,7 @@ public class AppApplication extends Application {
         AVObject.registerSubclass(Place.class);
         AVObject.registerSubclass(Banner.class);
         AVOSCloud.initialize(this, AppConfig.AVOS_APP_ID, AppConfig.AVOS_APP_KEY);
+        AVInstallation.getCurrentInstallation().saveInBackground();
         updateCurUser();
 
         SDKInitializer.initialize(this);

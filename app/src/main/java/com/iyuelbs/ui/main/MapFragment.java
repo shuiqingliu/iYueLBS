@@ -51,7 +51,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View view = layoutInflater.inflate(R.layout.baidumap, viewGroup);
+        View view = layoutInflater.inflate(R.layout.baidumap, viewGroup, false);
 
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mRequestLocButton = (Button) view.findViewById(R.id.request);
@@ -67,7 +67,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);// 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(999);
+        option.setScanSpan(0);
         mLocationClient.setLocOption(option);
         mLocationClient.start();
 
@@ -96,7 +96,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        return super.onCreateView(layoutInflater, viewGroup, bundle);
+        return view;
     }
 
     private void onRequestLocation() {
@@ -128,12 +128,16 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        if (mLocationClient != null && !mLocationClient.isStarted()) {
+            mLocationClient.start();
+        }
         mMapView.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mLocationClient.stop();
         mMapView.onPause();
     }
 
@@ -156,7 +160,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void drawCircle(LatLng latLng){
+    public void drawCircle(LatLng latLng) {
         CircleOptions circleOptions = new CircleOptions();
         circleOptions.center(latLng);
         circleOptions.fillColor(0x204DB6AC);
@@ -167,7 +171,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //地图添加一个覆盖物,并尝试重绘覆盖物
         mBaiduMap.clear();
         mBaiduMap.addOverlay(circleOptions);
-        Log.e("绘制","绘制完成");
+        Log.e("绘制", "绘制完成");
     }
 
 
@@ -192,7 +196,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
-            drawCircle(new LatLng(location.getLatitude(),location.getLongitude()));
+            drawCircle(new LatLng(location.getLatitude(), location.getLongitude()));
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
