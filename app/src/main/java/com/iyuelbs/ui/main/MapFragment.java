@@ -24,6 +24,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Stroke;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.iyuelbs.R;
 
@@ -40,6 +41,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private BitmapDescriptor mCurrentMarker;
     private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
     private boolean isFirstLoc = true;// 是否首次定位
+    private UiSettings uiSettings;
 
     private Context mContext;
 
@@ -118,6 +120,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             case FOLLOWING:
                 mRequestLocButton.setText("罗盘");
                 mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
+                //关闭俯视收拾
+                uiSettings = mBaiduMap.getUiSettings();
+                uiSettings.setOverlookingGesturesEnabled(false);
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
                                 mCurrentMode, true, mCurrentMarker));
@@ -193,6 +198,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 isFirstLoc = false;
                 LatLng ll = new LatLng(location.getLatitude(),
                         location.getLongitude());
+                //设置初始化缩放级别
+                mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(17));
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
