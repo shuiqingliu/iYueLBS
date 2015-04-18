@@ -3,7 +3,6 @@ package com.iyuelbs.ui.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,13 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.Circle;
 import com.baidu.mapapi.map.CircleOptions;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Stroke;
@@ -35,13 +37,18 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     private Button mRequestLocButton;
     private Button mLocationReq;
+    private Button mMarkerButton;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient = null;
     private BitmapDescriptor mCurrentMarker;
     private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
     private boolean isFirstLoc = true;// 是否首次定位
+    private boolean isFirsCircle = true; //是否首次绘制圆
     private UiSettings uiSettings;
+    private BDLocation location;
+    private Marker mMarker;
+    private Circle circle;
 
     private Context mContext;
 
@@ -58,6 +65,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mRequestLocButton = (Button) view.findViewById(R.id.request);
         mLocationReq = (Button) view.findViewById(R.id.location_req);
+        mMarkerButton = (Button) view.findViewById(R.id.marker);
         RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
 
         mBaiduMap = mMapView.getMap();
@@ -78,6 +86,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mRequestLocButton.setOnClickListener(this);
         mLocationReq.setText("+");
         mLocationReq.setOnClickListener(this);
+        mMarkerButton.setText("tag");
+        mMarkerButton.setOnClickListener(this);
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -123,6 +133,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 //关闭俯视收拾
                 uiSettings = mBaiduMap.getUiSettings();
                 uiSettings.setOverlookingGesturesEnabled(false);
+                uiSettings.setCompassEnabled(true);
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
                                 mCurrentMode, true, mCurrentMarker));
@@ -160,23 +171,46 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v == mRequestLocButton) {
             onRequestLocation();
-        }else if (v == mLocationReq){
+        }else if (v == mLocationReq) {
             mLocationClient.requestLocation();
+        }else if (v == mMarkerButton) {
+            addMarker();
         }
     }
 
-    public void drawCircle(LatLng latLng) {
-        CircleOptions circleOptions = new CircleOptions();
-        circleOptions.center(latLng);
+    //添加marker
+    public void addMarker(){
+        //添加marker
+            double latitude = mBaiduMap.getLocationData().latitude;
+            double longitude = mBaiduMap.getLocationData().longitude;
+            mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+            MarkerOptions options = new MarkerOptions()
+                    .position(new LatLng(latitude, longitude))
+                    .icon(mCurrentMarker)
+                    .zIndex(9);
+            mMarker = (Marker) mBaiduMap.addOverlay(options);
+    }
+
+
+    //初始化Circleoption
+    CircleOptions circleOptions = new CircleOptions();
+    public void drawCircle(){
+        double latitude = mBaiduMap.getLocationData().latitude;
+        double longitude = mBaiduMap.getLocationData().longitude;
+        circleOptions.center(new LatLng(latitude,longitude));
         circleOptions.fillColor(0x204DB6AC);
         circleOptions.radius(300);
         Stroke stroke = new Stroke(3, 0xff00796B);
         //设置圆边框信息
         circleOptions.stroke(stroke);
-        //地图添加一个覆盖物,并尝试重绘覆盖物
-        mBaiduMap.clear();
-        mBaiduMap.addOverlay(circleOptions);
-        Log.e("绘制", "绘制完成");
+        //地图添加一个覆盖物,不再重绘覆盖物，大大节省资源
+        if (isFirsCircle) {
+            circle =(Circle) mBaiduMap.addOverlay(circleOptions);
+            isFirsCircle = false;
+        }else{
+            circle.setCenter(new LatLng(latitude,longitude));
+        }
+
     }
 
 
@@ -203,7 +237,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
-            drawCircle(new LatLng(location.getLatitude(), location.getLongitude()));
+            //绘制圆形覆盖物
+            drawCircle();
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
