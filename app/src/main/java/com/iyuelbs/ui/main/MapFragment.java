@@ -3,12 +3,15 @@ package com.iyuelbs.ui.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -29,6 +32,12 @@ import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.entity.Tag;
+import com.iyuelbs.entity.User;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by xifan on 15-4-14.
@@ -189,6 +198,33 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                     .icon(mCurrentMarker)
                     .zIndex(9);
             mMarker = (Marker) mBaiduMap.addOverlay(options);
+            markerInfo();
+    }
+
+    //marker information
+    private void markerInfo(){
+        Tag tag = new Tag();
+        User user = AppHelper.getCurrentUser();
+        Calendar calendar = Calendar.getInstance();
+        Date time = calendar.getTime();
+        tag.setTitle("test");
+        tag.setAppointTime(time);
+        tag.setDetail("测试数据");
+        tag.setUser(user);
+        //tag.setPlace();
+        Log.e("time", "" + time);
+
+        //后台异步存储数据
+        tag.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    Log.e("saveok", "保存数据成功");
+                } else {
+                    Log.e("~—~", "出错了啦讨厌");
+                }
+            }
+        });
     }
 
 
