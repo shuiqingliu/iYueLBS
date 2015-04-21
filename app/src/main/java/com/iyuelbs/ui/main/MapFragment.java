@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -31,8 +32,15 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
+import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
 
@@ -42,7 +50,7 @@ import java.util.Date;
 /**
  * Created by xifan on 15-4-14.
  */
-public class MapFragment extends Fragment implements View.OnClickListener {
+public class MapFragment extends Fragment implements View.OnClickListener{
 
     private Button mRequestLocButton;
     private Button mLocationReq;
@@ -58,6 +66,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private BDLocation location;
     private Marker mMarker;
     private Circle circle;
+    public String placeStr; //位置信息
+    private GeoCoder mSearch; //搜索模块
 
     private Context mContext;
 
@@ -89,6 +99,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         option.setScanSpan(0);
         mLocationClient.setLocOption(option);
         mLocationClient.start();
+
+        // 初始化搜索模块，注册事件监听
+        mSearch = GeoCoder.newInstance();
+        mSearch.setOnGetGeoCodeResultListener(geoListener);
 
         // common ui
         mRequestLocButton.setText("普通");
@@ -171,6 +185,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         super.onDestroy();
         // 退出时销毁定位
         mLocationClient.stop();
+        //销毁查询
+        mSearch.destroy();
         // 关闭定位图层
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
@@ -201,8 +217,45 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             markerInfo();
     }
 
+    //反向地理编码
+    OnGetGeoCoderResultListener geoListener = new OnGetGeoCoderResultListener() {
+        @Override
+        public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+        }
+
+        @Override
+        public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+            if (reverseGeoCodeResult == null ||
+                    reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                //Toast.makeText(,"so sorry",Toast.LENGTH_LONG).show();
+                return;
+            }
+            placeStr = reverseGeoCodeResult.getAddress();
+           /* placeStr = reverseGeoCodeResult.getAddressDetail().city
+                        +reverseGeoCodeResult.getAddressDetail().province
+                        +reverseGeoCodeResult.getAddressDetail().district
+                        +reverseGeoCodeResult.getAddressDetail().street
+                        +reverseGeoCodeResult.getAddressDetail().streetNumber;*/
+            Log.e("hh", placeStr);
+        }
+    };
+
+    //place info
+    public Place placeInfo(String placegeo) {
+        double latitude = mBaiduMap.getLocationData().latitude;
+        double longitude = mBaiduMap.getLocationData().longitude;
+        mSearch.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(new LatLng(latitude, longitude)));
+        Place place = new Place();
+        place.setGeoLocation(new AVGeoPoint(mBaiduMap.getLocationData().latitude
+                , mBaiduMap.getLocationData().longitude));
+        place.setPlaceName(placegeo);
+        return place;
+    }
+
     //marker information
-    private void markerInfo(){
+    public void markerInfo(){
         Tag tag = new Tag();
         User user = AppHelper.getCurrentUser();
         Calendar calendar = Calendar.getInstance();
@@ -211,7 +264,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         tag.setAppointTime(time);
         tag.setDetail("测试数据");
         tag.setUser(user);
-        //tag.setPlace();
+        tag.setPlace(placeInfo(placeStr));
         Log.e("time", "" + time);
 
         //后台异步存储数据
