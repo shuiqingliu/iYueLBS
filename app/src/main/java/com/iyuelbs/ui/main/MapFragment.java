@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
@@ -68,7 +69,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     private Circle circle;
     public String placeStr; //位置信息
     private GeoCoder mSearch; //搜索模块
-
+    public Toast mToast;
     private Context mContext;
 
     @Override
@@ -134,6 +135,18 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == mRequestLocButton) {
+            onRequestLocation();
+        }else if (v == mLocationReq) {
+            mLocationClient.requestLocation();
+        }else if (v == mMarkerButton) {
+            addMarker();
+        }
+    }
+
+    //地图模式转化
     private void onRequestLocation() {
         switch (mCurrentMode) {
             case NORMAL:
@@ -164,45 +177,6 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mLocationClient != null && !mLocationClient.isStarted()) {
-            mLocationClient.start();
-        }
-        mMapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mLocationClient.stop();
-        mMapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // 退出时销毁定位
-        mLocationClient.stop();
-        //销毁查询
-        mSearch.destroy();
-        // 关闭定位图层
-        mBaiduMap.setMyLocationEnabled(false);
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == mRequestLocButton) {
-            onRequestLocation();
-        }else if (v == mLocationReq) {
-            mLocationClient.requestLocation();
-        }else if (v == mMarkerButton) {
-            addMarker();
-        }
-    }
-
     //添加marker
     public void addMarker(){
         //添加marker
@@ -221,36 +195,40 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     OnGetGeoCoderResultListener geoListener = new OnGetGeoCoderResultListener() {
         @Override
         public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-
         }
 
         @Override
         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
             if (reverseGeoCodeResult == null ||
                     reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                //Toast.makeText(,"so sorry",Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext,"对不起，获取当前位置出错,请稍候再试！",Toast.LENGTH_LONG).show();
                 return;
             }
             placeStr = reverseGeoCodeResult.getAddress();
-           /* placeStr = reverseGeoCodeResult.getAddressDetail().city
-                        +reverseGeoCodeResult.getAddressDetail().province
-                        +reverseGeoCodeResult.getAddressDetail().district
-                        +reverseGeoCodeResult.getAddressDetail().street
-                        +reverseGeoCodeResult.getAddressDetail().streetNumber;*/
-            Log.e("hh", placeStr);
+            Toast.makeText(mContext,placeStr,Toast.LENGTH_LONG).show();
         }
     };
 
     //place info
     public Place placeInfo(String placegeo) {
+        Place place = new Place();
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
         mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                 .location(new LatLng(latitude, longitude)));
-        Place place = new Place();
         place.setGeoLocation(new AVGeoPoint(mBaiduMap.getLocationData().latitude
                 , mBaiduMap.getLocationData().longitude));
         place.setPlaceName(placegeo);
+        place.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null){
+                    //Toast.makeText(mContext,"place保存成功",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext,"保存出错",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return place;
     }
 
@@ -274,7 +252,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
                 if (e == null) {
                     Log.e("saveok", "保存数据成功");
                 } else {
-                    Log.e("~—~", "出错了啦讨厌");
+                    Toast.makeText(mContext,"出错了讨厌啦",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -301,7 +279,6 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         }
 
     }
-
 
     public class MyLocationListener implements BDLocationListener {
         @Override
@@ -332,5 +309,33 @@ public class MapFragment extends Fragment implements View.OnClickListener{
 
         public void onReceivePoi(BDLocation poiLocation) {
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mLocationClient != null && !mLocationClient.isStarted()) {
+            mLocationClient.start();
+        }
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mLocationClient.stop();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // 退出时销毁定位
+        mLocationClient.stop();
+        //销毁查询
+        mSearch.destroy();
+        // 关闭定位图层
+        mBaiduMap.setMyLocationEnabled(false);
+        mMapView.onDestroy();
     }
 }
