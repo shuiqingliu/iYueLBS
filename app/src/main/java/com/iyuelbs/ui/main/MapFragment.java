@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -50,6 +53,7 @@ import com.iyuelbs.entity.User;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xifan on 15-4-14.
@@ -71,6 +75,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private Marker mMarker;
     private Circle circle;
     private LatLngBounds latLngBounds;
+    private LatLng ne;
+    private LatLng sw;
     public String placeStr; //位置信息
     private GeoCoder mSearch; //搜索模块
     public Toast mToast;
@@ -211,21 +217,21 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 return;
             }
             placeStr = reverseGeoCodeResult.getAddress();
-            Toast.makeText(mContext, placeStr, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, placeStr, Toast.LENGTH_SHORT).show();
         }
     };
 
     //place info
     public Place placeInfo(String placegeo) {
-        Place place = new Place();
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
         mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                 .location(new LatLng(latitude, longitude)));
+        Place place = new Place();
         place.setGeoLocation(new AVGeoPoint(mBaiduMap.getLocationData().latitude
                 , mBaiduMap.getLocationData().longitude));
         place.setPlaceName(placegeo);
-        place.saveInBackground(new SaveCallback() {
+        /*place.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {
@@ -234,7 +240,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(mContext, "保存出错", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
         return place;
     }
 
@@ -311,8 +317,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         int r = mMapView.getRight();
         int l = mMapView.getLeft();
         //将边界坐标转化为经纬度
-        LatLng ne = mBaiduMap.getProjection().fromScreenLocation(new Point(r, t));
-        LatLng sw = mBaiduMap.getProjection().fromScreenLocation(new Point(l, b));
+        ne = mBaiduMap.getProjection().fromScreenLocation(new Point(r, t));
+        sw = mBaiduMap.getProjection().fromScreenLocation(new Point(l, b));
         //创建地理范围
         latLngBounds = new LatLngBounds.Builder()
                 .include(ne).include(sw).build();
@@ -322,6 +328,23 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         Log.e("target", target.longitude + "," + target.latitude);
         Toast.makeText(mContext,"东经：" + target.longitude +
                 "北纬：" + target.latitude,Toast.LENGTH_LONG).show();*/
+        getMarkerData();
+    }
+
+    //从lc获取maker数据集
+    public void getMarkerData() {
+        AVQuery<Place> query = AVObject.getQuery(Place.class);
+        query.whereWithinGeoBox("geoLocation",
+                new AVGeoPoint(sw.latitude,sw.longitude),new AVGeoPoint(ne.latitude,ne.longitude));
+        query.limit(1000);
+        query.findInBackground(new FindCallback<Place>() {
+            @Override
+            public void done(List<Place> list, AVException e) {
+                if (e == null) {
+                    Log.d("查询完成", "共查询到" + list.size() + "个");
+                }
+            }
+        });
     }
 
     public class MyLocationListener implements BDLocationListener {
@@ -346,7 +369,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(17));
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
-                getArea();
             }
             //绘制圆形覆盖物
             drawCircle();
