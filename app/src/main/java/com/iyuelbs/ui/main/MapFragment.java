@@ -54,7 +54,7 @@ import java.util.Date;
 /**
  * Created by xifan on 15-4-14.
  */
-public class MapFragment extends Fragment implements View.OnClickListener{
+public class MapFragment extends Fragment implements View.OnClickListener {
 
     private Button mRequestLocButton;
     private Button mLocationReq;
@@ -145,9 +145,9 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if (v == mRequestLocButton) {
             onRequestLocation();
-        }else if (v == mLocationReq) {
+        } else if (v == mLocationReq) {
             mLocationClient.requestLocation();
-        }else if (v == mMarkerButton) {
+        } else if (v == mMarkerButton) {
             addMarker();
         }
     }
@@ -184,17 +184,17 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     }
 
     //添加marker
-    public void addMarker(){
+    public void addMarker() {
         //添加marker
-            double latitude = mBaiduMap.getLocationData().latitude;
-            double longitude = mBaiduMap.getLocationData().longitude;
-            mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
-            MarkerOptions options = new MarkerOptions()
-                    .position(new LatLng(latitude, longitude))
-                    .icon(mCurrentMarker)
-                    .zIndex(9);
-            mMarker = (Marker) mBaiduMap.addOverlay(options);
-            markerInfo();
+        double latitude = mBaiduMap.getLocationData().latitude;
+        double longitude = mBaiduMap.getLocationData().longitude;
+        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+        MarkerOptions options = new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
+                .icon(mCurrentMarker)
+                .zIndex(9);
+        mMarker = (Marker) mBaiduMap.addOverlay(options);
+        markerInfo();
     }
 
     //反向地理编码
@@ -207,11 +207,11 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
             if (reverseGeoCodeResult == null ||
                     reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(mContext,"对不起，获取当前位置出错,请稍候再试！",Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "对不起，获取当前位置出错,请稍候再试！", Toast.LENGTH_LONG).show();
                 return;
             }
             placeStr = reverseGeoCodeResult.getAddress();
-            Toast.makeText(mContext,placeStr,Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, placeStr, Toast.LENGTH_LONG).show();
         }
     };
 
@@ -228,10 +228,10 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         place.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                if (e == null){
+                if (e == null) {
                     //Toast.makeText(mContext,"place保存成功",Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(mContext,"保存出错",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "保存出错", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -239,7 +239,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     }
 
     //marker information
-    public void markerInfo(){
+    public void markerInfo() {
         Tag tag = new Tag();
         User user = AppHelper.getCurrentUser();
         Calendar calendar = Calendar.getInstance();
@@ -258,7 +258,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
                 if (e == null) {
                     Log.e("saveok", "保存数据成功");
                 } else {
-                    Toast.makeText(mContext,"出错了讨厌啦",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "出错了讨厌啦", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -267,10 +267,11 @@ public class MapFragment extends Fragment implements View.OnClickListener{
 
     //初始化Circleoption
     CircleOptions circleOptions = new CircleOptions();
-    public void drawCircle(){
+
+    public void drawCircle() {
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
-        circleOptions.center(new LatLng(latitude,longitude));
+        circleOptions.center(new LatLng(latitude, longitude));
         circleOptions.fillColor(0x204DB6AC);
         circleOptions.radius(300);
         Stroke stroke = new Stroke(3, 0xff00796B);
@@ -278,10 +279,10 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         circleOptions.stroke(stroke);
         //地图添加一个覆盖物,不再重绘覆盖物，大大节省资源
         if (isFirsCircle) {
-            circle =(Circle) mBaiduMap.addOverlay(circleOptions);
+            circle = (Circle) mBaiduMap.addOverlay(circleOptions);
             isFirsCircle = false;
-        }else{
-            circle.setCenter(new LatLng(latitude,longitude));
+        } else {
+            circle.setCenter(new LatLng(latitude, longitude));
         }
 
     }
