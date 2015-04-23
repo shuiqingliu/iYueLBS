@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.main;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.Circle;
 import com.baidu.mapapi.map.CircleOptions;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -33,6 +35,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -67,6 +70,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
     private BDLocation location;
     private Marker mMarker;
     private Circle circle;
+    private LatLngBounds latLngBounds;
     public String placeStr; //位置信息
     private GeoCoder mSearch; //搜索模块
     public Toast mToast;
@@ -112,6 +116,8 @@ public class MapFragment extends Fragment implements View.OnClickListener{
         mLocationReq.setOnClickListener(this);
         mMarkerButton.setText("tag");
         mMarkerButton.setOnClickListener(this);
+        mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
+
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -166,7 +172,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
             case FOLLOWING:
                 mRequestLocButton.setText("罗盘");
                 mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
-                //关闭俯视收拾
+                //关闭俯视手势
                 uiSettings = mBaiduMap.getUiSettings();
                 uiSettings.setOverlookingGesturesEnabled(false);
                 uiSettings.setCompassEnabled(true);
@@ -280,6 +286,43 @@ public class MapFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    BaiduMap.OnMapStatusChangeListener statusChangeListener
+            = new BaiduMap.OnMapStatusChangeListener() {
+        @Override
+        public void onMapStatusChangeStart(MapStatus mapStatus) {
+        }
+
+        @Override
+        public void onMapStatusChange(MapStatus mapStatus) {
+        }
+
+        @Override
+        public void onMapStatusChangeFinish(MapStatus mapStatus) {
+            getArea();
+        }
+    };
+
+    //获取当前地图范围
+    public void getArea() {
+        //获取地图边界
+        int b = mMapView.getBottom();
+        int t = mMapView.getTop();
+        int r = mMapView.getRight();
+        int l = mMapView.getLeft();
+        //将边界坐标转化为经纬度
+        LatLng ne = mBaiduMap.getProjection().fromScreenLocation(new Point(r, t));
+        LatLng sw = mBaiduMap.getProjection().fromScreenLocation(new Point(l, b));
+        //创建地理范围
+        latLngBounds = new LatLngBounds.Builder()
+                .include(ne).include(sw).build();
+        Log.e("northeast", ne.longitude + "," + ne.latitude);
+        Log.e("sourthwest", sw.longitude + "," + sw.latitude);
+        /*LatLng target = mBaiduMap.getMapStatus().target;
+        Log.e("target", target.longitude + "," + target.latitude);
+        Toast.makeText(mContext,"东经：" + target.longitude +
+                "北纬：" + target.latitude,Toast.LENGTH_LONG).show();*/
+    }
+
     public class MyLocationListener implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -302,6 +345,7 @@ public class MapFragment extends Fragment implements View.OnClickListener{
                 mBaiduMap.setMapStatus(MapStatusUpdateFactory.zoomTo(17));
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
+                getArea();
             }
             //绘制圆形覆盖物
             drawCircle();
