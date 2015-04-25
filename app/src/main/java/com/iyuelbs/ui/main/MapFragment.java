@@ -53,7 +53,9 @@ import com.iyuelbs.entity.User;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xifan on 15-4-14.
@@ -81,6 +83,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private GeoCoder mSearch; //搜索模块
     public Toast mToast;
     private Context mContext;
+    private Map<Double,Double> mMarkerExist;
+    private boolean isFirstMarker = true;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -97,7 +101,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mLocationReq = (Button) view.findViewById(R.id.location_req);
         mMarkerButton = (Button) view.findViewById(R.id.marker);
         RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
-
+        //marker采用相同图标节省资源，后续可以添加分类tag的图标
+        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+        //初始化map集合
+        mMarkerExist = new HashMap<>();
         mBaiduMap = mMapView.getMap();
         //开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -194,7 +201,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //添加marker
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
-        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
         MarkerOptions options = new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .icon(mCurrentMarker)
@@ -333,15 +339,42 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     //从lc获取maker数据集
     public void getMarkerData() {
+
         AVQuery<Place> query = AVObject.getQuery(Place.class);
         query.whereWithinGeoBox("geoLocation",
-                new AVGeoPoint(sw.latitude,sw.longitude),new AVGeoPoint(ne.latitude,ne.longitude));
-        query.limit(1000);
+                new AVGeoPoint(sw.latitude, sw.longitude), new AVGeoPoint(ne.latitude, ne.longitude));
+        //不能设置1000灰常卡，当前缩放级没必要设置50足矣
+        query.limit(50);
         query.findInBackground(new FindCallback<Place>() {
             @Override
             public void done(List<Place> list, AVException e) {
                 if (e == null) {
-                    Log.d("查询完成", "共查询到" + list.size() + "个");
+                    for (Place getlocation : list) {
+                        double latitude = getlocation.getGeoLocation().getLatitude();
+                        double longitude = getlocation.getGeoLocation().getLongitude();
+                        MarkerOptions options = new MarkerOptions()
+                                .position(new LatLng(latitude, longitude))
+                                .icon(mCurrentMarker)
+                                .zIndex(9);
+                        Log.e("fuck1", "运行到这里了");
+                        Log.e("isFirst","" + isFirstMarker);
+                        //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
+                        if (isFirstMarker) {
+                            Log.e("isFirsttt","" + isFirstMarker);
+                            mMarker = (Marker) mBaiduMap.addOverlay(options);
+                            mMarkerExist.put(latitude, longitude);
+                            Log.e("fuck1", "运行到这里了");
+                            Log.d("查询完成", "共查询到" + list.size() + "个");
+                            //TODO： 如何做到判断已经有overly的点不再重绘？？？
+                            //将当前marker保存起来啊，然后判断LatLng！！！
+                        } else if (mMarkerExist.get(latitude) == longitude) {
+                            //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
+                            //  所以有可能造成tag丢失，这存在BUG，
+                        } else {
+                            mMarkerExist.put(latitude, longitude);
+                            mMarker = (Marker) mBaiduMap.addOverlay(options);
+                        }
+                    }
                 }
             }
         });
