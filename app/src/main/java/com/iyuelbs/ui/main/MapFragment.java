@@ -130,6 +130,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mMarkerButton.setText("tag");
         mMarkerButton.setOnClickListener(this);
         mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
+        //设置事件监听
+        mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
 
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -224,6 +226,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             }
             placeStr = reverseGeoCodeResult.getAddress();
             Toast.makeText(mContext, placeStr, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    //地图load完成回调函数,地图首次加载就绘制当前屏幕范围tag
+    BaiduMap.OnMapLoadedCallback onMapLoadedCallback = new BaiduMap.OnMapLoadedCallback() {
+        @Override
+        public void onMapLoaded() {
+            if (isFirstMarker){
+                getArea();
+                isFirsCircle = false;
+            }
         }
     };
 
@@ -356,23 +369,18 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                 .position(new LatLng(latitude, longitude))
                                 .icon(mCurrentMarker)
                                 .zIndex(9);
-                        Log.e("fuck1", "运行到这里了");
-                        Log.e("isFirst","" + isFirstMarker);
                         //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
                         if (isFirstMarker) {
-                            Log.e("isFirsttt","" + isFirstMarker);
                             mMarker = (Marker) mBaiduMap.addOverlay(options);
                             mMarkerExist.put(latitude, longitude);
-                            Log.e("fuck1", "运行到这里了");
-                            Log.d("查询完成", "共查询到" + list.size() + "个");
                             //TODO： 如何做到判断已经有overly的点不再重绘？？？
                             //将当前marker保存起来啊，然后判断LatLng！！！
                         } else if (mMarkerExist.get(latitude) == longitude) {
                             //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
                             //  所以有可能造成tag丢失，这存在BUG，
                         } else {
-                            mMarkerExist.put(latitude, longitude);
                             mMarker = (Marker) mBaiduMap.addOverlay(options);
+                            mMarkerExist.put(latitude, longitude);
                         }
                     }
                 }
@@ -391,7 +399,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(location.getRadius())
                             // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(100).latitude(location.getLatitude())
+                    .direction(0).latitude(location.getLatitude())
                     .longitude(location.getLongitude()).build();
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
