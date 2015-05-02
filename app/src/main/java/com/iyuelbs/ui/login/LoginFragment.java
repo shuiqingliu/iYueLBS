@@ -37,6 +37,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         mPasswordText = (EditText) view.findViewById(R.id.login_password);
         final Button confirmBtn = (Button) view.findViewById(R.id.login_confirm_btn);
         Button registerBtn = (Button) view.findViewById(R.id.login_other_btn);
+        Button findPass = (Button) view.findViewById(R.id.btn_find_password);
 
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -52,6 +53,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
 
         registerBtn.setOnClickListener(this);
         confirmBtn.setOnClickListener(this);
+        findPass.setOnClickListener(this);
         return view;
     }
 
@@ -64,6 +66,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener 
         } else if (id == R.id.login_other_btn) {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.common_container, new ThirdLoginFragment());
+            transaction.addToBackStack(null);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            transaction.commit();
+        } else if (id == R.id.btn_find_password){
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.common_container, new ResetPwd());
             transaction.addToBackStack(null);
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             transaction.commit();

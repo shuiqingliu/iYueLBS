@@ -3,6 +3,7 @@
 
     <string name="app_name">爱约</string>
     <string name="action_settings">设置</string>
+    <string name="action_logout">退出</string>
 
     <string name="title_username">用户名</string>
     <string name="title_password">密码</string>
@@ -47,6 +48,7 @@
 
     <string name="btn_login">登录</string>
     <string name="btn_other_login">其他登录方式</string>
+    <string name="btn_find_password">找回密码</string>
     <string name="btn_account_register">账号注册</string>
     <string name="btn_phone_register">手机号注册</string>
     <string name="btn_register">注册</string>
@@ -55,7 +57,10 @@
     <string name="btn_weibo_login">微博登录</string>
     <string name="btn_qq_login">QQ登录</string>
     <string name="default_login">直接登录</string>
+    <string name="find_pass">重置密码</string>
+    <string name="btn_reset_pwd">确定</string>
     <string name="btn_resent_verify_code">重新发送</string>
+    <string name="btn_get_verify_code">获取验证码</string>
     <string name="btn_send_date">立即发布</string>
 
     <string name="msg_loading">请稍候&#8230;</string>

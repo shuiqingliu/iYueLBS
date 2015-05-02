@@ -89,17 +89,35 @@
         android:textColor="@color/white"
         android:textSize="18sp"/>
 
+    <RelativeLayout
+        android:id="@+id/third_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+    <Button
+        android:id="@+id/btn_find_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/btn_transparent_dark"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="@string/btn_find_password"
+        android:textColor="@color/teal"/>
+
     <Button
         android:id="@+id/login_other_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_alignParentRight="true"
         android:background="@drawable/btn_transparent_dark"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:text="@string/btn_other_login"
-        android:textColor="@color/teal"/>
+        android:textColor="@color/teal" />
+    </RelativeLayout>
 
 </LinearLayout>
