@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,12 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avoscloud.leanchatlib.activity.ChatActivity;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -65,6 +72,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private Button mRequestLocButton;
     private Button mLocationReq;
     private Button mMarkerButton;
+    private Button mChatButton;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     private LocationClient mLocationClient = null;
@@ -100,6 +108,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mRequestLocButton = (Button) view.findViewById(R.id.request);
         mLocationReq = (Button) view.findViewById(R.id.location_req);
         mMarkerButton = (Button) view.findViewById(R.id.marker);
+        mChatButton = (Button) view.findViewById(R.id.btn_chat);
         RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
         //marker采用相同图标节省资源，后续可以添加分类tag的图标
         mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
@@ -129,6 +138,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mLocationReq.setOnClickListener(this);
         mMarkerButton.setText("tag");
         mMarkerButton.setOnClickListener(this);
+        mChatButton.setText("聊天");
+        mChatButton.setOnClickListener(this);
         mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
         //设置事件监听
         mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
@@ -164,6 +175,35 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             mLocationClient.requestLocation();
         } else if (v == mMarkerButton) {
             addMarker();
+        }else if (v == mChatButton) {
+            User user = AppHelper.getCurrentUser();
+            ChatManager chatManager = ChatManager.getInstance();
+            chatManager.setupDatabaseWithSelfId(user.getNickName());
+            chatManager.openClientWithSelfId(user.getNickName(), new AVIMClientCallback() {
+                @Override
+                public void done(AVIMClient avimClient, AVException e) {
+                    if (e != null) {
+                        e.printStackTrace();
+                    } else {
+
+                    }
+                }
+            });
+
+            final ChatManager chatManagers = ChatManager.getInstance();
+            chatManagers.fetchConversationWithUserId("qingliuss", new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conversation, AVException e) {
+                    if (e != null) {
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                    } else {
+                        chatManagers.registerConversation(conversation);
+                        Intent intent = new Intent(mContext, ChatRoomActivity.class);
+                        intent.putExtra(ChatActivity.CONVID, conversation.getConversationId());
+                        startActivity(intent);
+                    }
+                }
+            });
         }
     }
 

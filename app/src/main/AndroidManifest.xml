@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--leanchat-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 
     <application
@@ -57,19 +62,25 @@
                   android:label="@string/title_activity_my_detail">
         </activity>
 
-        <receiver
-            android:name=".support.receiver.MessageReceiver"
-            android:exported="false">
-            <!--<intent-filter>-->
-            <!--&lt;!&ndash;<action android:name="cn.bmob.push.action.MESSAGE"/>&ndash;&gt;-->
-            <!--</intent-filter>-->
-        </receiver>
+        <activity android:name=".ui.main.ChatRoomActivity"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:launchMode="singleTask"/>
 
         <!-- Image Crop -->
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
 
         <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote">
         </service>
+
+        <!--leanchat-->
+        <service android:name="com.avos.avoscloud.PushService" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
