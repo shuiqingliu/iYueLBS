@@ -30,6 +30,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.Circle;
@@ -89,6 +90,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private LatLng sw;
     public String placeStr; //位置信息
     private GeoCoder mSearch; //搜索模块
+    private BaiduMapOptions mBaiduMapOptions;
+    private View mapid;
     public Toast mToast;
     private Context mContext;
     private Map<Double,Double> mMarkerExist;
@@ -103,8 +106,14 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View view = layoutInflater.inflate(R.layout.baidumap, viewGroup, false);
-
+       /* View rl = view.findViewById(R.id.maplayout);
+        mMapView = new MapView(mContext, new BaiduMapOptions()
+                .zoomControlsEnabled(false));
+        mMapView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT
+                , RelativeLayout.LayoutParams.WRAP_CONTENT));
+        ((RelativeLayout)rl).addView(mMapView);*/
         mMapView = (MapView) view.findViewById(R.id.mapview);
+        mMapView.showZoomControls(false);
         mRequestLocButton = (Button) view.findViewById(R.id.request);
         mLocationReq = (Button) view.findViewById(R.id.location_req);
         mMarkerButton = (Button) view.findViewById(R.id.marker);
@@ -245,7 +254,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         double longitude = mBaiduMap.getLocationData().longitude;
         MarkerOptions options = new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
-                .icon(mCurrentMarker)
+                .icon(mCurrentMarker) 
                 .zIndex(9);
         mMarker = (Marker) mBaiduMap.addOverlay(options);
         markerInfo();
