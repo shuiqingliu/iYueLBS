@@ -88,5 +88,6 @@
     <string name="pref_show_location_status_summary">我们会根据您设置的位置与手机的状态来判断您当前的状态并显示给您的好友，以方便随时约你</string>
     <string name="pref_show_status_to_all_title">向陌生人显示位置状态</string>
     <string name="pref_show_status_to_all_summary">任何人都将能看到您的位置状态</string>
+    <string name="gps_now">当前位置</string>
 
 </resources>

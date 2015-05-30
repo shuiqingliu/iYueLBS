@@ -21,6 +21,7 @@ public class MainActivity extends BaseActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private MapFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class MainActivity extends BaseActivity {
 
     private void initFragments(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            MapFragment fragment = new MapFragment();
+            fragment = new MapFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.main_content, fragment, "map")
                     .commit();
         }
@@ -70,6 +71,9 @@ public class MainActivity extends BaseActivity {
                 Intent i = new Intent(MainActivity.this, LoginActivity.class);
                 AVUser.logOut();
                 startActivity(i);
+                break;
+            case R.id.my_location:
+                fragment.mLocationClient.requestLocation();
                 break;
         }
         return true;

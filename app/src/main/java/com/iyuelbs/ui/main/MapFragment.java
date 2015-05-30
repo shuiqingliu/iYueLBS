@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
@@ -30,7 +29,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.Circle;
@@ -58,6 +56,7 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.ui.settings.MyOrientationListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -71,12 +70,11 @@ import java.util.Map;
 public class MapFragment extends Fragment implements View.OnClickListener {
 
     private Button mRequestLocButton;
-    private Button mLocationReq;
     private Button mMarkerButton;
     private Button mChatButton;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
-    private LocationClient mLocationClient = null;
+    protected LocationClient mLocationClient = null;
     private BitmapDescriptor mCurrentMarker;
     private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
     private boolean isFirstLoc = true;// 是否首次定位
@@ -90,12 +88,13 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private LatLng sw;
     public String placeStr; //位置信息
     private GeoCoder mSearch; //搜索模块
-    private BaiduMapOptions mBaiduMapOptions;
-    private View mapid;
     public Toast mToast;
     private Context mContext;
     private Map<Double,Double> mMarkerExist;
     private boolean isFirstMarker = true;
+    public int nowNum;
+
+    public MyOrientationListener myOrientationListener;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -106,26 +105,20 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View view = layoutInflater.inflate(R.layout.baidumap, viewGroup, false);
-       /* View rl = view.findViewById(R.id.maplayout);
-        mMapView = new MapView(mContext, new BaiduMapOptions()
-                .zoomControlsEnabled(false));
-        mMapView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT
-                , RelativeLayout.LayoutParams.WRAP_CONTENT));
-        ((RelativeLayout)rl).addView(mMapView);*/
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.showZoomControls(false);
         mRequestLocButton = (Button) view.findViewById(R.id.request);
-        mLocationReq = (Button) view.findViewById(R.id.location_req);
         mMarkerButton = (Button) view.findViewById(R.id.marker);
         mChatButton = (Button) view.findViewById(R.id.btn_chat);
-        RadioGroup group = (RadioGroup) view.findViewById(R.id.radioGroup);
         //marker采用相同图标节省资源，后续可以添加分类tag的图标
-        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_marka);
+        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
         //初始化map集合
         mMarkerExist = new HashMap<>();
         mBaiduMap = mMapView.getMap();
         //开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
+        //
+        initOrientation();
         //定位初始化
         mLocationClient = new LocationClient(mContext);
         mLocationClient.registerLocationListener(new MyLocationListener());    //注册监听函数
@@ -143,8 +136,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         // common ui
         mRequestLocButton.setText("普通");
         mRequestLocButton.setOnClickListener(this);
-        mLocationReq.setText("+");
-        mLocationReq.setOnClickListener(this);
         mMarkerButton.setText("tag");
         mMarkerButton.setOnClickListener(this);
         mChatButton.setText("聊天");
@@ -153,26 +144,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //设置事件监听
         mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
 
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.defaulticon) {
-                    // 传入null则，恢复默认图标
-                    mCurrentMarker = null;
-                    mBaiduMap
-                            .setMyLocationConfigeration(new MyLocationConfiguration(
-                                    mCurrentMode, true, null));
-                } else if (checkedId == R.id.customicon) {
-                    // 修改为自定义marker
-                    mCurrentMarker = BitmapDescriptorFactory
-                            .fromResource(R.drawable.icon_geo);
-                    mBaiduMap
-                            .setMyLocationConfigeration(new MyLocationConfiguration(
-                                    mCurrentMode, true, mCurrentMarker));
-                }
-            }
-        });
-
         return view;
     }
 
@@ -180,8 +151,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         if (v == mRequestLocButton) {
             onRequestLocation();
-        } else if (v == mLocationReq) {
-            mLocationClient.requestLocation();
         } else if (v == mMarkerButton) {
             addMarker();
         }else if (v == mChatButton) {
@@ -224,14 +193,14 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
-                                mCurrentMode, true, mCurrentMarker));
+                                mCurrentMode, true, null));
                 break;
             case COMPASS:
                 mRequestLocButton.setText("普通");
                 mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
-                                mCurrentMode, true, mCurrentMarker));
+                                mCurrentMode, true, null));
                 break;
             case FOLLOWING:
                 mRequestLocButton.setText("罗盘");
@@ -242,7 +211,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 uiSettings.setCompassEnabled(true);
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
-                                mCurrentMode, true, mCurrentMarker));
+                                mCurrentMode, true, null));
                 break;
         }
     }
@@ -448,7 +417,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(location.getRadius())
                             // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(0).latitude(location.getLatitude())
+                    .direction(nowNum).latitude(location.getLatitude())
                     .longitude(location.getLongitude()).build();
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
@@ -468,6 +437,26 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public int initOrientation(){
+        myOrientationListener = new MyOrientationListener(mContext);
+        myOrientationListener.setOnOrientationListener(new MyOrientationListener.OnOrientationListener() {
+            @Override
+            public void onOrientationChanged(float x) {
+                nowNum = (int) x;
+                new MyLocationData.Builder().direction(nowNum);
+                //mLocationClient.requestLocation();
+            }
+        });
+        return  nowNum;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        myOrientationListener.start();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -482,6 +471,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         super.onPause();
         mLocationClient.stop();
         mMapView.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        myOrientationListener.stop();
     }
 
     @Override

@@ -10,4 +10,10 @@
           android:title="@string/action_logout"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item
+        android:id="@+id/my_location"
+        android:icon="@drawable/ic_my_location"
+        android:title="@string/gps_now"
+        android:orderInCategory="200"
+        app:showAsAction="always" />
 </menu>
