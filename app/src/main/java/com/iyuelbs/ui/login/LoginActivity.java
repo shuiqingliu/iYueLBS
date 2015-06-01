@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseActivity;
@@ -15,6 +16,7 @@ import com.iyuelbs.ui.main.MainActivity;
 import de.greenrobot.event.EventBus;
 
 public class LoginActivity extends BaseActivity {
+    private boolean forcelogin = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             // TODO UserInfo
+                            NavUtils.go(mContext, MainActivity.class);
+
                         }
                     });
             return false;

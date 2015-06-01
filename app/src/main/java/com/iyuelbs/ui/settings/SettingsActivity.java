@@ -16,7 +16,7 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.common_activity, true);
+        setContentView(R.layout.fragment_activity,true);
         initFragments(savedInstanceState);
     }
 

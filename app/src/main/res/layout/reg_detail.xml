@@ -108,6 +108,10 @@
 
     <include layout="@layout/view_divider"/>
 
+<!--
+    http://stackoverflow.com/questions/21760018/multi-line-edittext-with
+    -imeoptions-actiondone-does-not-work-in-an-custom-dial
+-->
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/reg_detail_signature"
         android:layout_width="match_parent"
@@ -118,6 +122,10 @@
         android:textSize="16sp"
         app:floatingLabel="none"
         app:hideUnderline="true"
+        android:imeOptions="actionGo"
+        android:lines="3"
+        android:scrollHorizontally="false"
+        android:inputType="textImeMultiLine"
         app:maxCharacters="60"/>
 
 </LinearLayout>
