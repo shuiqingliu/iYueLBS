@@ -5,10 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -56,13 +58,27 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
         mAvatarView = (RoundedImageView) view.findViewById(R.id.reg_detail_avatar_preview);
         mNickNameText = (EditText) view.findViewById(R.id.reg_detail_nickname);
         mSignatureText = (MaterialEditText) view.findViewById(R.id.reg_detail_signature);
-        mSexText = (TextView) view.findViewById(R.id.reg_detail_sex_text);
+        mSexText = (TextView)       view.findViewById(R.id.reg_detail_sex_text);
         mSexSpinner = (Spinner) view.findViewById(R.id.reg_detail_sex_spinner);
         RelativeLayout sexSelector = (RelativeLayout) view.findViewById(R.id.reg_detail_sex_layout);
         FrameLayout avatarLayout = (FrameLayout) view.findViewById(R.id.reg_detail_avatar_layout);
 
+        mSignatureText.setLines(3);
+        mSignatureText.setHorizontallyScrolling(false);
+
         sexSelector.setOnClickListener(this);
         avatarLayout.setOnClickListener(this);
+
+        mSignatureText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    onFinishUpdateUserDetails();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mSexSpinner.setAdapter(new ArrayAdapter<>(mContext, R.layout.spinner_dropdown_item,
                 getResources().getStringArray(R.array.dropdown_sex)));
