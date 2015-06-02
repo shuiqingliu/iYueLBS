@@ -1,28 +1,26 @@
 package com.iyuelbs.app;
 
 import android.app.Application;
-import android.content.Context;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.controller.ChatManager;
-import com.avoscloud.leanchatlib.controller.ChatManagerAdapter;
-import com.avoscloud.leanchatlib.model.UserInfo;
 import com.baidu.mapapi.SDKInitializer;
 import com.iyuelbs.entity.Banner;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.ui.chat.entity.avobject.AddRequest;
+import com.iyuelbs.ui.chat.entity.avobject.UpdateInfo;
+import com.iyuelbs.ui.chat.service.ChatManagerAdapterImpl;
+import com.iyuelbs.ui.chat.service.ConversationManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
-import java.util.List;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -59,6 +57,8 @@ public class AppApplication extends Application {
     }
 
     private void initSdk() {
+        AVObject.registerSubclass(AddRequest.class);
+        AVObject.registerSubclass(UpdateInfo.class);
         AVObject.registerSubclass(Tag.class);
         AVObject.registerSubclass(Place.class);
         AVObject.registerSubclass(Banner.class);
@@ -74,7 +74,17 @@ public class AppApplication extends Application {
         AVOSCloud.setDebugLogEnabled(true);  // set false when release
         final ChatManager chatManager = ChatManager.getInstance();
         chatManager.init(this);
-        chatManager.setChatManagerAdapter(new ChatManagerAdapter() {
+        if (AVUser.getCurrentUser() != null){
+            chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+        }else {
+            Toast.makeText(getApplication(), "当前用户为空", Toast.LENGTH_SHORT);
+        }
+        //chatManager.setConversationEventHandler();
+        chatManager.setConversationEventHandler(ConversationManager.getConversationHandler());
+        ChatManagerAdapterImpl chatManagerAdapter = new ChatManagerAdapterImpl(mAppApplication);
+        chatManager.setChatManagerAdapter(chatManagerAdapter);
+        ChatManager.setDebugEnabled(true);
+        /*chatManager.setChatManagerAdapter(new ChatManagerAdapter() {
             @Override
             public UserInfo getUserInfoById(String userId) {
                 UserInfo userInfo = new UserInfo();
@@ -92,7 +102,7 @@ public class AppApplication extends Application {
             public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
                 Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 
     public User getCurUser() {

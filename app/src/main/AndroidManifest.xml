@@ -62,9 +62,52 @@
                   android:label="@string/title_activity_my_detail">
         </activity>
 
-        <activity android:name=".ui.main.ChatRoomActivity"
+        <activity android:name=".ui.chat.ChatRoomActivity"
             android:theme="@android:style/Theme.Holo.Light"
             android:launchMode="singleTask"/>
+
+        <activity
+            android:name=".ui.chat.ui.MsgActivity"
+            android:launchMode="singleTask" />
+
+
+        <activity
+            android:name=".ui.chat.ui.conversation.ConversationDetailActivity"
+            android:theme="@style/ChatMainTheme" />
+
+
+        <!--chat start-->
+        <activity
+            android:name=".ui.chat.ui.contact.ContactNewFriendActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.chat.ui.contact.ContactAddFriendActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.chat.ui.contact.ContactPersonInfoActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.chat.ui.profile.ProfileNotifySettingActivity"
+            android:theme="@style/ChatMainTheme" />
+
+        <activity
+            android:name=".ui.chat.ui.conversation.ConversationGroupListActivity"
+            android:label="@string/conversation_group"
+            android:theme="@style/ChatMainTheme" />
+
+
+
+        <activity
+            android:name=".ui.chat.ui.conversation.ConversationAddMembersActivity"
+            android:label="@string/conversation_inviteMembers"
+            android:theme="@style/ChatMainTheme" />
+
+
+        <!--chat end-->
+
 
         <!-- Image Crop -->
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>

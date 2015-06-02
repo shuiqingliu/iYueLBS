@@ -1,4 +1,4 @@
-package com.iyuelbs.ui.main;
+package com.iyuelbs.ui.chat;
 
 import android.os.Bundle;
 import android.view.View;
