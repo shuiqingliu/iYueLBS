@@ -18,12 +18,6 @@ import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
-import com.avos.avoscloud.im.v2.AVIMClient;
-import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
-import com.avoscloud.leanchatlib.activity.ChatActivity;
-import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -51,11 +45,13 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.ui.chat.ui.MsgActivity;
 import com.iyuelbs.ui.settings.MyOrientationListener;
 
 import java.util.Calendar;
@@ -69,14 +65,13 @@ import java.util.Map;
  */
 public class MapFragment extends Fragment implements View.OnClickListener {
 
-    private Button mRequestLocButton;
-    private Button mMarkerButton;
     private Button mChatButton;
+    private FloatingActionButton tagBtn;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     protected LocationClient mLocationClient = null;
     private BitmapDescriptor mCurrentMarker;
-    private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
+    private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
     private boolean isFirstLoc = true;// 是否首次定位
     private boolean isFirsCircle = true; //是否首次绘制圆
     private UiSettings uiSettings;
@@ -107,9 +102,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         View view = layoutInflater.inflate(R.layout.baidumap, viewGroup, false);
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.showZoomControls(false);
-        mRequestLocButton = (Button) view.findViewById(R.id.request);
-        mMarkerButton = (Button) view.findViewById(R.id.marker);
         mChatButton = (Button) view.findViewById(R.id.btn_chat);
+        tagBtn =(FloatingActionButton) view.findViewById(R.id.tag_btn);
         //marker采用相同图标节省资源，后续可以添加分类tag的图标
         mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
         //初始化map集合
@@ -117,6 +111,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mBaiduMap = mMapView.getMap();
         //开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
+        //设置默认为跟 随模式
+        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
+                mCurrentMode,true,null));
         //
         initOrientation();
         //定位初始化
@@ -134,10 +131,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mSearch.setOnGetGeoCodeResultListener(geoListener);
 
         // common ui
-        mRequestLocButton.setText("普通");
-        mRequestLocButton.setOnClickListener(this);
-        mMarkerButton.setText("tag");
-        mMarkerButton.setOnClickListener(this);
+        tagBtn.setOnClickListener(this);
         mChatButton.setText("聊天");
         mChatButton.setOnClickListener(this);
         mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
@@ -149,12 +143,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v == mRequestLocButton) {
-            onRequestLocation();
-        } else if (v == mMarkerButton) {
+      if (v == tagBtn) {
             addMarker();
         }else if (v == mChatButton) {
-            User user = AppHelper.getCurrentUser();
+           /* User user = AppHelper.getCurrentUser();
             ChatManager chatManager = ChatManager.getInstance();
             chatManager.setupDatabaseWithSelfId(user.getNickName());
             chatManager.openClientWithSelfId(user.getNickName(), new AVIMClientCallback() {
@@ -181,29 +173,32 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                         startActivity(intent);
                     }
                 }
-            });
+            });*/
+            Intent intent = new Intent(mContext, MsgActivity.class);
+            startActivity(intent);
         }
     }
 
     //地图模式转化
+    //将此功能以后放到设置里面
     private void onRequestLocation() {
         switch (mCurrentMode) {
             case NORMAL:
-                mRequestLocButton.setText("跟随");
+                //mRequestLocButton.setText("跟随");
                 mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
                                 mCurrentMode, true, null));
                 break;
             case COMPASS:
-                mRequestLocButton.setText("普通");
+                //mRequestLocButton.setText("普通");
                 mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
                 mBaiduMap
                         .setMyLocationConfigeration(new MyLocationConfiguration(
                                 mCurrentMode, true, null));
                 break;
             case FOLLOWING:
-                mRequestLocButton.setText("罗盘");
+                //mRequestLocButton.setText("罗盘");
                 mCurrentMode = MyLocationConfiguration.LocationMode.COMPASS;
                 //关闭俯视手势
                 uiSettings = mBaiduMap.getUiSettings();
