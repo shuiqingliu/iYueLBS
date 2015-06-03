@@ -53,6 +53,7 @@ import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.ui.chat.ui.MsgActivity;
 import com.iyuelbs.ui.settings.MyOrientationListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -88,13 +89,16 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private Map<Double,Double> mMarkerExist;
     private boolean isFirstMarker = true;
     public int nowNum;
+    protected SlidingUpPanelLayout mLayout;
 
     public MyOrientationListener myOrientationListener;
+
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mContext = getActivity();
+
     }
 
     @Override
@@ -104,6 +108,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mMapView.showZoomControls(false);
         mChatButton = (Button) view.findViewById(R.id.btn_chat);
         tagBtn =(FloatingActionButton) view.findViewById(R.id.tag_btn);
+        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        //设置slidinguppanel支持锚点
+        if (mLayout.getAnchorPoint() == 1.0f) {
+            mLayout.setAnchorPoint(0.7f);
+        }
         //marker采用相同图标节省资源，后续可以添加分类tag的图标
         mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
         //初始化map集合
@@ -138,13 +147,34 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //设置事件监听
         mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
 
+
+       /* view.setFocusableInTouchMode(true);
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+
+                }
+                return false;
+            }
+        } );*/
         return view;
     }
 
+    public void slidOpen(){
+        if(mLayout != null &&
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                        || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+    }
     @Override
     public void onClick(View v) {
       if (v == tagBtn) {
-            addMarker();
+          expansion();
+            //addMarker();
         }else if (v == mChatButton) {
            /* User user = AppHelper.getCurrentUser();
             ChatManager chatManager = ChatManager.getInstance();
@@ -209,6 +239,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                                 mCurrentMode, true, null));
                 break;
         }
+    }
+
+    //展开slidinguppanel
+    public void expansion(){
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
     }
 
     //添加marker
@@ -322,7 +357,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         } else {
             circle.setCenter(new LatLng(latitude, longitude));
         }
-
     }
 
     BaiduMap.OnMapStatusChangeListener statusChangeListener

@@ -13,6 +13,7 @@ import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.ui.login.LoginActivity;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
  * Created by Bob Peng on 2015/1/21.
@@ -81,11 +82,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+
         if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-        } else {
-            super.onBackPressed();
+        } else if (fragment != null) {
+            fragment.slidOpen();
+            if (fragment.mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED)
+                super.onBackPressed();
         }
     }
-
 }
