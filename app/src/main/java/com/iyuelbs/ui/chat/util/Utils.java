@@ -30,7 +30,6 @@ import com.avos.avoscloud.AVUser;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppApplication;
 import com.iyuelbs.app.AppHelper;
-import com.iyuelbs.ui.chat.base.App;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -666,7 +665,7 @@ public class Utils {
   }
 
   public static int getColor(int resId) {
-    return App.ctx.getResources().getColor(resId);
+    return AppHelper.getAppContext().getResources().getColor(resId);
   }
 
   public static boolean doubleEqual(double a, double b) {
@@ -679,12 +678,12 @@ public class Utils {
       return String.valueOf(metres) + AppApplication.getApplication().getString(R.string.discover_metres);
     } else {
       String num = String.format("%.1f", distance / 1000);
-      return num + App.ctx.getString(R.string.utils_kilometres);
+      return num + AppApplication.getApplication().getString(R.string.utils_kilometres);
     }
   }
 
   public static void printException(Exception e) {
-    if (App.debug) {
+    if (AppApplication.debug) {
       e.printStackTrace();
     }
   }

@@ -190,7 +190,7 @@ public class ContactFragment extends BaseFragment {
     friendsList.setItemListener(new BaseListView.ItemListener<SortUser>() {
       @Override
       public void onItemSelected(SortUser item) {
-        ChatRoomActivity.chatByUserId(getActivity(), item.getInnerUser().getUsername());
+        ChatRoomActivity.chatByUserId(getActivity(), item.getInnerUser().getObjectId());
       }
 
       @Override

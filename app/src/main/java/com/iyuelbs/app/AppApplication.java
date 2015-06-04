@@ -26,7 +26,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
  * Created by Bob Peng on 2015/1/21.
  */
 public class AppApplication extends Application {
-
+    public static boolean debug = true;
     private static AppApplication mAppApplication;
     private AsyncHttpClient mHttpClient;
     private User mUser;
@@ -75,9 +75,9 @@ public class AppApplication extends Application {
         final ChatManager chatManager = ChatManager.getInstance();
         chatManager.init(this);
         if (AVUser.getCurrentUser() != null){
-            chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getUsername());
+            chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
         }else {
-            Toast.makeText(getApplication(), "当前用户为空", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplication(), "当前用户为空", Toast.LENGTH_SHORT).show();
         }
         //chatManager.setConversationEventHandler();
         chatManager.setConversationEventHandler(ConversationManager.getConversationHandler());

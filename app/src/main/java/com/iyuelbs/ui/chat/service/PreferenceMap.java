@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.iyuelbs.R;
-import com.iyuelbs.ui.chat.base.App;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.ui.chat.entity.avobject.User;
 import com.iyuelbs.ui.chat.util.Logger;
 
@@ -105,7 +105,7 @@ public class PreferenceMap {
 
   public boolean isNotifyWhenNews() {
     return pref.getBoolean(NOTIFY_WHEN_NEWS,
-        App.ctx.getResources().getBoolean(R.bool.defaultNotifyWhenNews));
+            AppHelper.getAppContext().getResources().getBoolean(R.bool.defaultNotifyWhenNews));
   }
 
   public void setNotifyWhenNews(boolean notifyWhenNews) {
@@ -113,7 +113,7 @@ public class PreferenceMap {
   }
 
   boolean getBooleanByResId(int resId) {
-    return App.ctx.getResources().getBoolean(resId);
+    return AppHelper.getAppContext().getResources().getBoolean(resId);
   }
 
   public boolean isVoiceNotify() {

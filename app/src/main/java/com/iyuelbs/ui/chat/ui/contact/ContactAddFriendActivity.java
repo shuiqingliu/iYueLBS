@@ -13,7 +13,6 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppApplication;
-import com.iyuelbs.ui.chat.base.App;
 import com.iyuelbs.ui.chat.service.AddRequestService;
 import com.iyuelbs.ui.chat.service.UserService;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseActivity;

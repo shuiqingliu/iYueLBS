@@ -89,6 +89,8 @@ public class MainActivity extends BaseActivity {
             fragment.slidOpen();
             if (fragment.mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED)
                 super.onBackPressed();
+        }else{
+            super.onBackPressed();
         }
     }
 }

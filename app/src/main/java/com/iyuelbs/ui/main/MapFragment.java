@@ -1,7 +1,6 @@
 package com.iyuelbs.ui.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -190,40 +189,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
           }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
               addMarker();
           }
-
-            //addMarker();
         }else if (v == mChatButton) {
-           /* User user = AppHelper.getCurrentUser();
-            ChatManager chatManager = ChatManager.getInstance();
-            chatManager.setupDatabaseWithSelfId(user.getNickName());
-            chatManager.openClientWithSelfId(user.getNickName(), new AVIMClientCallback() {
-                @Override
-                public void done(AVIMClient avimClient, AVException e) {
-                    if (e != null) {
-                        e.printStackTrace();
-                    } else {
-
-                    }
-                }
-            });
-
-            final ChatManager chatManagers = ChatManager.getInstance();
-            chatManagers.fetchConversationWithUserId("qingliuss", new AVIMConversationCreatedCallback() {
-                @Override
-                public void done(AVIMConversation conversation, AVException e) {
-                    if (e != null) {
-                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        chatManagers.registerConversation(conversation);
-                        Intent intent = new Intent(mContext, ChatRoomActivity.class);
-                        intent.putExtra(ChatActivity.CONVID, conversation.getConversationId());
-                        startActivity(intent);
-                    }
-                }
-            });*/
-            Intent intent = new Intent(mContext, MsgActivity.class);
-            startActivity(intent);
-        }
+          MsgActivity.goMainActivityFromActivity(getActivity());
+      }
     }
 
     //地图模式转化

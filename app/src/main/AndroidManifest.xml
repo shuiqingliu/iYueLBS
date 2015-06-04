@@ -62,8 +62,8 @@
                   android:label="@string/title_activity_my_detail">
         </activity>
 
-        <activity android:name=".ui.chat.ChatRoomActivity"
-            android:theme="@android:style/Theme.Holo.Light"
+        <activity android:name=".ui.chat.ui.chat.ChatRoomActivity"
+            android:theme="@style/ChatMainTheme"
             android:launchMode="singleTask"/>
 
         <activity

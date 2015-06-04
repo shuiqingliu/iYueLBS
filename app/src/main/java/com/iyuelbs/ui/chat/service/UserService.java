@@ -13,7 +13,6 @@ import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.FollowCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.iyuelbs.app.AppApplication;
-import com.iyuelbs.ui.chat.base.App;
 import com.iyuelbs.ui.chat.base.Constant;
 import com.iyuelbs.ui.chat.entity.avobject.User;
 import com.iyuelbs.ui.chat.util.Logger;
@@ -104,7 +103,7 @@ public class UserService {
 
 
   public static List<AVUser> findNearbyPeople(int orderType, int skip, int limit) throws AVException {
-    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(App.ctx);
+    PreferenceMap preferenceMap = PreferenceMap.getCurUserPrefDao(AppApplication.getApplication());
     AVGeoPoint geoPoint = preferenceMap.getLocation();
     if (geoPoint == null) {
       Logger.i("geo point is null");

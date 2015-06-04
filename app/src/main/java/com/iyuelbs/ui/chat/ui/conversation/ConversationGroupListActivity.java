@@ -13,7 +13,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.iyuelbs.R;
-import com.iyuelbs.ui.chat.base.App;
 import com.iyuelbs.ui.chat.service.CacheService;
 import com.iyuelbs.ui.chat.service.ConversationChangeEvent;
 import com.iyuelbs.ui.chat.service.ConversationManager;

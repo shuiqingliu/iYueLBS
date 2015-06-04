@@ -25,7 +25,6 @@ import com.avoscloud.leanchatlib.model.ConversationType;
 import com.avoscloud.leanchatlib.view.ViewHolder;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppApplication;
-import com.iyuelbs.ui.chat.base.App;
 import com.iyuelbs.ui.chat.service.CacheService;
 import com.iyuelbs.ui.chat.service.ConversationManager;
 import com.iyuelbs.ui.chat.service.UserService;
