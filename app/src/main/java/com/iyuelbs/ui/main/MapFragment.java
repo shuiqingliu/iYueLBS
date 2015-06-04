@@ -5,17 +5,22 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVCloudQueryResult;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.CloudQueryCallback;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDLocation;
@@ -68,6 +73,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     private Button mChatButton;
     private FloatingActionButton tagBtn;
+    private RecyclerView mRecyclerView;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     protected LocationClient mLocationClient = null;
@@ -87,10 +93,14 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public Toast mToast;
     private Context mContext;
     private Map<Double,Double> mMarkerExist;
+    //private Map<String,String> placeID;
+    private List<Tag> tagID;
+    private List<Place> placeId;
     private boolean isFirstMarker = true;
     public int nowNum;
     protected SlidingUpPanelLayout mLayout;
-
+    private String cqlStr = "select * from Tag where place in (select * from Place where geoLocation within " +
+                            "[sw.latitude, sw.longitude] and [ne.latitude,ne.longitude])";
     public MyOrientationListener myOrientationListener;
 
 
@@ -107,7 +117,16 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.showZoomControls(false);
         mChatButton = (Button) view.findViewById(R.id.btn_chat);
+        /*mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setAdapter(new MyAdapter());*/
         tagBtn =(FloatingActionButton) view.findViewById(R.id.tag_btn);
+        tagBtn.setColorNormal(R.color.pink);
+        tagBtn.setIcon(R.drawable.ic_fab_star);
+        tagBtn.setColorNormalResId(R.color.pink_pressed);
         mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
         //设置slidinguppanel支持锚点
         if (mLayout.getAnchorPoint() == 1.0f) {
@@ -123,8 +142,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         //设置默认为跟 随模式
         mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                 mCurrentMode,true,null));
-        //
+        //方向传感器
         initOrientation();
+        //slidingPanel监听器
+        mLayout.setPanelSlideListener(panelListener);
         //定位初始化
         mLocationClient = new LocationClient(mContext);
         mLocationClient.registerLocationListener(new MyLocationListener());    //注册监听函数
@@ -146,20 +167,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
         //设置事件监听
         mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
-
-
-       /* view.setFocusableInTouchMode(true);
-        view.setOnKeyListener( new View.OnKeyListener()
-        {
-            @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-
-                }
-                return false;
-            }
-        } );*/
+        //tag查询
+        getTagCQL();
         return view;
     }
 
@@ -173,7 +182,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
       if (v == tagBtn) {
-          expansion();
+          if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+              expansion();
+              tagBtn.setColorNormal(R.color.purple);
+              tagBtn.setIcon(R.drawable.ic_send_white);
+              tagBtn.setColorNormalResId(R.color.deep_purple);
+          }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
+              addMarker();
+          }
+
             //addMarker();
         }else if (v == mChatButton) {
            /* User user = AppHelper.getCurrentUser();
@@ -241,6 +258,61 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    SlidingUpPanelLayout.PanelSlideListener panelListener = new SlidingUpPanelLayout.PanelSlideListener() {
+        @Override
+        public void onPanelSlide(View view, float v) {
+
+        }
+
+        @Override
+        public void onPanelCollapsed(View view) {
+            tagBtn.setColorNormal(R.color.pink);
+            tagBtn.setColorNormalResId(R.color.pink_pressed);
+            tagBtn.setIcon(R.drawable.ic_fab_star);
+        }
+
+        @Override
+        public void onPanelExpanded(View view) {
+
+        }
+
+        @Override
+        public void onPanelAnchored(View view) {
+            if (mLayout.getPanelState() ==SlidingUpPanelLayout.PanelState.ANCHORED){
+
+            }
+        }
+
+        @Override
+        public void onPanelHidden(View view) {
+
+        }
+
+        @Override
+        public void onPanelHiddenExecuted(View view, Interpolator interpolator, int i) {
+
+        }
+
+        @Override
+        public void onPanelShownExecuted(View view, Interpolator interpolator, int i) {
+
+        }
+
+        @Override
+        public void onPanelExpandedStateY(View view, boolean b) {
+
+        }
+
+        @Override
+        public void onPanelCollapsedStateY(View view, boolean b) {
+
+        }
+
+        @Override
+        public void onPanelLayout(View view, SlidingUpPanelLayout.PanelState panelState) {
+
+        }
+    };
     //展开slidinguppanel
     public void expansion(){
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
@@ -273,7 +345,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 return;
             }
             placeStr = reverseGeoCodeResult.getAddress();
-            Toast.makeText(mContext, placeStr, Toast.LENGTH_SHORT).show();
+            if (placeStr == null){
+                Toast.makeText(mContext, mContext.getString(R.string.placeNull), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(mContext, placeStr, Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -292,6 +368,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public Place placeInfo(String placegeo) {
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
+        //发起反地理编码查询
         mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                 .location(new LatLng(latitude, longitude)));
         Place place = new Place();
@@ -325,16 +402,19 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         Log.e("time", "" + time);
 
         //后台异步存储数据
-        tag.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    Log.e("saveok", "保存数据成功");
-                } else {
-                    Toast.makeText(mContext, "出错了讨厌啦", Toast.LENGTH_SHORT).show();
+        if (placeStr != null){
+            tag.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        Log.e("saveok", "保存数据成功");
+                    } else {
+                        Toast.makeText(mContext, "出错了讨厌啦", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
 
@@ -399,8 +479,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     //从lc获取maker数据集
     public void getMarkerData() {
-
-        AVQuery<Place> query = AVObject.getQuery(Place.class);
+        final AVQuery<Place> query = AVObject.getQuery(Place.class);
         query.whereWithinGeoBox("geoLocation",
                 new AVGeoPoint(sw.latitude, sw.longitude), new AVGeoPoint(ne.latitude, ne.longitude));
         //不能设置1000灰常卡，当前缩放级没必要设置50足矣
@@ -430,6 +509,34 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                             mMarkerExist.put(latitude, longitude);
                         }
                     }
+                }
+            }
+        });
+    }
+
+    public void getTagObject(){
+        AVQuery<Tag> tagAVQuery = AVQuery.getQuery(Tag.class);
+        tagAVQuery.include("place");
+        tagAVQuery.whereExists("place");
+        tagAVQuery.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> list, AVException e) {
+                for (Tag tag : list){
+                    Place place = tag.getPlace();
+                    placeId.add(place);
+                }
+            }
+        });
+    }
+
+    public void getTagCQL(){
+        AVQuery.doCloudQueryInBackground(cqlStr, new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                if (e == null){
+                    int a = avCloudQueryResult.getCount();
+                    Log.e("CQL", a + "");
+                    Toast.makeText(mContext, a + "", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -479,6 +586,39 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         return  nowNum;
     }
 
+    public class MyAdapter extends  RecyclerView.Adapter<MyAdapter.ViewHolder>{
+        private String[] mDataset;
+
+       /* public MyAdapter(String[] mDataset){
+            this.mDataset = mDataset;
+        }*/
+
+        public  class ViewHolder extends RecyclerView.ViewHolder{
+
+            public TextView mTextView;
+            public ViewHolder(View v) {
+                super(v);
+                mTextView = (TextView)v.findViewById(R.id.info_text);
+            }
+        }
+
+        @Override
+        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_view,parent,false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int position) {
+            viewHolder.mTextView.setText("fuck");
+        }
+
+        @Override
+        public int getItemCount() {
+            return 20;
+        }
+    }
 
     @Override
     public void onStart() {
