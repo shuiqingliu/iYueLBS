@@ -75,7 +75,7 @@ public class AppApplication extends Application {
         final ChatManager chatManager = ChatManager.getInstance();
         chatManager.init(this);
         if (AVUser.getCurrentUser() != null){
-            chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+            chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getUsername());
         }else {
             Toast.makeText(getApplication(), "当前用户为空", Toast.LENGTH_SHORT);
         }

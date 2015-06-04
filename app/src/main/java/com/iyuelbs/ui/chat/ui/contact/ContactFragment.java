@@ -28,7 +28,6 @@ import com.iyuelbs.ui.chat.service.AddRequestService;
 import com.iyuelbs.ui.chat.service.UserService;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseFragment;
 import com.iyuelbs.ui.chat.ui.chat.ChatRoomActivity;
-import com.iyuelbs.ui.chat.ui.conversation.ConversationGroupListActivity;
 import com.iyuelbs.ui.chat.ui.view.BaseListView;
 import com.iyuelbs.ui.chat.ui.view.ClearEditText;
 import com.iyuelbs.ui.chat.ui.view.EnLetterView;
@@ -191,7 +190,7 @@ public class ContactFragment extends BaseFragment {
     friendsList.setItemListener(new BaseListView.ItemListener<SortUser>() {
       @Override
       public void onItemSelected(SortUser item) {
-        ChatRoomActivity.chatByUserId(getActivity(), item.getInnerUser().getObjectId());
+        ChatRoomActivity.chatByUserId(getActivity(), item.getInnerUser().getUsername());
       }
 
       @Override
@@ -260,11 +259,6 @@ public class ContactFragment extends BaseFragment {
     @OnClick(R.id.layout_new)
     void goNewFriend() {
       Utils.goActivity(ctx, ContactNewFriendActivity.class);
-    }
-
-    @OnClick(R.id.layout_group)
-    void goGroupConvList() {
-      Utils.goActivity(ctx, ConversationGroupListActivity.class);
     }
 
     public ImageView getMsgTipsView() {
