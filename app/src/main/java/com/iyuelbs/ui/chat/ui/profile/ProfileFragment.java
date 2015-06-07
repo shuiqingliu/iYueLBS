@@ -23,7 +23,6 @@ import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.db.DBHelper;
 import com.iyuelbs.R;
 import com.iyuelbs.ui.chat.entity.avobject.User;
-import com.iyuelbs.ui.chat.service.UpdateService;
 import com.iyuelbs.ui.chat.service.UserService;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseFragment;
 import com.iyuelbs.ui.chat.util.Logger;
@@ -85,13 +84,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     genderLayout = fragmentView.findViewById(R.id.sexLayout);
     notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
     genderView = (TextView) fragmentView.findViewById(R.id.sex);
-    updateLayout = fragmentView.findViewById(R.id.updateLayout);
 
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
     genderLayout.setOnClickListener(this);
     notifyLayout.setOnClickListener(this);
-    updateLayout.setOnClickListener(this);
   }
 
   @Override
@@ -114,9 +111,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       showSexChooseDialog();
     } else if (id == R.id.notifyLayout) {
       Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
-    } else if (id == R.id.updateLayout) {
-      UpdateService updateService = UpdateService.getInstance(getActivity());
-      updateService.showSureUpdateDialog();
     }
   }
 

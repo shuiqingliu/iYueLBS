@@ -32,6 +32,8 @@ import com.iyuelbs.ui.chat.util.Utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/*import com.iyuelbs.ui.chat.service.ChatManagerAdapterImpl;*/
+
 /**
  * Created by lzw on 15/4/24.
  */
@@ -62,11 +64,6 @@ public class ChatRoomActivity extends ChatActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    initLocation();
-  }
-
-  private void initLocation() {
-    addLocationBtn.setVisibility(View.VISIBLE);
   }
 
   @Override
