@@ -10,16 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avos.avoscloud.AVCloudQueryResult;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVQuery;
-import com.avos.avoscloud.CloudQueryCallback;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.SaveCallback;
 import com.baidu.location.BDLocation;
@@ -31,6 +30,7 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.Circle;
 import com.baidu.mapapi.map.CircleOptions;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -55,10 +55,17 @@ import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.entity.Place;
 import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
+import com.iyuelbs.support.widget.RoundedImageView;
+import com.iyuelbs.ui.chat.service.CacheService;
 import com.iyuelbs.ui.chat.ui.MsgActivity;
 import com.iyuelbs.ui.settings.MyOrientationListener;
+import com.iyuelbs.ui.settings.TimeCal;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -70,13 +77,13 @@ import java.util.Map;
  */
 public class MapFragment extends Fragment implements View.OnClickListener {
 
-    private Button mChatButton;
     private FloatingActionButton tagBtn;
     private RecyclerView mRecyclerView;
     private MapView mMapView;
     private BaiduMap mBaiduMap;
     protected LocationClient mLocationClient = null;
     private BitmapDescriptor mCurrentMarker;
+    private BitmapDescriptor mMarkerIcon;
     private MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
     private boolean isFirstLoc = true;// 是否首次定位
     private boolean isFirsCircle = true; //是否首次绘制圆
@@ -88,20 +95,27 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private LatLng ne;
     private LatLng sw;
     public String placeStr; //位置信息
+    private LatLng lastpostion;
     private GeoCoder mSearch; //搜索模块
     public Toast mToast;
     private Context mContext;
-    private Map<Double,Double> mMarkerExist;
-    //private Map<String,String> placeID;
-    private List<Tag> tagID;
-    private List<Place> placeId;
+    private Map<String,String> mMarkerExist;
+    public ArrayList<Place> placeId;
+    private Marker lastmark;
+    private boolean isFirst=true;
     private boolean isFirstMarker = true;
     public int nowNum;
+    private int fabStatus = 2;
     protected SlidingUpPanelLayout mLayout;
-    private String cqlStr = "select * from Tag where place in (select * from Place where geoLocation within " +
-                            "[sw.latitude, sw.longitude] and [ne.latitude,ne.longitude])";
     public MyOrientationListener myOrientationListener;
-
+    private DisplayImageOptions mImageOptions;
+    private ImageLoader mImageLoader;
+    private RelativeLayout relativeLayout;
+    private RoundedImageView userAvatar;
+    private TextView tagTitle;
+    private TextView tagDetial;
+    private TextView tagTime;
+    private User chatUser;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -115,13 +129,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         View view = layoutInflater.inflate(R.layout.baidumap, viewGroup, false);
         mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.showZoomControls(false);
-        mChatButton = (Button) view.findViewById(R.id.btn_chat);
-        /*mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager manager = new LinearLayoutManager(mContext);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setAdapter(new MyAdapter());*/
+        userAvatar = (RoundedImageView) view.findViewById(R.id.tag_avatar);
+        tagTitle = (TextView) view.findViewById(R.id.tag_title);
+        tagDetial = (TextView) view.findViewById(R.id.tag_detial);
+        tagTime = (TextView) view.findViewById(R.id.tag_time);
         tagBtn =(FloatingActionButton) view.findViewById(R.id.tag_btn);
         tagBtn.setColorNormal(R.color.pink);
         tagBtn.setIcon(R.drawable.ic_fab_star);
@@ -131,11 +142,14 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         if (mLayout.getAnchorPoint() == 1.0f) {
             mLayout.setAnchorPoint(0.7f);
         }
+
         //marker采用相同图标节省资源，后续可以添加分类tag的图标
         mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
+        mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.ic_selected_tag);
         //初始化map集合
-        mMarkerExist = new HashMap<>();
         mBaiduMap = mMapView.getMap();
+
+        //初始化Place ObjectID
         //开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         //设置默认为跟 随模式
@@ -161,37 +175,64 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         // common ui
         tagBtn.setOnClickListener(this);
-        mChatButton.setText("聊天");
-        mChatButton.setOnClickListener(this);
         mBaiduMap.setOnMapStatusChangeListener(statusChangeListener);
         //设置事件监听
         mBaiduMap.setOnMapLoadedCallback(onMapLoadedCallback);
-        //tag查询
-        getTagCQL();
+        //maker点击事件监听
+        mBaiduMap.setOnMarkerClickListener(onMarkerClickListener);
+        //地图点击事件
+        mBaiduMap.setOnMapClickListener(onMapClickListener);
         return view;
     }
 
-    public void slidOpen(){
-        if(mLayout != null &&
-                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
-                        || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
-            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        }
-    }
     @Override
     public void onClick(View v) {
       if (v == tagBtn) {
-          if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
-              expansion();
-              tagBtn.setColorNormal(R.color.purple);
-              tagBtn.setIcon(R.drawable.ic_send_white);
-              tagBtn.setColorNormalResId(R.color.deep_purple);
-          }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
-              addMarker();
+          switch (fabStatus){
+              case 1:{
+                  if (chatUser.getObjectId() == null){
+                      Toast.makeText(mContext,"不能获得对方ID，暂不能聊天",Toast.LENGTH_SHORT).show();
+                  }else{
+                      if (AppHelper.getCurrentUser().getObjectId().equals(chatUser.getObjectId())) {
+                          Toast.makeText(mContext, "对不起,您不可以和自己聊天！", Toast.LENGTH_SHORT).show();
+                      }else {
+                          List<AVUser> userList = new ArrayList<>();
+                          userList.add(AppHelper.getCurrentUser());
+                          userList.add(chatUser);
+                          CacheService.registerUsers(userList);
+                          List<String> userString = new ArrayList<>();
+                          userString.add(chatUser.getObjectId());
+                          userString.add(chatUser.getObjectId());
+                          try {
+
+                              CacheService.cacheUsers(userString);
+                          }catch (AVException e){
+                              e.printStackTrace();
+                          }
+                          MsgActivity.goChatActivityFromActivity(getActivity(), chatUser.getObjectId());
+                      }
+                  }
+
+                  break;
+              }
+              case 2:{
+                  if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+                      expansion();
+                      tagBtn.setColorNormal(R.color.purple);
+                      tagBtn.setIcon(R.drawable.ic_send_white);
+                      tagBtn.setColorNormalResId(R.color.deep_purple);
+                  }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
+                      addMarker();
+                  }
+                  break;
+              }
+              case 3:{
+                  MsgActivity.goMainActivityFromActivity(getActivity());
+                  break;
+              }
+
           }
-        }else if (v == mChatButton) {
-          MsgActivity.goMainActivityFromActivity(getActivity());
-      }
+        }
     }
 
     //地图模式转化
@@ -229,7 +270,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     SlidingUpPanelLayout.PanelSlideListener panelListener = new SlidingUpPanelLayout.PanelSlideListener() {
         @Override
         public void onPanelSlide(View view, float v) {
-
         }
 
         @Override
@@ -241,49 +281,49 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onPanelExpanded(View view) {
-
         }
 
         @Override
         public void onPanelAnchored(View view) {
-            if (mLayout.getPanelState() ==SlidingUpPanelLayout.PanelState.ANCHORED){
-
-            }
+            fabStatus = 2;
         }
 
         @Override
         public void onPanelHidden(View view) {
-
         }
 
         @Override
         public void onPanelHiddenExecuted(View view, Interpolator interpolator, int i) {
-
         }
 
         @Override
         public void onPanelShownExecuted(View view, Interpolator interpolator, int i) {
-
         }
 
         @Override
         public void onPanelExpandedStateY(View view, boolean b) {
-
         }
 
         @Override
         public void onPanelCollapsedStateY(View view, boolean b) {
-
         }
 
         @Override
         public void onPanelLayout(View view, SlidingUpPanelLayout.PanelState panelState) {
-
         }
     };
+
     //展开slidinguppanel
     public void expansion(){
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+    }
+
+    public void slidingClose(){
+        if(mLayout != null &&
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                        || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
     }
 
     //添加marker
@@ -326,11 +366,85 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onMapLoaded() {
             if (isFirstMarker){
-                getArea();
+                drawTag();
                 isFirsCircle = false;
             }
         }
     };
+
+    //Marker事件监听
+    BaiduMap.OnMarkerClickListener onMarkerClickListener = new BaiduMap.OnMarkerClickListener() {
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            if (isFirst){
+                marker.setIcon(mMarkerIcon);
+
+            }else{
+                lastmark.setIcon(mCurrentMarker);
+                marker.setIcon(mMarkerIcon);
+            }
+            isFirst = false;
+            lastmark = marker;
+            userAvatar.setVisibility(View.VISIBLE);
+            MapDataHelper mapDataHelper = (MapDataHelper) marker.getExtraInfo().get("mapdate");
+            mapDataHelper.getUsername();
+            mapDataHelper.getPlacename();
+            mapDataHelper.getDate();
+            chatUser = mapDataHelper.getUser();
+            tagInfo(mapDataHelper);
+            //设置fab 状态
+            fabStatus = 1;
+            tagBtn.setColorNormal(R.color.teal_dark);
+            tagBtn.setIcon(R.drawable.ic_chat_white);
+            tagBtn.setColorNormalResId(R.color.teal);
+            return false;
+        }
+    };
+
+    public void tagInfo(MapDataHelper mapDataHelper){
+        getImageLoader().displayImage(mapDataHelper.getUserAv(), userAvatar, mImageOptions);
+        tagTitle.setText(mapDataHelper.getTitle());
+        tagDetial.setText(mapDataHelper.getDetail());
+        Calendar calendar = Calendar.getInstance();
+        Date time = calendar.getTime();
+        TimeCal timeCal = new TimeCal();
+        String timeStr = timeCal.twoDateDistance(mapDataHelper.getDate(), time);
+        tagTime.setText(timeStr);
+
+    }
+
+    private ImageLoader getImageLoader() {
+        if (mImageLoader == null) {
+            mImageLoader = AppHelper.getImageLoader();
+            mImageOptions = AppHelper.getDefaultOptsBuilder().displayer(new SimpleBitmapDisplayer()).build();
+        }
+        return mImageLoader;
+    }
+
+    //Map单击事件
+    BaiduMap.OnMapClickListener onMapClickListener = new BaiduMap.OnMapClickListener() {
+        @Override
+        public void onMapClick(LatLng latLng) {
+            fabStatus = 3;
+            tagBtn.setColorNormal(R.color.pink);
+            tagBtn.setColorNormalResId(R.color.pink_pressed);
+            tagBtn.setIcon(R.drawable.ic_fab_star);
+            if (lastmark != null){
+                lastmark.setIcon(mCurrentMarker);
+            }
+            userAvatar.setVisibility(View.GONE);
+            tagTitle.setText("");
+            tagDetial.setText("");
+            tagTime.setText("");
+
+        }
+
+        @Override
+        public boolean onMapPoiClick(MapPoi mapPoi) {
+            return false;
+        }
+    };
+
 
     //place info
     public Place placeInfo(String placegeo) {
@@ -343,16 +457,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         place.setGeoLocation(new AVGeoPoint(mBaiduMap.getLocationData().latitude
                 , mBaiduMap.getLocationData().longitude));
         place.setPlaceName(placegeo);
-        /*place.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    //Toast.makeText(mContext,"place保存成功",Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(mContext, "保存出错", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
         return place;
     }
 
@@ -388,7 +492,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     //初始化Circleoption
     CircleOptions circleOptions = new CircleOptions();
-
     public void drawCircle() {
         double latitude = mBaiduMap.getLocationData().latitude;
         double longitude = mBaiduMap.getLocationData().longitude;
@@ -407,6 +510,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    //监听地图状态变化
     BaiduMap.OnMapStatusChangeListener statusChangeListener
             = new BaiduMap.OnMapStatusChangeListener() {
         @Override
@@ -419,12 +523,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onMapStatusChangeFinish(MapStatus mapStatus) {
-            getArea();
+            drawTag();
         }
     };
 
+    /**
+    *从服务器获取tag数据并将数据与maker绑定开始
+    */
+    public void drawTag() {
     //获取当前地图范围
-    public void getArea() {
         //获取地图边界
         int b = mMapView.getBottom();
         int t = mMapView.getTop();
@@ -438,11 +545,62 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 .include(ne).include(sw).build();
         Log.e("northeast", ne.longitude + "," + ne.latitude);
         Log.e("sourthwest", sw.longitude + "," + sw.latitude);
-        /*LatLng target = mBaiduMap.getMapStatus().target;
-        Log.e("target", target.longitude + "," + target.latitude);
-        Toast.makeText(mContext,"东经：" + target.longitude +
-                "北纬：" + target.latitude,Toast.LENGTH_LONG).show();*/
+        getTagObject();
+    }
+
+    //将tag数据和marker绑定
+    public void getTagObject(){
         getMarkerData();
+        AVQuery<Tag> tagAVQuery = AVQuery.getQuery(Tag.class);
+        tagAVQuery.whereContainedIn("place", placeId);
+        tagAVQuery.findInBackground(new FindCallback<Tag>() {
+            @Override
+            public void done(List<Tag> list, AVException e) {
+                if (e == null) {
+                    mMarkerExist = new HashMap<>();
+                    for (int i = 0;i< list.size();i++) {
+                        //首先取得place和tag的基本数据
+                        double latitude = placeId.get(i).getGeoLocation().getLatitude();
+                        double longitude = placeId.get(i).getGeoLocation().getLongitude();
+                        MarkerOptions options = new MarkerOptions()
+                                .position(new LatLng(latitude, longitude))
+                                .icon(mCurrentMarker)
+                                .zIndex(9);
+                        User user = list.get(i).getUser();
+                        String tagid = list.get(i).getObjectId();
+                        String placeid = placeId.get(i).getObjectId();
+                        String placename = list.get(i).getPlace().getPlaceName();
+                        String username = list.get(i).getUser().getUsername();
+                        String title = list.get(i).getTitle();
+                        String detial = list.get(i).getDetail();
+                        String userav = list.get(i).getUser().getAvatarUrl();
+                        Date date = list.get(i).getAppointTime();
+                        MapDataHelper mapDataHelper = new MapDataHelper(user,username, title, detial, userav, date, placename);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mapdate",mapDataHelper);
+
+                        //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
+                        if (isFirstMarker) {
+                            mMarker = (Marker) mBaiduMap.addOverlay(options);
+                            mMarker.setExtraInfo(bundle);
+                            mMarkerExist.put(tagid,placeid);
+                            //TODO： 如何做到判断已经有overly的点不再重绘？？？
+                            //将当前marker保存起来啊，然后判断LatLng！！！
+                        } else if (mMarkerExist.get(tagid) == placeid) {
+                            //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
+                            //  所以有可能造成tag丢失，这存在BUG，
+                        } else {
+                            mMarker = (Marker) mBaiduMap.addOverlay(options);
+                            mMarker.setExtraInfo(bundle);
+                            mMarkerExist.put(tagid,placeid);
+                        }
+
+                    }
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     //从lc获取maker数据集
@@ -456,59 +614,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             @Override
             public void done(List<Place> list, AVException e) {
                 if (e == null) {
+                    placeId = new ArrayList<>();
                     for (Place getlocation : list) {
-                        double latitude = getlocation.getGeoLocation().getLatitude();
-                        double longitude = getlocation.getGeoLocation().getLongitude();
-                        MarkerOptions options = new MarkerOptions()
-                                .position(new LatLng(latitude, longitude))
-                                .icon(mCurrentMarker)
-                                .zIndex(9);
-                        //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
-                        if (isFirstMarker) {
-                            mMarker = (Marker) mBaiduMap.addOverlay(options);
-                            mMarkerExist.put(latitude, longitude);
-                            //TODO： 如何做到判断已经有overly的点不再重绘？？？
-                            //将当前marker保存起来啊，然后判断LatLng！！！
-                        } else if (mMarkerExist.get(latitude) == longitude) {
-                            //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
-                            //  所以有可能造成tag丢失，这存在BUG，
-                        } else {
-                            mMarker = (Marker) mBaiduMap.addOverlay(options);
-                            mMarkerExist.put(latitude, longitude);
-                        }
+                        placeId.add(getlocation);
                     }
                 }
             }
         });
     }
-
-    public void getTagObject(){
-        AVQuery<Tag> tagAVQuery = AVQuery.getQuery(Tag.class);
-        tagAVQuery.include("place");
-        tagAVQuery.whereExists("place");
-        tagAVQuery.findInBackground(new FindCallback<Tag>() {
-            @Override
-            public void done(List<Tag> list, AVException e) {
-                for (Tag tag : list){
-                    Place place = tag.getPlace();
-                    placeId.add(place);
-                }
-            }
-        });
-    }
-
-    public void getTagCQL(){
-        AVQuery.doCloudQueryInBackground(cqlStr, new CloudQueryCallback<AVCloudQueryResult>() {
-            @Override
-            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
-                if (e == null){
-                    int a = avCloudQueryResult.getCount();
-                    Log.e("CQL", a + "");
-                    Toast.makeText(mContext, a + "", Toast.LENGTH_SHORT);
-                }
-            }
-        });
-    }
+    /**
+     *从服务器获取tag数据并将数据与maker绑定结束
+     */
 
     public class MyLocationListener implements BDLocationListener {
         @Override
@@ -535,9 +651,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             }
             //绘制圆形覆盖物
             drawCircle();
-        }
-
-        public void onReceivePoi(BDLocation poiLocation) {
         }
     }
 

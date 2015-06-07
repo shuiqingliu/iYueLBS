@@ -13,9 +13,9 @@ import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.iyuelbs.R;
 import com.iyuelbs.ui.chat.service.CacheService;
-import com.iyuelbs.ui.chat.service.UpdateService;
 import com.iyuelbs.ui.chat.service.event.LoginFinishEvent;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseActivity;
+import com.iyuelbs.ui.chat.ui.chat.ChatRoomActivity;
 import com.iyuelbs.ui.chat.ui.contact.ContactFragment;
 import com.iyuelbs.ui.chat.ui.conversation.ConversationRecentFragment;
 import com.iyuelbs.ui.chat.ui.profile.ProfileFragment;
@@ -57,6 +57,12 @@ public class MsgActivity extends BaseActivity {
     fromActivity.startActivity(intent);
   }
 
+  public static void goChatActivityFromActivity(Activity fromActivity,String userID) {
+    ChatManager chatManager = ChatManager.getInstance();
+    chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+    chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
+    ChatRoomActivity.chatByUserId(fromActivity, userID);
+  }
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,14 +70,7 @@ public class MsgActivity extends BaseActivity {
     findView();
     init();
 
-    //mySpaceBtn.performClick();
-    //contactBtn.performClick();
-    //discoverBtn.performClick();
     conversationBtn.performClick();
-
-
-    UpdateService updateService = UpdateService.getInstance(this);
-    updateService.checkUpdate();
     CacheService.registerUser(AVUser.getCurrentUser());
   }
 

@@ -1,7 +1,6 @@
 package com.iyuelbs.app;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
@@ -76,8 +75,6 @@ public class AppApplication extends Application {
         chatManager.init(this);
         if (AVUser.getCurrentUser() != null){
             chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
-        }else {
-            Toast.makeText(getApplication(), "当前用户为空", Toast.LENGTH_SHORT).show();
         }
         //chatManager.setConversationEventHandler();
         chatManager.setConversationEventHandler(ConversationManager.getConversationHandler());

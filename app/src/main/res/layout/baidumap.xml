@@ -27,22 +27,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/maplayout">
-
-
     <com.baidu.mapapi.map.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true" />
-
-    <Button
-        android:id="@+id/btn_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="79dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="250dp"
-        android:background="@color/teal" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -59,23 +48,59 @@
                 android:layout_height="68dp"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"/>
+                    android:id="@+id/taginfo">
 
-                <Button
-                    android:id="@+id/follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical|right"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"/>
+                    <com.iyuelbs.support.widget.RoundedImageView
+                        android:id="@+id/tag_avatar"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:scaleType="fitCenter"
+                        android:layout_margin="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tag_avatar"
+                        android:orientation="vertical" >
+
+
+                        <TextView
+                            android:id="@+id/tag_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/teal"
+                            android:textStyle="bold"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tag_detial"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:textColor="@color/teal" />
+
+                            <TextView
+                                android:id="@+id/tag_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginRight="20dp"
+                                android:gravity="right"
+                                android:textSize="12sp"
+                                android:textColor="@color/teal" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -92,6 +117,10 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>

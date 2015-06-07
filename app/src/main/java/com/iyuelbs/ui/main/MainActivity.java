@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity {
         if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
             mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else if (fragment != null) {
-            fragment.slidOpen();
+            fragment.slidingClose();
             if (fragment.mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED)
                 super.onBackPressed();
         }else{
