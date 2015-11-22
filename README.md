@@ -34,5 +34,5 @@
 ##其他依赖支持
 
 >       AVOSCloud [https://leancloud.cn/]
->       高德地图SDK [http://lbs.amap.com/]
+>       百度地图SDK [http://developer.baidu.com/map/]
 >       七牛云存储 [https://portal.qiniu.com/]
