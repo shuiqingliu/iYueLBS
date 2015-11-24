@@ -1,7 +1,6 @@
 package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseActivity;
@@ -69,8 +68,13 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void onPositive(MaterialDialog dialog) {
                             // TODO UserInfo
-                            NavUtils.go(mContext, MainActivity.class);
+                            NavUtils.go(mContext,RegisterUserDetail.class);
 
+                        }
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            super.onNegative(dialog);
+                            NavUtils.go(mContext, MainActivity.class);
                         }
                     });
             return false;

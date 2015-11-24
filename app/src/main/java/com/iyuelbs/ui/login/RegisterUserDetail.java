@@ -205,4 +205,5 @@ public class RegisterUserDetail extends BaseFragment implements View.OnClickList
             }
         }
     }
+
 }

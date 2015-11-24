@@ -14,7 +14,6 @@ import com.avos.avoscloud.UpdatePasswordCallback;
 import com.iyuelbs.BaseFragment;
 import com.iyuelbs.R;
 import com.iyuelbs.entity.User;
-import com.iyuelbs.support.utils.Utils;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Timer;
@@ -138,10 +137,10 @@ public class ResetPwd extends BaseFragment implements View.OnClickListener {
         }
 
         if (valid) {
-            if (!Utils.isPhoneString(mPhoneText.getText().toString())) {
+           /* if (!Utils.isPhoneString(mPhoneText.getText().toString())) {
                 mPhoneText.setError(getString(R.string.msg_phone_invalid));
                 valid = false;
-            }
+            }*/
 
             if (!mPasswordText.getText().toString().equals(mConfirmPwdText.getText().toString())) {
                 mConfirmPwdText.setError(getString(R.string.msg_pwd_confirm_failed));
