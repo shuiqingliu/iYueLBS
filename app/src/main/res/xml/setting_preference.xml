@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="提醒消息设置">
 
-    <CheckBoxPreference
-        android:defaultValue="@bool/defaultNotifyWhenNews"
-        android:key="notifyWhenNews"
-        android:title="@string/profile_notifyWhenNews" />
-
-    <CheckBoxPreference
-        android:defaultValue="@bool/defaultVoiceNotify"
-        android:dependency="notifyWhenNews"
-        android:key="voiceNotify"
-        android:title="@string/setting_preference_voice" />
-
-    <CheckBoxPreference
-        android:defaultValue="@bool/defaultVibrateNotify"
-        android:dependency="notifyWhenNews"
-        android:key="vibrateNotify"
-        android:title="@string/profile_vibrate" />
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="@string/profile_notifyWhenNews"
+            android:key="notifyWhenNews"
+            android:summaryOn="当前为接收（默认）"
+            android:summaryOff="当前为不接收"
+            android:defaultValue="@bool/defaultNotifyWhenNews"/>
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="@string/setting_preference_voice"
+            android:dependency="notifyWhenNews"
+            android:key="voiceNotify"
+            android:summaryOff="不接收语音消息"
+            android:summaryOn="接收语音消息"
+            android:defaultValue="@bool/defaultVoiceNotify"/>
+        <CheckBoxPreference
+            android:layout="@layout/preference_item"
+            android:title="@string/profile_vibrate"
+            android:dependency="notifyWhenNews"
+            android:summaryOff="已关闭震动"
+            android:summaryOn="震动已开启"
+            android:key="vibrateNotify"
+            android:defaultValue="@bool/defaultVibrateNotify"/>
+    </PreferenceCategory>
 </PreferenceScreen>
