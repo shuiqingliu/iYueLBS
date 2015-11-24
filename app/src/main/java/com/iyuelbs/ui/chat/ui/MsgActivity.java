@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.avos.avoscloud.AVUser;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.iyuelbs.R;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.ui.chat.service.CacheService;
 import com.iyuelbs.ui.chat.service.event.LoginFinishEvent;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseActivity;
@@ -19,6 +20,7 @@ import com.iyuelbs.ui.chat.ui.chat.ChatRoomActivity;
 import com.iyuelbs.ui.chat.ui.contact.ContactFragment;
 import com.iyuelbs.ui.chat.ui.conversation.ConversationRecentFragment;
 import com.iyuelbs.ui.chat.ui.profile.ProfileFragment;
+import com.iyuelbs.ui.main.MainActivity;
 
 import de.greenrobot.event.EventBus;
 
@@ -38,7 +40,7 @@ public class MsgActivity extends BaseActivity {
   private static final String[] fragmentTags = new String[]{FRAGMENT_TAG_CONVERSATION, FRAGMENT_TAG_CONTACT, FRAGMENT_TAG_PROFILE};
 
 
-  Button conversationBtn, contactBtn,  mySpaceBtn;
+  public Button conversationBtn, contactBtn,  mySpaceBtn;
   View fragmentContainer;
   ContactFragment contactFragment;
   ConversationRecentFragment conversationRecentFragment;
@@ -63,15 +65,32 @@ public class MsgActivity extends BaseActivity {
     chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
     ChatRoomActivity.chatByUserId(fromActivity, userID);
   }
+
+  public static void goActivityFromActivity(Activity fromActivity) {
+    ChatManager chatManager = ChatManager.getInstance();
+    chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+    chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
+    Intent intent = new Intent(fromActivity, MainActivity.class);
+    fromActivity.startActivity(intent);
+  }
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.msg_activity);
     findView();
     init();
-
-    conversationBtn.performClick();
-    CacheService.registerUser(AVUser.getCurrentUser());
+    Intent intent = getIntent();
+    int i = intent.getIntExtra("status", 0);
+    if ( i == 1){
+      conversationBtn.performClick();
+    }else if (i == 2) {
+      contactBtn.performClick();
+    }else if (i ==3) {
+      mySpaceBtn.performClick();
+    }
+    CacheService.registerUser(AppHelper.getCurrentUser());
   }
 
 

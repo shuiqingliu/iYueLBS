@@ -1,8 +1,6 @@
 package com.iyuelbs.ui.chat.ui.profile;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,7 +20,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.db.DBHelper;
 import com.iyuelbs.R;
-import com.iyuelbs.ui.chat.entity.avobject.User;
+import com.iyuelbs.app.AppHelper;
 import com.iyuelbs.ui.chat.service.UserService;
 import com.iyuelbs.ui.chat.ui.base_activity.BaseFragment;
 import com.iyuelbs.ui.chat.util.Logger;
@@ -70,7 +68,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
   private void refresh() {
     AVUser curUser = AVUser.getCurrentUser();
     usernameView.setText(curUser.getUsername());
-    genderView.setText(User.getGenderDesc(curUser));
+    genderView.setText(AppHelper.getCurrentUser().isMale()? "男" : "女");
     UserService.displayAvatar(curUser, avatarView);
   }
 
@@ -85,9 +83,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     notifyLayout = fragmentView.findViewById(R.id.notifyLayout);
     genderView = (TextView) fragmentView.findViewById(R.id.sex);
 
+    genderView.setText(AppHelper.getCurrentUser().isMale()? "男" : "女");
     avatarLayout.setOnClickListener(this);
     logoutLayout.setOnClickListener(this);
-    genderLayout.setOnClickListener(this);
     notifyLayout.setOnClickListener(this);
   }
 
@@ -106,31 +104,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
       });
       AVUser.logOut();
+      getActivity().setResult(Activity.RESULT_OK);
       getActivity().finish();
-    } else if (id == R.id.sexLayout) {
-      showSexChooseDialog();
     } else if (id == R.id.notifyLayout) {
       Utils.goActivity(ctx, ProfileNotifySettingActivity.class);
     }
-  }
-
-  private void showSexChooseDialog() {
-    AVUser user = AVUser.getCurrentUser();
-    int checkItem = User.getGender(user) == User.Gender.Male ? 0 : 1;
-    new AlertDialog.Builder(ctx).setTitle(R.string.profile_sex)
-        .setSingleChoiceItems(User.genderStrings, checkItem, new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            User.Gender gender;
-            if (which == 0) {
-              gender = User.Gender.Male;
-            } else {
-              gender = User.Gender.Female;
-            }
-            UserService.saveSex(gender, saveCallback);
-            dialog.dismiss();
-          }
-        }).setNegativeButton(R.string.chat_common_cancel, null).show();
   }
 
   @Override
@@ -148,7 +126,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
           protected void doInBack() throws Exception {
             UserService.saveAvatar(path);
           }
-
           @Override
           protected void onSucceed() {
             refresh();

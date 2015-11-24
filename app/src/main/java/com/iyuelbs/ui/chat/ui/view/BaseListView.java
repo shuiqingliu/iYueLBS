@@ -2,6 +2,7 @@ package com.iyuelbs.ui.chat.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -83,7 +84,7 @@ public class BaseListView<T> extends XListView implements XListView.IXListViewLi
           if (datas.size() < ONE_PAGE_SIZE) {
             if (isToastIfEmpty()) {
               if (datas.size() == 0) {
-                Utils.toast(getContext(), R.string.chat_base_list_view_listEmptyHint);
+                Log.e("contact","无数据");
               }
             }
             //setPullLoadEnable(false);
