@@ -8,11 +8,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.avos.avoscloud.AVUser;
 import com.iyuelbs.BaseActivity;
 import com.iyuelbs.R;
 import com.iyuelbs.support.utils.ViewUtils;
-import com.iyuelbs.ui.login.LoginActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 /**
@@ -54,6 +52,10 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    public void closeDrawLayout(){
+        mDrawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_common, menu);
@@ -66,18 +68,26 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()){
             case R.id.action_settings:
                 // TODO 设置界面进行设置
+                DrawerFragment.goMsgActivityFromActivity(this,3);
                 break;
             case R.id.action_logout:
                 //退出当前登录
-                Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                AVUser.logOut();
-                startActivity(i);
+                finish();
                 break;
             case R.id.my_location:
                 fragment.mLocationClient.requestLocation();
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
+        }
     }
 
     @Override

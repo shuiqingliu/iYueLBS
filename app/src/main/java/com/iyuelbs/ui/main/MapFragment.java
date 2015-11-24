@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,12 +58,13 @@ import com.iyuelbs.entity.Tag;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.support.widget.RoundedImageView;
 import com.iyuelbs.ui.chat.service.CacheService;
-import com.iyuelbs.ui.chat.ui.MsgActivity;
+import com.iyuelbs.ui.chat.ui.chat.ChatRoomActivity;
 import com.iyuelbs.ui.settings.MyOrientationListener;
 import com.iyuelbs.ui.settings.TimeCal;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -112,10 +114,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private ImageLoader mImageLoader;
     private RelativeLayout relativeLayout;
     private RoundedImageView userAvatar;
-    private TextView tagTitle;
-    private TextView tagDetial;
-    private TextView tagTime;
+    private TextView tagTitle,tagDetial,tagTime;
     private User chatUser;
+    private MaterialEditText tagTitleText, tagDetailText;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -133,11 +134,14 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         tagTitle = (TextView) view.findViewById(R.id.tag_title);
         tagDetial = (TextView) view.findViewById(R.id.tag_detial);
         tagTime = (TextView) view.findViewById(R.id.tag_time);
+        tagTitleText = (MaterialEditText) view.findViewById(R.id.tag_title_text);
+        tagDetailText = (MaterialEditText) view.findViewById(R.id.tag_detial_text);
         tagBtn =(FloatingActionButton) view.findViewById(R.id.tag_btn);
         tagBtn.setColorNormal(R.color.pink);
-        tagBtn.setIcon(R.drawable.ic_fab_star);
+        tagBtn.setIcon(R.drawable.ic_add_white_24dp);
         tagBtn.setColorNormalResId(R.color.pink_pressed);
         mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        mLayout.setTouchEnabled(false);
         //设置slidinguppanel支持锚点
         if (mLayout.getAnchorPoint() == 1.0f) {
             mLayout.setAnchorPoint(0.7f);
@@ -190,7 +194,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
       if (v == tagBtn) {
           switch (fabStatus){
               case 1:{
-                  if (chatUser.getObjectId() == null){
+                  if (null == chatUser.getObjectId()){
                       Toast.makeText(mContext,"不能获得对方ID，暂不能聊天",Toast.LENGTH_SHORT).show();
                   }else{
                       if (AppHelper.getCurrentUser().getObjectId().equals(chatUser.getObjectId())) {
@@ -209,7 +213,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                           }catch (AVException e){
                               e.printStackTrace();
                           }
-                          MsgActivity.goChatActivityFromActivity(getActivity(), chatUser.getObjectId());
+                          ChatRoomActivity.chatByUserId(getActivity(), chatUser.getObjectId());
                       }
                   }
 
@@ -221,13 +225,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                       tagBtn.setColorNormal(R.color.purple);
                       tagBtn.setIcon(R.drawable.ic_send_white);
                       tagBtn.setColorNormalResId(R.color.deep_purple);
-                  }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
-                      addMarker();
+                      userAvatar.setVisibility(View.VISIBLE);
+                      getImageLoader().displayImage(AppHelper.getCurrentUser().getAvatarUrl(), userAvatar, mImageOptions);
+                      tagTitle.setText(R.string.add_tag);
+                      tagDetial.setText("");
+                      tagTime.setText("");
                   }
+                  fabStatus = 3;
                   break;
               }
               case 3:{
-                  MsgActivity.goMainActivityFromActivity(getActivity());
+                  addMarker();
                   break;
               }
 
@@ -276,7 +284,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         public void onPanelCollapsed(View view) {
             tagBtn.setColorNormal(R.color.pink);
             tagBtn.setColorNormalResId(R.color.pink_pressed);
-            tagBtn.setIcon(R.drawable.ic_fab_star);
+            tagBtn.setIcon(R.drawable.ic_add_white_24dp);
+            fabStatus = 2;
         }
 
         @Override
@@ -285,7 +294,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
         @Override
         public void onPanelAnchored(View view) {
-            fabStatus = 2;
         }
 
         @Override
@@ -323,6 +331,10 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
                         || mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            userAvatar.setVisibility(View.GONE);
+            tagTitle.setText("");
+            tagDetial.setText("");
+            tagTime.setText("");
         }
     }
 
@@ -333,7 +345,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         double longitude = mBaiduMap.getLocationData().longitude;
         MarkerOptions options = new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
-                .icon(mCurrentMarker) 
+                .icon(mCurrentMarker)
                 .zIndex(9);
         mMarker = (Marker) mBaiduMap.addOverlay(options);
         markerInfo();
@@ -355,8 +367,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             placeStr = reverseGeoCodeResult.getAddress();
             if (placeStr == null){
                 Toast.makeText(mContext, mContext.getString(R.string.placeNull), Toast.LENGTH_SHORT).show();
-            }else{
-                Toast.makeText(mContext, placeStr, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -425,18 +435,21 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     BaiduMap.OnMapClickListener onMapClickListener = new BaiduMap.OnMapClickListener() {
         @Override
         public void onMapClick(LatLng latLng) {
-            fabStatus = 3;
-            tagBtn.setColorNormal(R.color.pink);
-            tagBtn.setColorNormalResId(R.color.pink_pressed);
-            tagBtn.setIcon(R.drawable.ic_fab_star);
-            if (lastmark != null){
-                lastmark.setIcon(mCurrentMarker);
+            if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+                fabStatus = 2;
+                tagBtn.setColorNormal(R.color.pink);
+                tagBtn.setColorNormalResId(R.color.pink_pressed);
+                tagBtn.setIcon(R.drawable.ic_add_white_24dp);
+                if (lastmark != null) {
+                        lastmark.setIcon(mCurrentMarker);
+                }
+                userAvatar.setVisibility(View.GONE);
+                tagTitle.setText("");
+                tagDetial.setText("");
+                tagTime.setText("");
+            }else if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED) {
+                setPanelNull();
             }
-            userAvatar.setVisibility(View.GONE);
-            tagTitle.setText("");
-            tagDetial.setText("");
-            tagTime.setText("");
-
         }
 
         @Override
@@ -462,33 +475,56 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     //marker information
     public void markerInfo() {
-        Tag tag = new Tag();
-        User user = AppHelper.getCurrentUser();
-        Calendar calendar = Calendar.getInstance();
-        Date time = calendar.getTime();
-        tag.setTitle("test");
-        tag.setAppointTime(time);
-        tag.setDetail("测试数据");
-        tag.setUser(user);
-        tag.setPlace(placeInfo(placeStr));
-        Log.e("time", "" + time);
+        if (checkField()) {
+            Tag tag = new Tag();
+            User user = AppHelper.getCurrentUser();
+            Calendar calendar = Calendar.getInstance();
+            Date time = calendar.getTime();
+            tag.setTitle(tagTitleText.getText().toString());
+            tag.setDetail(tagDetailText.getText().toString());
+            tag.setAppointTime(time);
+            tag.setUser(user);
+            tag.setPlace(placeInfo(placeStr));
+            Log.e("time", "" + time);
 
-        //后台异步存储数据
-        if (placeStr != null){
-            tag.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(AVException e) {
-                    if (e == null) {
-                        Log.e("saveok", "保存数据成功");
-                    } else {
-                        Toast.makeText(mContext, "出错了讨厌啦", Toast.LENGTH_SHORT).show();
+            //后台异步存储数据
+            if (placeStr != null) {
+                tag.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(AVException e) {
+                        if (e == null) {
+                            Log.e("saveok", "保存数据成功");
+                            Toast.makeText(mContext, "标签发表成功\n地点：" + placeStr, Toast.LENGTH_SHORT).show();
+                            setPanelNull();
+                        } else {
+                            Toast.makeText(mContext, "发表标签出错，没关系再试一次！", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                Toast.makeText(mContext,"网络不佳或定位失败，请重试。",Toast.LENGTH_SHORT).show();
+            }
         }
-
     }
 
+    public boolean checkField(){
+        boolean valid = true;
+        if (TextUtils.isEmpty(tagTitleText.getText())){
+            tagTitleText.setError("标题不能为空！");
+            valid = false;
+        }
+        return valid;
+    }
+
+    public void setPanelNull(){
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        userAvatar.setVisibility(View.GONE);
+        tagTitle.setText("");
+        tagDetial.setText("");
+        tagTime.setText("");
+        tagTitleText.setText("");
+        tagDetailText.setText("");
+    }
 
     //初始化Circleoption
     CircleOptions circleOptions = new CircleOptions();
@@ -665,40 +701,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             }
         });
         return  nowNum;
-    }
-
-    public class MyAdapter extends  RecyclerView.Adapter<MyAdapter.ViewHolder>{
-        private String[] mDataset;
-
-       /* public MyAdapter(String[] mDataset){
-            this.mDataset = mDataset;
-        }*/
-
-        public  class ViewHolder extends RecyclerView.ViewHolder{
-
-            public TextView mTextView;
-            public ViewHolder(View v) {
-                super(v);
-                mTextView = (TextView)v.findViewById(R.id.info_text);
-            }
-        }
-
-        @Override
-        public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int i) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_view,parent,false);
-            return new ViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int position) {
-            viewHolder.mTextView.setText("fuck");
-        }
-
-        @Override
-        public int getItemCount() {
-            return 20;
-        }
     }
 
     @Override

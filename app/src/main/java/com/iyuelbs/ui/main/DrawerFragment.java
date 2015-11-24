@@ -8,11 +8,20 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.DrawerLayout;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.afollestad.materialdialogs.ThemeSingleton;
+import com.avos.avoscloud.AVUser;
+import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.iyuelbs.R;
 import com.iyuelbs.app.AppConfig;
 import com.iyuelbs.app.AppHelper;
@@ -20,6 +29,8 @@ import com.iyuelbs.app.Keys;
 import com.iyuelbs.entity.User;
 import com.iyuelbs.support.utils.ViewUtils;
 import com.iyuelbs.support.widget.RoundedImageView;
+import com.iyuelbs.ui.chat.ui.MsgActivity;
+import com.iyuelbs.ui.settings.About;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -34,8 +45,8 @@ public class DrawerFragment extends ListFragment {
 
     private Context mContext;
     private ImageLoader mImageLoader;
+    private DrawerLayout mDrawerLayout;
     private DisplayImageOptions mImageOptions;
-
     private List<MenuItem> mDrawerList;
     private MenuItem mDividerItem;
     private DrawerAdapter mAdapter;
@@ -73,15 +84,17 @@ public class DrawerFragment extends ListFragment {
         mDividerItem = new MenuItem(0, null);
         mDrawerList.add(new MenuItem(R.drawable.ic_explore_grey600_24dp,
                 getString(R.string.title_drawer_index)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_place_grey600_24dp,
+        mDrawerList.add(new MenuItem(R.drawable.ic_chat_grey600_24dp,
                 getString(R.string.title_drawer_places)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_local_restaurant_grey600_24dp,
+        mDrawerList.add(new MenuItem(R.drawable.ic_person_grey600_24dp,
                 getString(R.string.title_drawer_restaurant)));
-        mDrawerList.add(new MenuItem(R.drawable.ic_arrow_back_grey600_24dp,
-                getString(R.string.title_drawer_me)));
+        /*mDrawerList.add(new MenuItem(R.drawable.ic_arrow_back_grey600_24dp,
+                getString(R.string.title_drawer_me)));*/
         mDrawerList.add(mDividerItem);
         mDrawerList.add(new MenuItem(R.drawable.ic_settings_grey600_24dp,
                 getString(R.string.action_settings)));
+        mDrawerList.add(new MenuItem(R.drawable.ic_arrow_back_grey600_24dp,
+                getString(R.string.about_me)));
     }
 
     private void setupListView() {
@@ -105,6 +118,7 @@ public class DrawerFragment extends ListFragment {
         }
         mUserNameText = (TextView) view.findViewById(R.id.drawer_user_name);
         mStatusText = (TextView) view.findViewById(R.id.drawer_user_status);
+        mDrawerLayout = (DrawerLayout) view.findViewById(R.id.main_drawer_layout);
         getListView().addHeaderView(view, null, false);
 
         initUserInfo();
@@ -116,7 +130,7 @@ public class DrawerFragment extends ListFragment {
             getImageLoader().displayImage(user.getAvatarUrl(), mAvatarImage, mImageOptions);
             mAvatarImage.setVisibility(View.VISIBLE);
             mUserNameText.setText(user.getNickName());
-            mStatusText.setText(user.getLocStatus() == null ? getString(R.string.title_no_loc_status) : user.getLocStatus());
+            mStatusText.setText(user == null ? getString(R.string.title_no_loc_status) : getString(R.string.title_login));
         } else {
             mAvatarImage.setVisibility(View.INVISIBLE);
             mUserNameText.setText(R.string.title_not_login);
@@ -131,7 +145,7 @@ public class DrawerFragment extends ListFragment {
 
         super.onListItemClick(l, v, position, id);
 
-        if (position < mDrawerList.size() - 1) { // don't toggle settings
+        if (position < mDrawerList.size()-1) { // don't toggle settings
             l.setItemChecked(position, true);
             mCurrentIndex = position;
 
@@ -139,17 +153,39 @@ public class DrawerFragment extends ListFragment {
                 case 0: // index
                     break;
                 case 1: // place
+                    goMsgActivityFromActivity(getActivity(), 1);
                     break;
                 case 2: // restaurant
+                    goMsgActivityFromActivity(getActivity(), 2);
                     break;
-                case 3:
-                    Intent intent = new Intent(mContext, MyInfoDetail.class);
-                    startActivity(intent);
+                case 4:
+                    goMsgActivityFromActivity(getActivity(), 3);
                     break;
             }
         } else {
             // TODO: for now is settings
+            showCustomWebView();
         }
+
+    }
+
+    private void showCustomWebView() {
+        int accentColor = ThemeSingleton.get().widgetColor;
+        if (accentColor == 0)
+            accentColor = getResources().getColor(R.color.teal);
+
+        About.create(false, accentColor).show(getFragmentManager(), "关于");
+    }
+
+
+
+    public static void goMsgActivityFromActivity(Activity fromActivity,int status) {
+        ChatManager chatManager = ChatManager.getInstance();
+        chatManager.setupDatabaseWithSelfId(AVUser.getCurrentUser().getObjectId());
+        chatManager.openClientWithSelfId(AVUser.getCurrentUser().getObjectId(), null);
+        Intent intent = new Intent(fromActivity, MsgActivity.class);
+        intent.putExtra("status", status);
+        fromActivity.startActivityForResult(intent,0);
     }
 
     private DrawerAdapter getAdapter() {
