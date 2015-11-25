@@ -7,6 +7,7 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
@@ -84,7 +85,7 @@ public class ConversationManager {
     final List<AVIMTypedMessage> foundMessages = new ArrayList<>();
     conversation.queryMessages(1, new AVIMMessagesQueryCallback() {
       @Override
-      public void done(List<AVIMMessage> messages, AVException e) {
+      public void done(List<AVIMMessage> messages, AVIMException e) {
         es[0] = e;
         if (e == null) {
           if (messages == null) {
@@ -120,7 +121,7 @@ public class ConversationManager {
     final AVException[] es = new AVException[1];
     CacheService.cacheConvs(convids, new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         es[0] = e;
         latch.countDown();
       }
@@ -160,7 +161,7 @@ public class ConversationManager {
     conv.setName(newName);
     conv.updateInfoInBackground(new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (e != null) {
           callback.done(e);
         } else {

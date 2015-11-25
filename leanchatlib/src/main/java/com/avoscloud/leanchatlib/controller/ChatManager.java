@@ -2,12 +2,12 @@ package com.avoscloud.leanchatlib.controller;
 
 import android.content.Context;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMClientEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationEventHandler;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMMessageManager;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -93,7 +93,7 @@ public class ChatManager extends AVIMClientEventHandler {
     query.orderByDescending(KEY_UPDATED_AT);
     query.findInBackground(new AVIMConversationQueryCallback() {
       @Override
-      public void done(List<AVIMConversation> conversations, AVException e) {
+      public void done(List<AVIMConversation> conversations, AVIMException e) {
         if (e != null) {
           callback.done(null, e);
         } else {
@@ -160,7 +160,7 @@ public class ChatManager extends AVIMClientEventHandler {
     imClient = AVIMClient.getInstance(selfId);
     imClient.open(new AVIMClientCallback() {
       @Override
-      public void done(AVIMClient client, AVException e) {
+      public void done(AVIMClient client, AVIMException e) {
         if (e != null) {
           connect = false;
           connectionListener.onConnectionChanged(connect);
@@ -209,12 +209,12 @@ public class ChatManager extends AVIMClientEventHandler {
     imClient.close(new AVIMClientCallback() {
 
       @Override
-      public void done(AVIMClient client, AVException e) {
+      public void done(AVIMClient avimClient, AVIMException e) {
         if (e != null) {
           Utils.logThrowable(e);
         }
         if (callback != null) {
-          callback.done(client, e);
+          callback.done(avimClient, e);
         }
       }
     });
@@ -238,6 +238,11 @@ public class ChatManager extends AVIMClientEventHandler {
     Utils.log();
     connect = true;
     connectionListener.onConnectionChanged(connect);
+  }
+
+  @Override
+  public void onClientOffline(AVIMClient avimClient, int i) {
+
   }
 
   public boolean isConnect() {
@@ -300,7 +305,7 @@ public class ChatManager extends AVIMClientEventHandler {
                             final AVIMTypedMessagesArrayCallback callback) {
     conversation.queryMessages(msgId, time, limit, new AVIMMessagesQueryCallback() {
       @Override
-      public void done(List<AVIMMessage> imMessages, AVException e) {
+      public void done(List<AVIMMessage> imMessages, AVIMException e) {
         if (e != null) {
           callback.done(new ArrayList<AVIMTypedMessage>(), e);
         } else {

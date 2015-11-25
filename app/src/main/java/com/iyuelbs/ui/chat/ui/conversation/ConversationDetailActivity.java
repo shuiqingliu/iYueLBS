@@ -14,9 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avoscloud.leanchatlib.activity.ChatActivity;
 import com.avoscloud.leanchatlib.controller.ConversationHelper;
@@ -161,7 +161,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
               final ProgressDialog progress = showSpinnerDialog();
               conv().kickMembers(Arrays.asList(user.getObjectId()), new AVIMConversationCallback() {
                 @Override
-                public void done(AVException e) {
+                public void done(AVIMException e) {
                   progress.dismiss();
                   if (filterException(e)) {
                     Utils.toast(R.string.conversation_detail_kickSucceed);
@@ -184,7 +184,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
     final String convid = conv().getConversationId();
     conv().quit(new AVIMConversationCallback() {
       @Override
-      public void done(AVException e) {
+      public void done(AVIMException e) {
         if (filterException(e)) {
           RoomsTable roomsTable = RoomsTable.getCurrentUserInstance();
           roomsTable.deleteRoom(convid);
@@ -206,7 +206,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
         String newName = UpdateContentActivity.getResultValue(data);
         conversationManager.updateName(conv(), newName, new AVIMConversationCallback() {
           @Override
-          public void done(AVException e) {
+          public void done(AVIMException e) {
             if (filterException(e)) {
               ConversationDetailActivity.this.refresh();
             }

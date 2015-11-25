@@ -16,6 +16,7 @@ import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avoscloud.leanchatlib.controller.ChatManager;
 import com.avoscloud.leanchatlib.db.DBHelper;
@@ -100,7 +101,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
       DBHelper.getCurrentUserInstance().closeHelper();
       chatManager.closeWithCallback(new AVIMClientCallback() {
         @Override
-        public void done(AVIMClient avimClient, AVException e) {
+        public void done(AVIMClient avimClient, AVIMException e) {
+
         }
       });
       AVUser.logOut();
