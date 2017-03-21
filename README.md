@@ -1,27 +1,27 @@
-#iYueLBS
+# iYueLBS
 
-##主要功能
+## 主要功能
 
-###爱约标签
+### 爱约标签
 
 >     1.查看或搜索附近感兴趣的标签
 >     2.发布标签
 
-###爱约地点
+### 爱约地点
 
 >     1.显示附近热门地点/热门标签
 >     2.显示好友位置/距离
 
-###好友消息功能
+### 好友消息功能
 
 >    关注好友
 >    发送私信
 
-###`TODO:`爱约餐厅(Optional)
+### `TODO:`爱约餐厅(Optional)
 
 >     约人可以去的用餐地点推荐
 
-##依赖开源项目
+## 依赖开源项目
 
 >       support-v7
 >       SystemBarTintManager [https://github.com/jgilfelt/SystemBarTint]
@@ -31,7 +31,7 @@
 >       material-dialogs [https://github.com/afollestad/material-dialogs]
 >       MaterialEditText [https://github.com/rengwuxian/MaterialEditText]
 
-##其他依赖支持
+## 其他依赖支持
 
 >       AVOSCloud [https://leancloud.cn/]
 >       百度地图SDK [http://developer.baidu.com/map/]
