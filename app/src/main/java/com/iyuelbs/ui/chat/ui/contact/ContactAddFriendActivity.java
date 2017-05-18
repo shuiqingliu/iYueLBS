@@ -22,15 +22,15 @@ import com.iyuelbs.ui.chat.ui.view.BaseListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ContactAddFriendActivity extends BaseActivity {
-  @InjectView(R.id.searchNameEdit)
+  @BindView(R.id.searchNameEdit)
   EditText searchNameEdit;
 
-  @InjectView(R.id.searchList)
+  @BindView(R.id.searchList)
   BaseListView<AVUser> listView;
   private String searchName = "";
   private AddFriendListAdapter adapter;
@@ -40,7 +40,7 @@ public class ContactAddFriendActivity extends BaseActivity {
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
     setContentView(R.layout.contact_add_friend_activity);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
     init();
   }
 

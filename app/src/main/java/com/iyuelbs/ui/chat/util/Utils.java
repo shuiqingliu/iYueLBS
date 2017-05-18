@@ -31,23 +31,14 @@ import com.iyuelbs.R;
 import com.iyuelbs.app.AppApplication;
 import com.iyuelbs.app.AppHelper;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -58,7 +49,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -74,13 +69,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Utils {
-  public static BufferedReader bufferedReader(String url) throws IOException,
-      ClientProtocolException, UnsupportedEncodingException {
-    HttpGet get = new HttpGet(url);
-    DefaultHttpClient client = new DefaultHttpClient();
-    HttpResponse response = client.execute(get);
-    HttpEntity entity = response.getEntity();
-    InputStream stream = entity.getContent();
+  public static BufferedReader bufferedReader(String url) throws IOException, UnsupportedEncodingException {
+    URL urlObject = new URL(url);
+    HttpURLConnection urlConnection = (HttpURLConnection) urlObject.openConnection();
+    InputStream stream = urlConnection.getInputStream();
     BufferedReader reader = new BufferedReader(new InputStreamReader(stream,
         "GBK"));
     return reader;
@@ -98,8 +90,7 @@ public class Utils {
     return text;
   }
 
-  public static Bitmap urlToBitmap(String url) throws ClientProtocolException,
-      IOException {
+  public static Bitmap urlToBitmap(String url) throws IOException {
     return BitmapFactory.decodeStream(inputStreamFromUrl(url));
   }
 
@@ -121,11 +112,9 @@ public class Utils {
   }
 
   public static InputStream inputStreamFromUrl(String url) throws IOException {
-    DefaultHttpClient client = new DefaultHttpClient();
-    HttpGet get = new HttpGet(url);
-    HttpResponse response = client.execute(get);
-    HttpEntity entity = response.getEntity();
-    InputStream stream = entity.getContent();
+    URL urlObject = new URL(url);
+    HttpURLConnection urlConnection = (HttpURLConnection) urlObject.openConnection();
+    InputStream stream = urlConnection.getInputStream();
     return stream;
   }
 
@@ -154,7 +143,7 @@ public class Utils {
   }
 
   public static Bitmap saveBitmapLocal(String bitmapUrl, File bitmapFile)
-      throws IOException, FileNotFoundException, ClientProtocolException {
+      throws IOException, FileNotFoundException{
     Bitmap resultBitmap;
     downloadFileIfNotExists(bitmapUrl, bitmapFile);
     resultBitmap = Utils.bitmapFromFile(bitmapFile);
@@ -162,8 +151,7 @@ public class Utils {
   }
 
   public static Bitmap getBitmapFromUrl(String logoUrl, String filmEnName,
-                                        String appPath) throws IOException, FileNotFoundException,
-      ClientProtocolException {
+                                        String appPath) throws IOException, FileNotFoundException{
     Bitmap resultBitmap;
     String logoPath = appPath + "logo/";
     File dir = new File(logoPath);
@@ -329,20 +317,30 @@ public class Utils {
     return builder.toString();
   }
 
-  public static String getShortUrl(String longUrl) throws IOException, JSONException {
+  public static String getShortUrl(String longUrl) throws Exception {
     if (longUrl.startsWith("http") == false) {
       throw new IllegalArgumentException("longUrl must start with http");
     }
     String url = "https://api.weibo.com/2/short_url/shorten.json";
-    HttpPost post = new HttpPost(url);
+    URL urlObject = new URL(url);
+    HttpURLConnection urlConnection = (HttpURLConnection) urlObject.openConnection();
+    urlConnection.setDoOutput(true);
+
+    InputStream stream = urlConnection.getInputStream();
+
     List<NameValuePair> params = new ArrayList<NameValuePair>();
     params.add(new BasicNameValuePair("access_token", "2.00_hkjqBR1dbuCc632289355qerfeD"));
     params.add(new BasicNameValuePair("url_long", longUrl));
-    post.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-    HttpResponse res = new DefaultHttpClient().execute(post);
-    if (res.getStatusLine().getStatusCode() == 200) {
-      String str = EntityUtils.toString(res.getEntity());
-      JSONObject json = new JSONObject(str);
+    OutputStream outputStream = urlConnection.getOutputStream();
+    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+    String postParams = params.toString();
+    writer.write(postParams);
+    writer.flush();
+    outputStream.close();
+    writer.close();
+    if (urlConnection.getResponseCode() == 200) {
+      InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+      JSONObject json = new JSONObject(readStream(inputStream).toString());
       JSONArray arr = json.getJSONArray("urls");
       JSONObject urls = arr.getJSONObject(0);
       if (urls.getBoolean("result")) {

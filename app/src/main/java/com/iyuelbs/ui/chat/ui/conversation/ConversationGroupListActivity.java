@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 /**
  * Created by lzw on 14-10-7.
  */
 public class ConversationGroupListActivity extends ConversationEventBaseActivity {
-  @InjectView(R.id.groupList)
+  @BindView(R.id.groupList)
   BaseListView<AVIMConversation> groupListView;
 
   private List<AVIMConversation> convs = new ArrayList<AVIMConversation>();
@@ -44,7 +44,7 @@ public class ConversationGroupListActivity extends ConversationEventBaseActivity
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.conversation_list_activity);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
     conversationManager = ConversationManager.getInstance();
     initList();
     initActionBar(getApplicationContext().getString(R.string.conversation_group));

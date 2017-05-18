@@ -40,20 +40,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public class ContactFragment extends BaseFragment {
   private static CharacterParser characterParser;
   private static PinyinComparator pinyinComparator;
-  @InjectView(R.id.et_msg_search)
+  @BindView(R.id.et_msg_search)
   ClearEditText clearEditText;
-  @InjectView(R.id.dialog)
+  @BindView(R.id.dialog)
   TextView dialogTextView;
-  @InjectView(R.id.list_friends)
+  @BindView(R.id.list_friends)
   BaseListView<SortUser> friendsList;
-  @InjectView(R.id.right_letter)
+  @BindView(R.id.right_letter)
   EnLetterView rightLetter;
   View listHeaderView;
   private ContactFragmentAdapter userAdapter;
@@ -64,10 +64,10 @@ public class ContactFragment extends BaseFragment {
                            Bundle savedInstanceState) {
     // TODO Auto-generated method stub
     View view = inflater.inflate(R.layout.contact_fragment, container, false);
-    ButterKnife.inject(this, view);
+    ButterKnife.bind(this, view);
 
     listHeaderView = inflater.inflate(R.layout.contact_fragment_header_layout, null, false);
-    ButterKnife.inject(listHeaderViewHolder, listHeaderView);
+    ButterKnife.bind(listHeaderViewHolder, listHeaderView);
     return view;
   }
 
@@ -253,7 +253,7 @@ public class ContactFragment extends BaseFragment {
   }
 
   class ListHeaderViewHolder {
-    @InjectView(R.id.iv_msg_tips)
+    @BindView(R.id.iv_msg_tips)
     ImageView msgTipsView;
 
     @OnClick(R.id.layout_new)

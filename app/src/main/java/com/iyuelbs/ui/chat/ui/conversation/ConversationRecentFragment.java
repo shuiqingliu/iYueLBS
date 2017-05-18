@@ -30,16 +30,16 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import de.greenrobot.event.EventBus;
 
 /**
  * Created by lzw on 14-9-17.
  */
 public class ConversationRecentFragment extends BaseFragment implements ChatManager.ConnectionListener {
-  @InjectView(R.id.convList)
+  @BindView(R.id.convList)
   BaseListView<Room> listView;
-  @InjectView(R.id.im_client_state_view)
+  @BindView(R.id.im_client_state_view)
   View imClientStateView;
   private boolean hidden;
   private EventBus eventBus;
@@ -49,7 +49,7 @@ public class ConversationRecentFragment extends BaseFragment implements ChatMana
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.message_fragment, container, false);
-    ButterKnife.inject(this, view);
+    ButterKnife.bind(this, view);
     return view;
   }
 

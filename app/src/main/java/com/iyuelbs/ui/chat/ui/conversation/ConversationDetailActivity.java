@@ -40,7 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -51,13 +51,13 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
   private static final int ADD_MEMBERS = 0;
   private static final int INTENT_NAME = 0;
   private static List<AVUser> members = new ArrayList<AVUser>();
-  @InjectView(R.id.usersGrid)
+  @BindView(R.id.usersGrid)
   ExpandGridView usersGrid;
 
-  @InjectView(R.id.name_layout)
+  @BindView(R.id.name_layout)
   View nameLayout;
 
-  @InjectView(R.id.quit_layout)
+  @BindView(R.id.quit_layout)
   View quitLayout;
 
   private ConversationType conversationType;
@@ -69,7 +69,7 @@ public class ConversationDetailActivity extends ConversationBaseActivity impleme
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.conversation_detail_activity);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
     initData();
     initGrid();
     initActionBar(R.string.conversation_detail_title);

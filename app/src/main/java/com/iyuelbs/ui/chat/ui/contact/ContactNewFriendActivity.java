@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 
 public class ContactNewFriendActivity extends BaseActivity implements
         Refreshable {
-  @InjectView(R.id.newfriendList)
+  @BindView(R.id.newfriendList)
   BaseListView<AddRequest> listView;
   NewFriendListAdapter adapter;
 
@@ -44,7 +44,7 @@ public class ContactNewFriendActivity extends BaseActivity implements
     // TODO Auto-generated method stub
     super.onCreate(savedInstanceState);
     setContentView(R.layout.contact_new_friend_activity);
-    ButterKnife.inject(this);
+    ButterKnife.bind(this);
     initView();
     refresh();
   }

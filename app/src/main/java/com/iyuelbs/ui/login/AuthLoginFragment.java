@@ -92,12 +92,12 @@ public class AuthLoginFragment extends BaseFragment {
             public void onProgressChanged(WebView view, int progress) {
                 mProgressBar.setProgress(progress);
                 if (progress == 0 || progress == 100) {
-                    if (mProgressBar.getTag() == 1) {
+                    if ((int)(mProgressBar.getTag()) == 1) {
                         mProgressBar.setVisibility(View.GONE);
                         mProgressBar.setTag(0);
                     }
                 } else {
-                    if (mProgressBar.getTag() == 0) {
+                    if ((int)(mProgressBar.getTag()) == 0) {
                         mProgressBar.setVisibility(View.VISIBLE);
                         mProgressBar.setTag(1);
                     }
