@@ -542,7 +542,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             circle = (Circle) mBaiduMap.addOverlay(circleOptions);
             isFirsCircle = false;
         } else {
-            circle.setCenter(new LatLng(latitude, longitude));
+            try {
+
+                circle.setCenter(new LatLng(latitude, longitude));
+            }catch (Exception e){
+                Log.e("drawError",e.getMessage());
+            }
         }
     }
 
