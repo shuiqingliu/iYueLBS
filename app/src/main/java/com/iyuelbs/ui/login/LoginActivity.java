@@ -1,6 +1,7 @@
 package com.iyuelbs.ui.login;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.iyuelbs.BaseActivity;
@@ -59,6 +60,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private boolean checkUserLogin() {
+       // Log.e("UserINfo!!!!!!!!!!!!",AppHelper.getCurrentUser().getUsername());
         if (!AppHelper.checkLogin()) {
             return false;
         }
@@ -79,7 +81,6 @@ public class LoginActivity extends BaseActivity {
                     });
             return false;
         }
-
         NavUtils.go(this, MainActivity.class);
         finish();
         return true;

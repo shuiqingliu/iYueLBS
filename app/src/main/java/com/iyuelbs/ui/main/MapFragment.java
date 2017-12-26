@@ -375,10 +375,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     BaiduMap.OnMapLoadedCallback onMapLoadedCallback = new BaiduMap.OnMapLoadedCallback() {
         @Override
         public void onMapLoaded() {
-            if (isFirstMarker){
-                drawTag();
-                isFirsCircle = false;
-            }
+            drawTag();
+//            if (isFirstMarker){
+//                drawTag();
+//                //isFirsCircle = false;
+//            }
         }
     };
 
@@ -527,10 +528,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     }
 
     //初始化Circleoption
-    CircleOptions circleOptions = new CircleOptions();
-    public void drawCircle() {
-        double latitude = mBaiduMap.getLocationData().latitude;
-        double longitude = mBaiduMap.getLocationData().longitude;
+
+
+    public void drawCircle(BDLocation bdloc) {
+        CircleOptions circleOptions = new CircleOptions();
+        //CircleOptions circleOptions = new CircleOptions();
+        double latitude = bdloc.getLatitude();
+        double longitude = bdloc.getLongitude();
+        //double latitude = mBaiduMap.getLocationData().latitude;
+        //double longitude = mBaiduMap.getLocationData().longitude;
         circleOptions.center(new LatLng(latitude, longitude));
         circleOptions.fillColor(0x204DB6AC);
         circleOptions.radius(300);
@@ -542,18 +548,17 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             circle = (Circle) mBaiduMap.addOverlay(circleOptions);
             isFirsCircle = false;
         } else {
-            try {
-
-                circle.setCenter(new LatLng(latitude, longitude));
-            }catch (Exception e){
-                Log.e("drawError",e.getMessage());
-            }
+            circle.setCenter(new LatLng(latitude, longitude));
         }
     }
 
     //监听地图状态变化
     BaiduMap.OnMapStatusChangeListener statusChangeListener
             = new BaiduMap.OnMapStatusChangeListener() {
+        @Override
+        public void onMapStatusChangeStart(MapStatus mapStatus,int test) {
+        }
+
         @Override
         public void onMapStatusChangeStart(MapStatus mapStatus) {
         }
@@ -586,67 +591,76 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 .include(ne).include(sw).build();
         Log.e("northeast", ne.longitude + "," + ne.latitude);
         Log.e("sourthwest", sw.longitude + "," + sw.latitude);
-        getTagObject();
+        getMarkerData();
     }
 
     //将tag数据和marker绑定
     public void getTagObject(){
-        getMarkerData();
-        AVQuery<Tag> tagAVQuery = AVQuery.getQuery(Tag.class);
-        tagAVQuery.whereContainedIn("place", placeId);
-        tagAVQuery.findInBackground(new FindCallback<Tag>() {
-            @Override
-            public void done(List<Tag> list, AVException e) {
-                if (e == null) {
-                    mMarkerExist = new HashMap<>();
-                    for (int i = 0;i< list.size();i++) {
-                        //首先取得place和tag的基本数据
-                        double latitude = placeId.get(i).getGeoLocation().getLatitude();
-                        double longitude = placeId.get(i).getGeoLocation().getLongitude();
-                        MarkerOptions options = new MarkerOptions()
-                                .position(new LatLng(latitude, longitude))
-                                .icon(mCurrentMarker)
-                                .zIndex(9);
-                        User user = list.get(i).getUser();
-                        String tagid = list.get(i).getObjectId();
-                        String placeid = placeId.get(i).getObjectId();
-                        String placename = list.get(i).getPlace().getPlaceName();
-                        String username = list.get(i).getUser().getUsername();
-                        String title = list.get(i).getTitle();
-                        String detial = list.get(i).getDetail();
-                        String userav = list.get(i).getUser().getAvatarUrl();
-                        Date date = list.get(i).getAppointTime();
-                        MapDataHelper mapDataHelper = new MapDataHelper(user,username, title, detial, userav, date, placename);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mapdate",mapDataHelper);
-
-                        //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
-                        if (isFirstMarker) {
-                            mMarker = (Marker) mBaiduMap.addOverlay(options);
-                            mMarker.setExtraInfo(bundle);
-                            mMarkerExist.put(tagid,placeid);
-                            //TODO： 如何做到判断已经有overly的点不再重绘？？？
-                            //将当前marker保存起来啊，然后判断LatLng！！！
-                        } else if (mMarkerExist.get(tagid) == placeid) {
-                            //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
-                            //  所以有可能造成tag丢失，这存在BUG，
-                        } else {
-                            mMarker = (Marker) mBaiduMap.addOverlay(options);
-                            mMarker.setExtraInfo(bundle);
-                            mMarkerExist.put(tagid,placeid);
-                        }
-
-                    }
-                } else {
-                    e.printStackTrace();
-                }
+        //getMarkerData();
+        Log.e("Place信息","大小:"+ placeId.size());
+        //if (placeId.size() > 0){
+            AVQuery<Tag> tagAVQuery = AVQuery.getQuery(Tag.class);
+            for (Place j : placeId){
+                Log.e("Place信息","k" + j);
             }
-        });
+            tagAVQuery.whereContainedIn("place", placeId);
+            tagAVQuery.findInBackground(new FindCallback<Tag>() {
+                @Override
+                public void done(List<Tag> list, AVException e) {
+                    if (e == null){
+                        mMarkerExist = new HashMap<>();
+                        for (int i = 0;i< placeId.size();i++) {
+                            Log.e("数据大小","dataSize:" + list.size());
+                            //首先取得place和tag的基本数据
+                            Log.e("Place","对象ID：" + list.get(i).getPlace());
+                            double latitude = placeId.get(i).getGeoLocation().getLatitude();
+                            double longitude = placeId.get(i).getGeoLocation().getLongitude();
+                            MarkerOptions options = new MarkerOptions()
+                                    .position(new LatLng(latitude, longitude))
+                                    .icon(mCurrentMarker)
+                                    .zIndex(9);
+                            User user = list.get(i).getUser();
+                            String tagid = list.get(i).getObjectId();
+                            String placeid = placeId.get(i).getObjectId();
+                            String placename = list.get(i).getPlace().getPlaceName();
+                            String username = list.get(i).getUser().getUsername();
+                            String title = list.get(i).getTitle();
+                            String detial = list.get(i).getDetail();
+                            String userav = list.get(i).getUser().getAvatarUrl();
+                            Date date = list.get(i).getAppointTime();
+                            MapDataHelper mapDataHelper = new MapDataHelper(user,username, title, detial, userav, date, placename);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("mapdate",mapDataHelper);
+
+                            //判断已经绘制到地图上的tag不再绘制节省资源。这块有bug
+                            if (isFirstMarker) {
+                                mMarker = (Marker) mBaiduMap.addOverlay(options);
+                                mMarker.setExtraInfo(bundle);
+                                mMarkerExist.put(tagid,placeid);
+                                //TODO： 如何做到判断已经有overly的点不再重绘？？？
+                                //将当前marker保存起来啊，然后判断LatLng！！！
+                            } else if (mMarkerExist.get(tagid) == placeid) {
+                                //TODO ： 上面判断条件也得加上用户判断和tag对象判断因为map的键值不能重复
+                                //  所以有可能造成tag丢失，这存在BUG，
+                            } else {
+                                mMarker = (Marker) mBaiduMap.addOverlay(options);
+                                mMarker.setExtraInfo(bundle);
+                                mMarkerExist.put(tagid,placeid);
+                            }
+
+                        }
+                    } else {
+                        Log.e("tag","Draw Error");
+                    }
+                }
+            });
+        //}
     }
 
     //从lc获取maker数据集
     public void getMarkerData() {
-        final AVQuery<Place> query = AVObject.getQuery(Place.class);
+        placeId = new ArrayList<>();
+        AVQuery<Place> query = AVObject.getQuery(Place.class);
         query.whereWithinGeoBox("geoLocation",
                 new AVGeoPoint(sw.latitude, sw.longitude), new AVGeoPoint(ne.latitude, ne.longitude));
         //不能设置1000灰常卡，当前缩放级没必要设置50足矣
@@ -655,13 +669,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             @Override
             public void done(List<Place> list, AVException e) {
                 if (e == null) {
-                    placeId = new ArrayList<>();
-                    for (Place getlocation : list) {
-                        placeId.add(getlocation);
+                    for (Place placeObj : list) {
+                        placeId.add(placeObj);
+                        Log.e("添加","placie" + placeObj);
                     }
+                    getTagObject();
                 }
             }
         });
+        System.out.println(placeId.size());
     }
     /**
      *从服务器获取tag数据并将数据与maker绑定结束
@@ -691,7 +707,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 mBaiduMap.animateMapStatus(u);
             }
             //绘制圆形覆盖物
-            drawCircle();
+            drawCircle(location);
         }
     }
 
@@ -712,6 +728,8 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         myOrientationListener.start();
+        //绘制圆形覆盖物
+        //drawCircle();
     }
 
     @Override

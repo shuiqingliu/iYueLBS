@@ -1,5 +1,6 @@
 package com.iyuelbs.ui.main;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ public class EntrySplashActivity extends BaseActivity {
   private static final int GO_MAIN_MSG = 1;
   private static final int GO_LOGIN_MSG = 2;
 
+  @SuppressLint("HandlerLeak")
   private  Handler handler = new Handler() {
     @Override
     public void handleMessage(Message msg) {
